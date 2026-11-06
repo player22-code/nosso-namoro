@@ -2,216 +2,454 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#fff5f7">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fff5f7">
 
-  <title>Nossa História ❤️</title>
+<title>Nossa História ❤️</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #fff5f7;
-      color: #51343d;
-      text-align: center;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fff5f7;
+  color: #51343d;
+  text-align: center;
+}
 
-    header {
-      padding: 45px 18px 25px;
-    }
+header {
+  padding: 45px 18px 25px;
+}
 
-    .coracao {
-      font-size: 38px;
-    }
+.coracao {
+  font-size: 38px;
+}
 
-    h1 {
-      font-family: Georgia, serif;
-      font-size: 36px;
-      margin: 12px 0;
-    }
+h1 {
+  font-family: Georgia, serif;
+  font-size: 36px;
+  margin: 12px 0;
+}
 
-    .subtitulo {
-      color: #986c79;
-      line-height: 1.6;
-    }
+.subtitulo {
+  color: #986c79;
+  line-height: 1.6;
+}
 
-    main {
-      max-width: 700px;
-      margin: auto;
-      padding: 0 16px 40px;
-    }
+main {
+  max-width: 700px;
+  margin: auto;
+  padding: 0 16px 40px;
+}
 
-    section {
-      background: white;
-      padding: 24px 16px;
-      margin: 18px 0;
-      border-radius: 20px;
-      box-shadow: 0 5px 20px #713b4b12;
-    }
+section {
+  background: white;
+  padding: 24px 16px;
+  margin: 18px 0;
+  border-radius: 20px;
+  box-shadow: 0 5px 20px #713b4b12;
+}
 
-    h2 {
-      font-family: Georgia, serif;
-      color: #a84f6b;
-    }
+h2 {
+  font-family: Georgia, serif;
+  color: #a84f6b;
+}
 
-    #contador {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 20px;
-    }
+#contador {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
 
-    .tempo {
-      background: #fff0f4;
-      padding: 15px 5px;
-      border-radius: 12px;
-    }
+.tempo {
+  background: #fff0f4;
+  padding: 15px 5px;
+  border-radius: 12px;
+}
 
-    .numero {
-      display: block;
-      font-size: 26px;
-      font-weight: bold;
-      color: #b34467;
-    }
+.numero {
+  display: block;
+  font-size: 26px;
+  font-weight: bold;
+  color: #b34467;
+}
 
-    .legenda {
-      font-size: 13px;
-      color: #8c6873;
-    }
+.legenda {
+  font-size: 13px;
+  color: #8c6873;
+}
 
-    .foto {
-      width: 100%;
-      max-height: 480px;
-      object-fit: cover;
-      border-radius: 14px;
-      margin-top: 12px;
-    }
+.foto {
+  width: 100%;
+  max-height: 480px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-top: 12px;
+}
 
-    .mensagem {
-      line-height: 1.8;
-      font-size: 16px;
-      white-space: pre-line;
-    }
+.mensagem {
+  line-height: 1.8;
+  font-size: 16px;
+  white-space: pre-line;
+}
 
-    footer {
-      padding: 20px;
-      color: #986c79;
-      font-size: 13px;
-    }
-  </style>
+footer {
+  padding: 20px;
+  color: #986c79;
+  font-size: 13px;
+}
+
+/* =================================
+   SURPRESA DE ALERTA
+================================= */
+
+#surpresa {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 20px;
+  background: #ffe500;
+  color: #171717;
+  transition: background 0.8s ease;
+}
+
+#surpresa.escondida {
+  display: none;
+}
+
+/* ALERTA AMARELO */
+
+#alerta {
+  width: 100%;
+  max-width: 650px;
+  animation: piscar 0.8s infinite alternate;
+}
+
+.simbolo-alerta {
+  font-size: clamp(90px, 22vw, 170px);
+  line-height: 1.2;
+}
+
+.titulo-alerta {
+  font-size: clamp(35px, 10vw, 75px);
+  font-weight: 1000;
+  text-transform: uppercase;
+  margin: 15px 0;
+}
+
+.texto-alerta {
+  font-size: clamp(17px, 4vw, 25px);
+  font-weight: bold;
+}
+
+@keyframes piscar {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.25;
+  }
+}
+
+/* TRANSFORMAÇÃO EM AMOR */
+
+#amor {
+  display: none;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 650px;
+  animation: aparecer 1s ease forwards;
+}
+
+#surpresa.modo-amor {
+  background: linear-gradient(135deg, #ffb6ce, #ffe1eb, #ff9fc1);
+  color: #a52354;
+}
+
+#surpresa.modo-amor #alerta {
+  display: none;
+}
+
+#surpresa.modo-amor #amor {
+  display: block;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.icone-amor {
+  font-size: clamp(75px, 18vw, 130px);
+  animation: pulsar 0.9s infinite alternate;
+}
+
+@keyframes pulsar {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.18);
+  }
+}
+
+.titulo-amor {
+  font-family: Georgia, serif;
+  font-size: clamp(36px, 9vw, 65px);
+  font-weight: bold;
+  line-height: 1.15;
+  margin: 15px 0;
+}
+
+.texto-amor {
+  font-size: clamp(17px, 4vw, 23px);
+  line-height: 1.6;
+  padding: 0 10px;
+}
+
+.botao-amor {
+  background: #bd3267;
+  color: white;
+  border: none;
+  border-radius: 40px;
+  padding: 18px 28px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 25px;
+  box-shadow: 0 5px 20px #bd326744;
+  transition: transform 0.2s;
+}
+
+.botao-amor:active {
+  transform: scale(0.94);
+}
+
+/* EXPLOSÃO DE CORAÇÕES */
+
+#chuva-coracoes {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.coracao-voando {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 30px;
+  opacity: 0;
+  animation: explodir 2.8s ease-out forwards;
+}
+
+@keyframes explodir {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform:
+      translate(
+        calc(-50% + var(--dx)),
+        calc(-50% + var(--dy))
+      )
+      scale(1.5)
+      rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #alerta, .icone-amor, .coracao-voando {
+    animation-duration: 2s;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <header>
-    <div class="coracao">❤️</div>
+<!-- SURPRESA QUE APARECE AO ENTRAR -->
 
-    <h1>Nossa História</h1>
+<div id="surpresa">
+
+  <div id="chuva-coracoes"></div>
+
+  <!-- PRIMEIRA TELA: ALERTA -->
+
+  <div id="alerta">
+
+    <div class="simbolo-alerta">⚠️</div>
+
+    <div class="titulo-alerta">
+      VOCÊ FOI INFECTADO!
+    </div>
+
+    <div class="texto-alerta">
+      ALERTA! UMA AMEAÇA FOI DETECTADA!
+    </div>
+
+    <p>
+      Verificando seu dispositivo...
+    </p>
+
+  </div>
+
+  <!-- SEGUNDA TELA: AMOR -->
+
+  <div id="amor">
+
+    <div class="icone-amor">❤️</div>
+
+    <div class="titulo-amor">
+      VOCÊ FOI INFECTADO PELO AMOR!
+    </div>
+
+    <p class="texto-amor">
+      Não existe antivírus capaz de remover
+      esse sentimento. ❤️
+
+      Você agora está oficialmente infectada
+      por uma pessoa que te ama muito!
+    </p>
+
+    <button class="botao-amor" onclick="fecharSurpresa()">
+      VER MAIS SOBRE ❤️
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- SITE ORIGINAL -->
+
+<header>
+
+  <div class="coracao">❤️</div>
+
+  <h1>Nossa História</h1>
+
+  <p class="subtitulo">
+    Desde que nossas vidas se tornaram uma só história.
+  </p>
+
+</header>
+
+<main>
+
+  <!-- CRONÔMETRO -->
+
+  <section>
+
+    <h2>Nosso tempo juntos</h2>
 
     <p class="subtitulo">
-      Desde que nossas vidas se tornaram uma só história.
+      Cada segundo com você é especial.
     </p>
-  </header>
 
-  <main>
+    <div id="contador">
 
-    <!-- CRONÔMETRO -->
-    <section>
-
-      <h2>Nosso tempo juntos</h2>
-
-      <p class="subtitulo">
-        Cada segundo com você é especial.
-      </p>
-
-      <div id="contador">
-
-        <div class="tempo">
-          <span class="numero" id="anos">0</span>
-          <span class="legenda">Anos</span>
-        </div>
-
-        <div class="tempo">
-          <span class="numero" id="meses">0</span>
-          <span class="legenda">Meses</span>
-        </div>
-
-        <div class="tempo">
-          <span class="numero" id="dias">0</span>
-          <span class="legenda">Dias</span>
-        </div>
-
-        <div class="tempo">
-          <span class="numero" id="horas">00</span>
-          <span class="legenda">Horas</span>
-        </div>
-
-        <div class="tempo">
-          <span class="numero" id="minutos">00</span>
-          <span class="legenda">Minutos</span>
-        </div>
-
-        <div class="tempo">
-          <span class="numero" id="segundos">00</span>
-          <span class="legenda">Segundos</span>
-        </div>
-
+      <div class="tempo">
+        <span class="numero" id="anos">0</span>
+        <span class="legenda">Anos</span>
       </div>
 
-      <p class="subtitulo">
-        Desde 19 de novembro de 2025, às 13:00 ❤️
-      </p>
+      <div class="tempo">
+        <span class="numero" id="meses">0</span>
+        <span class="legenda">Meses</span>
+      </div>
 
-    </section>
+      <div class="tempo">
+        <span class="numero" id="dias">0</span>
+        <span class="legenda">Dias</span>
+      </div>
 
-    <!-- FOTOS -->
-    <section>
+      <div class="tempo">
+        <span class="numero" id="horas">00</span>
+        <span class="legenda">Horas</span>
+      </div>
 
-      <h2>Nossas lembranças 📸</h2>
+      <div class="tempo">
+        <span class="numero" id="minutos">00</span>
+        <span class="legenda">Minutos</span>
+      </div>
 
-      <img
-        class="foto"
-        src="foto1.jpeg"
-        alt="Uma lembrança nossa"
-      >
+      <div class="tempo">
+        <span class="numero" id="segundos">00</span>
+        <span class="legenda">Segundos</span>
+      </div>
 
-      <p class="subtitulo">
-        Um dos meus momentos favoritos com você.
-      </p>
+    </div>
 
-      <img
-        class="foto"
-        src="foto2.jpeg"
-        alt="Mais uma lembrança nossa"
-      >
+    <p class="subtitulo">
+      Desde 19 de novembro de 2025, às 13:00 ❤️
+    </p>
 
-      <p class="subtitulo">
-        Quero viver muitos outros momentos assim.
-      </p>
+  </section>
 
-      <img
-        class="foto"
-        src="foto3.jpeg"
-        alt="Mais uma foto nossa"
-      >
 
-      <p class="subtitulo">
-        Você faz parte das minhas melhores lembranças.
-      </p>
+  <!-- FOTOS -->
 
-    </section>
+  <section>
 
-    <!-- MENSAGEM -->
-    <section>
+    <h2>Nossas lembranças 📸</h2>
 
-      <h2>Uma mensagem para você 💌</h2>
+    <img class="foto"
+         src="foto1.jpeg"
+         alt="Uma lembrança nossa">
 
-      <p class="mensagem">Desde o dia em que começamos a namorar,
+    <p class="subtitulo">
+      Um dos meus momentos favoritos com você.
+    </p>
+
+    <img class="foto"
+         src="foto2.jpeg"
+         alt="Mais uma lembrança nossa">
+
+    <p class="subtitulo">
+      Quero viver muitos outros momentos assim.
+    </p>
+
+    <img class="foto"
+         src="foto3.jpeg"
+         alt="Mais uma foto nossa">
+
+    <p class="subtitulo">
+      Você faz parte das minhas melhores lembranças.
+    </p>
+
+  </section>
+
+
+  <!-- MENSAGEM -->
+
+  <section>
+
+    <h2>Uma mensagem para você 💌</h2>
+
+    <p class="mensagem">Desde o dia em que começamos a namorar,
 você se tornou uma parte muito especial da minha vida.
 
 Quero continuar criando lembranças,
@@ -220,124 +458,173 @@ compartilhando sorrisos e vivendo momentos ao seu lado.
 Obrigado por fazer parte da minha história.
 Eu te amo! ❤️</p>
 
-    </section>
+  </section>
 
-    <footer>
-      Feito com amor, especialmente para você. ❤️
-    </footer>
+  <footer>
+    Feito com amor, especialmente para você. ❤️
+  </footer>
 
-  </main>
+</main>
 
-  <script>
 
-    // DATA DE INÍCIO DO NAMORO
-    // 19/11/2025 às 13:00
+<script>
 
-    const inicio = new Date(2025, 10, 19, 13, 0, 0);
+/* =================================
+   CRONÔMETRO DO NAMORO
+================================= */
 
-    function adicionarMeses(data, quantidade) {
+const inicio = new Date(2025, 10, 19, 13, 0, 0);
 
-      const resultado = new Date(data);
-      const diaOriginal = resultado.getDate();
+function adicionarMeses(data, quantidade) {
 
-      resultado.setDate(1);
-      resultado.setMonth(
-        resultado.getMonth() + quantidade
-      );
+  const resultado = new Date(data);
+  const diaOriginal = resultado.getDate();
 
-      const ultimoDia = new Date(
-        resultado.getFullYear(),
-        resultado.getMonth() + 1,
-        0
-      ).getDate();
+  resultado.setDate(1);
+  resultado.setMonth(
+    resultado.getMonth() + quantidade
+  );
 
-      resultado.setDate(
-        Math.min(diaOriginal, ultimoDia)
-      );
+  const ultimoDia = new Date(
+    resultado.getFullYear(),
+    resultado.getMonth() + 1,
+    0
+  ).getDate();
 
-      return resultado;
-    }
+  resultado.setDate(
+    Math.min(diaOriginal, ultimoDia)
+  );
 
-    function atualizarContador() {
+  return resultado;
+}
 
-      const agora = new Date();
+function atualizarContador() {
 
-      if (agora < inicio) {
+  const agora = new Date();
 
-        document.getElementById("anos").textContent = "0";
-        document.getElementById("meses").textContent = "0";
-        document.getElementById("dias").textContent = "0";
-        document.getElementById("horas").textContent = "00";
-        document.getElementById("minutos").textContent = "00";
-        document.getElementById("segundos").textContent = "00";
+  if (agora < inicio) return;
 
-        return;
-      }
+  let anos =
+    agora.getFullYear() - inicio.getFullYear();
 
-      let anos =
-        agora.getFullYear() - inicio.getFullYear();
+  let marco = adicionarMeses(inicio, anos * 12);
 
-      let marco = adicionarMeses(inicio, anos * 12);
+  if (marco > agora) {
+    anos--;
+    marco = adicionarMeses(inicio, anos * 12);
+  }
 
-      if (marco > agora) {
-        anos--;
-        marco = adicionarMeses(inicio, anos * 12);
-      }
+  let meses = 0;
 
-      let meses = 0;
+  while (adicionarMeses(marco, 1) <= agora) {
+    marco = adicionarMeses(marco, 1);
+    meses++;
+  }
 
-      while (adicionarMeses(marco, 1) <= agora) {
+  let restante =
+    agora.getTime() - marco.getTime();
 
-        marco = adicionarMeses(marco, 1);
-        meses++;
+  const dias = Math.floor(restante / 86400000);
 
-      }
+  restante %= 86400000;
 
-      let restante =
-        agora.getTime() - marco.getTime();
+  const horas = Math.floor(restante / 3600000);
 
-      const dias = Math.floor(
-        restante / 86400000
-      );
+  restante %= 3600000;
 
-      restante %= 86400000;
+  const minutos = Math.floor(restante / 60000);
 
-      const horas = Math.floor(
-        restante / 3600000
-      );
+  const segundos = Math.floor(
+    (restante % 60000) / 1000
+  );
 
-      restante %= 3600000;
+  document.getElementById("anos").textContent = anos;
+  document.getElementById("meses").textContent = meses;
+  document.getElementById("dias").textContent = dias;
 
-      const minutos = Math.floor(
-        restante / 60000
-      );
+  document.getElementById("horas").textContent =
+    String(horas).padStart(2, "0");
 
-      const segundos = Math.floor(
-        (restante % 60000) / 1000
-      );
+  document.getElementById("minutos").textContent =
+    String(minutos).padStart(2, "0");
 
-      document.getElementById("anos").textContent = anos;
+  document.getElementById("segundos").textContent =
+    String(segundos).padStart(2, "0");
+}
 
-      document.getElementById("meses").textContent = meses;
+atualizarContador();
+setInterval(atualizarContador, 1000);
 
-      document.getElementById("dias").textContent = dias;
 
-      document.getElementById("horas").textContent =
-        String(horas).padStart(2, "0");
+/* =================================
+   SURPRESA: INFECTADO PELO AMOR
+================================= */
 
-      document.getElementById("minutos").textContent =
-        String(minutos).padStart(2, "0");
+const surpresa = document.getElementById("surpresa");
 
-      document.getElementById("segundos").textContent =
-        String(segundos).padStart(2, "0");
+let surpresaFechada = false;
 
-    }
+// Espera cinco segundos para revelar a surpresa.
 
-    atualizarContador();
+setTimeout(() => {
 
-    setInterval(atualizarContador, 1000);
+  if (surpresaFechada) return;
 
-  </script>
+  surpresa.classList.add("modo-amor");
+
+  criarCoracoes();
+
+}, 5000);
+
+
+// Cria vários corações explodindo pela tela.
+
+function criarCoracoes() {
+
+  const area = document.getElementById("chuva-coracoes");
+
+  const simbolos = ["❤️", "💕", "💖", "💗", "💘", "💝"];
+
+  for (let i = 0; i < 45; i++) {
+
+    const coracao = document.createElement("span");
+
+    coracao.className = "coracao-voando";
+
+    coracao.textContent =
+      simbolos[i % simbolos.length];
+
+    const angulo = Math.random() * Math.PI * 2;
+    const distancia = 100 + Math.random() * 450;
+
+    const dx = Math.cos(angulo) * distancia;
+    const dy = Math.sin(angulo) * distancia;
+
+    coracao.style.setProperty("--dx", dx + "px");
+    coracao.style.setProperty("--dy", dy + "px");
+
+    coracao.style.fontSize =
+      (18 + Math.random() * 30) + "px";
+
+    coracao.style.animationDelay =
+      (Math.random() * 0.7) + "s";
+
+    area.appendChild(coracao);
+  }
+}
+
+
+// Botão para revelar o site original.
+
+function fecharSurpresa() {
+
+  surpresaFechada = true;
+
+  surpresa.classList.add("escondida");
+
+}
+
+</script>
 
 </body>
 </html>
