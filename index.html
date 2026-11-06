@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff5f7">
+  <title>Nossa História ❤️</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fff5f7;
+      color: #51343d;
+      text-align: center;
+    }
+
+    header {
+      padding: 45px 18px 25px;
+    }
+
+    .coracao {
+      font-size: 38px;
+    }
+
+    h1 {
+      font-family: Georgia, serif;
+      font-size: 36px;
+      margin: 12px 0;
+    }
+
+    .subtitulo {
+      color: #986c79;
+      line-height: 1.6;
+    }
+
+    main {
+      max-width: 700px;
+      margin: auto;
+      padding: 0 16px 40px;
+    }
+
+    section {
+      background: white;
+      padding: 24px 16px;
+      margin: 18px 0;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px #713b4b12;
+    }
+
+    h2 {
+      font-family: Georgia, serif;
+      color: #a84f6b;
+    }
+
+    #contador {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .tempo {
+      background: #fff0f4;
+      padding: 15px 5px;
+      border-radius: 12px;
+    }
+
+    .numero {
+      display: block;
+      font-size: 26px;
+      font-weight: bold;
+      color: #b34467;
+    }
+
+    .legenda {
+      font-size: 13px;
+      color: #8c6873;
+    }
+
+    .foto {
+      width: 100%;
+      max-height: 480px;
+      object-fit: cover;
+      border-radius: 14px;
+      margin-top: 12px;
+    }
+
+    .mensagem {
+      line-height: 1.8;
+      font-size: 16px;
+      white-space: pre-line;
+    }
+
+    footer {
+      padding: 20px;
+      color: #986c79;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="coracao">❤️</div>
+    <h1>Nossa História</h1>
+    <p class="subtitulo">
+      Desde que nossas vidas se tornaram uma só história.
+    </p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Nosso tempo juntos</h2>
+      <p class="subtitulo">Cada segundo com você é especial.</p>
+
+      <div id="contador">
+        <div class="tempo">
+          <span class="numero" id="anos">0</span>
+          <span class="legenda">Anos</span>
+        </div>
+        <div class="tempo">
+          <span class="numero" id="meses">0</span>
+          <span class="legenda">Meses</span>
+        </div>
+        <div class="tempo">
+          <span class="numero" id="dias">0</span>
+          <span class="legenda">Dias</span>
+        </div>
+        <div class="tempo">
+          <span class="numero" id="horas">00</span>
+          <span class="legenda">Horas</span>
+        </div>
+        <div class="tempo">
+          <span class="numero" id="minutos">00</span>
+          <span class="legenda">Minutos</span>
+        </div>
+        <div class="tempo">
+          <span class="numero" id="segundos">00</span>
+          <span class="legenda">Segundos</span>
+        </div>
+      </div>
+
+      <p class="subtitulo">
+        Desde 19 de novembro de 2025, às 13:00 ❤️
+      </p>
+    </section>
+
+    <section>
+      <h2>Nossas lembranças 📸</h2>
+
+      <!-- Coloque suas fotos na mesma pasta deste arquivo -->
+      <img class="foto" src="foto1.jpg"
+           alt="Uma lembrança nossa">
+      <p class="subtitulo">Um dos meus momentos favoritos com você.</p>
+
+      <img class="foto" src="foto2.jpg"
+           alt="Mais uma lembrança nossa">
+      <p class="subtitulo">Quero viver muitos outros momentos assim.</p>
+
+      <img class="foto" src="foto3.jpg"
+           alt="Mais uma foto nossa">
+      <p class="subtitulo">Você faz parte das minhas melhores lembranças.</p>
+    </section>
+
+    <section>
+      <h2>Uma mensagem para você 💌</h2>
+      <p class="mensagem">Desde o dia em que começamos a namorar,
+você se tornou uma parte muito especial da minha vida.
+
+Quero continuar criando lembranças,
+compartilhando sorrisos e vivendo momentos ao seu lado.
+
+Obrigado por fazer parte da minha história.
+Eu te amo! ❤️</p>
+    </section>
+
+    <footer>
+      Feito com amor, especialmente para você. ❤️
+    </footer>
+  </main>
+
+  <script>
+    // Data de início: 19/11/2025 às 13:00,
+    // no horário local do dispositivo.
+    const inicio = new Date(2025, 10, 19, 13, 0, 0);
+
+    function adicionarMeses(data, quantidade) {
+      const resultado = new Date(data);
+      const diaOriginal = resultado.getDate();
+
+      resultado.setDate(1);
+      resultado.setMonth(resultado.getMonth() + quantidade);
+
+      const ultimoDia = new Date(
+        resultado.getFullYear(),
+        resultado.getMonth() + 1,
+        0
+      ).getDate();
+
+      resultado.setDate(Math.min(diaOriginal, ultimoDia));
+      return resultado;
+    }
+
+    function atualizarContador() {
+      const agora = new Date();
+
+      if (agora < inicio) {
+        document.getElementById("anos").textContent = "0";
+        document.getElementById("meses").textContent = "0";
+        document.getElementById("dias").textContent = "0";
+        document.getElementById("horas").textContent = "00";
+        document.getElementById("minutos").textContent = "00";
+        document.getElementById("segundos").textContent = "00";
+        return;
+      }
+
+      let anos = agora.getFullYear() - inicio.getFullYear();
+      let marco = adicionarMeses(inicio, anos * 12);
+
+      if (marco > agora) {
+        anos--;
+        marco = adicionarMeses(inicio, anos * 12);
+      }
+
+      let meses = 0;
+
+      while (adicionarMeses(marco, 1) <= agora) {
+        marco = adicionarMeses(marco, 1);
+        meses++;
+      }
+
+      let restante = agora.getTime() - marco.getTime();
+
+      const dias = Math.floor(restante / 86400000);
+      restante %= 86400000;
+
+      const horas = Math.floor(restante / 3600000);
+      restante %= 3600000;
+
+      const minutos = Math.floor(restante / 60000);
+      const segundos = Math.floor((restante % 60000) / 1000);
+
+      document.getElementById("anos").textContent = anos;
+      document.getElementById("meses").textContent = meses;
+      document.getElementById("dias").textContent = dias;
+      document.getElementById("horas").textContent =
+        String(horas).padStart(2, "0");
+      document.getElementById("minutos").textContent =
+        String(minutos).padStart(2, "0");
+      document.getElementById("segundos").textContent =
+        String(segundos).padStart(2, "0");
+    }
+
+    atualizarContador();
+    setInterval(atualizarContador, 1000);
+  </script>
+</body>
+</html>
