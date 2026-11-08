@@ -1,14 +1,16 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#fff5f7">
 
 <title>Nossa História ❤️</title>
 
 <style>
+
 * {
   box-sizing: border-box;
 }
@@ -104,246 +106,91 @@ footer {
   font-size: 13px;
 }
 
-/* =================================
-   SURPRESA DE ALERTA
-================================= */
+/* BOTÃO FLUTUANTE DE MÚSICA */
 
-#surpresa {
+#botao-musica {
   position: fixed;
-  inset: 0;
-  z-index: 99999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  padding: 20px;
-  background: #ffe500;
-  color: #171717;
-  transition: background 0.8s ease;
-}
-
-#surpresa.escondida {
-  display: none;
-}
-
-/* ALERTA AMARELO */
-
-#alerta {
-  width: 100%;
-  max-width: 650px;
-  animation: piscar 0.8s infinite alternate;
-}
-
-.simbolo-alerta {
-  font-size: clamp(90px, 22vw, 170px);
-  line-height: 1.2;
-}
-
-.titulo-alerta {
-  font-size: clamp(35px, 10vw, 75px);
-  font-weight: 1000;
-  text-transform: uppercase;
-  margin: 15px 0;
-}
-
-.texto-alerta {
-  font-size: clamp(17px, 4vw, 25px);
-  font-weight: bold;
-}
-
-@keyframes piscar {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0.25;
-  }
-}
-
-/* TRANSFORMAÇÃO EM AMOR */
-
-#amor {
-  display: none;
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-width: 650px;
-  animation: aparecer 1s ease forwards;
-}
-
-#surpresa.modo-amor {
-  background: linear-gradient(135deg, #ffb6ce, #ffe1eb, #ff9fc1);
-  color: #a52354;
-}
-
-#surpresa.modo-amor #alerta {
-  display: none;
-}
-
-#surpresa.modo-amor #amor {
-  display: block;
-}
-
-@keyframes aparecer {
-  from {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.icone-amor {
-  font-size: clamp(75px, 18vw, 130px);
-  animation: pulsar 0.9s infinite alternate;
-}
-
-@keyframes pulsar {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.18);
-  }
-}
-
-.titulo-amor {
-  font-family: Georgia, serif;
-  font-size: clamp(36px, 9vw, 65px);
-  font-weight: bold;
-  line-height: 1.15;
-  margin: 15px 0;
-}
-
-.texto-amor {
-  font-size: clamp(17px, 4vw, 23px);
-  line-height: 1.6;
-  padding: 0 10px;
-}
-
-.botao-amor {
+  right: 20px;
+  bottom: 20px;
+  width: 58px;
+  height: 58px;
+  border: none;
+  border-radius: 50%;
   background: #bd3267;
   color: white;
-  border: none;
-  border-radius: 40px;
-  padding: 18px 28px;
-  font-size: 17px;
-  font-weight: bold;
+  font-size: 25px;
   cursor: pointer;
-  margin-top: 25px;
-  box-shadow: 0 5px 20px #bd326744;
-  transition: transform 0.2s;
+  z-index: 1000;
+  box-shadow: 0 4px 18px #00000030;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, background 0.2s;
 }
 
-.botao-amor:active {
-  transform: scale(0.94);
+#botao-musica:active {
+  transform: scale(0.88);
 }
 
-/* EXPLOSÃO DE CORAÇÕES */
-
-#chuva-coracoes {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 1;
+#botao-musica.tocando {
+  animation: pulsar-musica 2s infinite;
 }
 
-.coracao-voando {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  font-size: 30px;
+@keyframes pulsar-musica {
+  0%, 100% {
+    box-shadow: 0 4px 18px #bd326755;
+  }
+
+  50% {
+    box-shadow: 0 4px 28px #bd3267aa;
+  }
+}
+
+#status-musica {
+  position: fixed;
+  right: 18px;
+  bottom: 87px;
+  z-index: 1000;
+  background: #51343d;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 12px;
   opacity: 0;
-  animation: explodir 2.8s ease-out forwards;
+  pointer-events: none;
+  transition: opacity 0.3s;
 }
 
-@keyframes explodir {
-  0% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
-  }
-  35% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform:
-      translate(
-        calc(-50% + var(--dx)),
-        calc(-50% + var(--dy))
-      )
-      scale(1.5)
-      rotate(360deg);
-  }
+#status-musica.visivel {
+  opacity: 1;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  #alerta, .icone-amor, .coracao-voando {
-    animation-duration: 2s;
-  }
-}
 </style>
 </head>
 
 <body>
 
-<!-- SURPRESA QUE APARECE AO ENTRAR -->
+<!-- MÚSICA DE FUNDO -->
 
-<div id="surpresa">
+<audio id="musica" loop preload="auto">
+  <source src="lofi.mp3" type="audio/mpeg">
+</audio>
 
-  <div id="chuva-coracoes"></div>
+<button
+  id="botao-musica"
+  type="button"
+  aria-label="Ativar música"
+  title="Ativar ou pausar música"
+>
+  🔇
+</button>
 
-  <!-- PRIMEIRA TELA: ALERTA -->
-
-  <div id="alerta">
-
-    <div class="simbolo-alerta">⚠️</div>
-
-    <div class="titulo-alerta">
-      VOCÊ FOI INFECTADO!
-    </div>
-
-    <div class="texto-alerta">
-      ALERTA! UMA AMEAÇA FOI DETECTADA!
-    </div>
-
-    <p>
-      Verificando seu dispositivo...
-    </p>
-
-  </div>
-
-  <!-- SEGUNDA TELA: AMOR -->
-
-  <div id="amor">
-
-    <div class="icone-amor">❤️</div>
-
-    <div class="titulo-amor">
-      VOCÊ FOI INFECTADO PELO AMOR!
-    </div>
-
-    <p class="texto-amor">
-      Não existe antivírus capaz de remover
-      esse sentimento. ❤️
-
-      Você agora está oficialmente infectada
-      por uma pessoa que te ama muito!
-    </p>
-
-    <button class="botao-amor" onclick="fecharSurpresa()">
-      VER MAIS SOBRE ❤️
-    </button>
-
-  </div>
-
+<div id="status-musica">
+  Música pausada
 </div>
 
 
-<!-- SITE ORIGINAL -->
+<!-- CABEÇALHO -->
 
 <header>
 
@@ -356,6 +203,7 @@ footer {
   </p>
 
 </header>
+
 
 <main>
 
@@ -416,25 +264,31 @@ footer {
 
     <h2>Nossas lembranças 📸</h2>
 
-    <img class="foto"
-         src="foto1.jpeg"
-         alt="Uma lembrança nossa">
+    <img
+      class="foto"
+      src="foto1.jpeg"
+      alt="Uma lembrança nossa"
+    >
 
     <p class="subtitulo">
       Um dos meus momentos favoritos com você.
     </p>
 
-    <img class="foto"
-         src="foto2.jpeg"
-         alt="Mais uma lembrança nossa">
+    <img
+      class="foto"
+      src="foto2.jpeg"
+      alt="Mais uma lembrança nossa"
+    >
 
     <p class="subtitulo">
       Quero viver muitos outros momentos assim.
     </p>
 
-    <img class="foto"
-         src="foto3.jpeg"
-         alt="Mais uma foto nossa">
+    <img
+      class="foto"
+      src="foto3.jpeg"
+      alt="Mais uma foto nossa"
+    >
 
     <p class="subtitulo">
       Você faz parte das minhas melhores lembranças.
@@ -460,6 +314,7 @@ Eu te amo! ❤️</p>
 
   </section>
 
+
   <footer>
     Feito com amor, especialmente para você. ❤️
   </footer>
@@ -481,6 +336,7 @@ function adicionarMeses(data, quantidade) {
   const diaOriginal = resultado.getDate();
 
   resultado.setDate(1);
+
   resultado.setMonth(
     resultado.getMonth() + quantidade
   );
@@ -510,36 +366,50 @@ function atualizarContador() {
   let marco = adicionarMeses(inicio, anos * 12);
 
   if (marco > agora) {
+
     anos--;
+
     marco = adicionarMeses(inicio, anos * 12);
+
   }
 
   let meses = 0;
 
   while (adicionarMeses(marco, 1) <= agora) {
+
     marco = adicionarMeses(marco, 1);
+
     meses++;
+
   }
 
   let restante =
     agora.getTime() - marco.getTime();
 
-  const dias = Math.floor(restante / 86400000);
+  const dias = Math.floor(
+    restante / 86400000
+  );
 
   restante %= 86400000;
 
-  const horas = Math.floor(restante / 3600000);
+  const horas = Math.floor(
+    restante / 3600000
+  );
 
   restante %= 3600000;
 
-  const minutos = Math.floor(restante / 60000);
+  const minutos = Math.floor(
+    restante / 60000
+  );
 
   const segundos = Math.floor(
     (restante % 60000) / 1000
   );
 
   document.getElementById("anos").textContent = anos;
+
   document.getElementById("meses").textContent = meses;
+
   document.getElementById("dias").textContent = dias;
 
   document.getElementById("horas").textContent =
@@ -550,79 +420,145 @@ function atualizarContador() {
 
   document.getElementById("segundos").textContent =
     String(segundos).padStart(2, "0");
+
 }
 
 atualizarContador();
+
 setInterval(atualizarContador, 1000);
 
 
 /* =================================
-   SURPRESA: INFECTADO PELO AMOR
+   CONTROLE DA MÚSICA
 ================================= */
 
-const surpresa = document.getElementById("surpresa");
+const musica = document.getElementById("musica");
 
-let surpresaFechada = false;
+const botao = document.getElementById("botao-musica");
 
-// Espera cinco segundos para revelar a surpresa.
+const statusMusica = document.getElementById("status-musica");
 
-setTimeout(() => {
+let tocando = false;
 
-  if (surpresaFechada) return;
+function atualizarBotao() {
 
-  surpresa.classList.add("modo-amor");
+  if (tocando && !musica.paused) {
 
-  criarCoracoes();
+    botao.textContent = "🔊";
 
-}, 5000);
+    botao.classList.add("tocando");
 
+    botao.setAttribute("aria-label", "Pausar música");
 
-// Cria vários corações explodindo pela tela.
+  } else {
 
-function criarCoracoes() {
+    botao.textContent = "🔇";
 
-  const area = document.getElementById("chuva-coracoes");
+    botao.classList.remove("tocando");
 
-  const simbolos = ["❤️", "💕", "💖", "💗", "💘", "💝"];
+    botao.setAttribute("aria-label", "Ativar música");
 
-  for (let i = 0; i < 45; i++) {
-
-    const coracao = document.createElement("span");
-
-    coracao.className = "coracao-voando";
-
-    coracao.textContent =
-      simbolos[i % simbolos.length];
-
-    const angulo = Math.random() * Math.PI * 2;
-    const distancia = 100 + Math.random() * 450;
-
-    const dx = Math.cos(angulo) * distancia;
-    const dy = Math.sin(angulo) * distancia;
-
-    coracao.style.setProperty("--dx", dx + "px");
-    coracao.style.setProperty("--dy", dy + "px");
-
-    coracao.style.fontSize =
-      (18 + Math.random() * 30) + "px";
-
-    coracao.style.animationDelay =
-      (Math.random() * 0.7) + "s";
-
-    area.appendChild(coracao);
   }
-}
-
-
-// Botão para revelar o site original.
-
-function fecharSurpresa() {
-
-  surpresaFechada = true;
-
-  surpresa.classList.add("escondida");
 
 }
+
+function mostrarStatus(mensagem) {
+
+  statusMusica.textContent = mensagem;
+
+  statusMusica.classList.add("visivel");
+
+  clearTimeout(statusMusica.timer);
+
+  statusMusica.timer = setTimeout(() => {
+
+    statusMusica.classList.remove("visivel");
+
+  }, 1800);
+
+}
+
+async function alternarMusica() {
+
+  if (musica.paused) {
+
+    try {
+
+      await musica.play();
+
+      tocando = true;
+
+      atualizarBotao();
+
+      mostrarStatus("♪ Música tocando");
+
+    } catch (erro) {
+
+      tocando = false;
+
+      atualizarBotao();
+
+      mostrarStatus("Não foi possível iniciar a música");
+
+    }
+
+  } else {
+
+    musica.pause();
+
+    tocando = false;
+
+    atualizarBotao();
+
+    mostrarStatus("Música pausada");
+
+  }
+
+}
+
+botao.addEventListener("click", alternarMusica);
+
+musica.addEventListener("play", () => {
+
+  tocando = true;
+
+  atualizarBotao();
+
+});
+
+musica.addEventListener("pause", () => {
+
+  tocando = false;
+
+  atualizarBotao();
+
+});
+
+musica.addEventListener("error", () => {
+
+  tocando = false;
+
+  atualizarBotao();
+
+  mostrarStatus("Confira o arquivo lofi.mp3");
+
+});
+
+atualizarBotao();
+
+// Tenta iniciar automaticamente.
+// Alguns navegadores bloqueiam áudio sem interação.
+// Nesse caso, basta tocar no botão de música.
+
+musica.volume = 0.35;
+
+musica.play().catch(() => {
+
+  tocando = false;
+
+  atualizarBotao();
+
+});
 
 </script>
 
