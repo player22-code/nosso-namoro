@@ -1,308 +1,80 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#fff5f7">
-
 <title>Nossa História ❤️</title>
-
 <style>
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #fff5f7;
-  color: #51343d;
-  text-align: center;
-}
-
-header {
-  padding: 45px 18px 25px;
-}
-
-.coracao {
-  font-size: 38px;
-}
-
-h1 {
-  font-family: Georgia, serif;
-  font-size: 36px;
-  margin: 12px 0;
-}
-
-.subtitulo {
-  color: #986c79;
-  line-height: 1.6;
-}
-
-main {
-  max-width: 700px;
-  margin: auto;
-  padding: 0 16px 40px;
-}
-
-section {
-  background: white;
-  padding: 24px 16px;
-  margin: 18px 0;
-  border-radius: 20px;
-  box-shadow: 0 5px 20px #713b4b12;
-}
-
-h2 {
-  font-family: Georgia, serif;
-  color: #a84f6b;
-}
-
-#contador {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.tempo {
-  background: #fff0f4;
-  padding: 15px 5px;
-  border-radius: 12px;
-}
-
-.numero {
-  display: block;
-  font-size: 26px;
-  font-weight: bold;
-  color: #b34467;
-}
-
-.legenda {
-  font-size: 13px;
-  color: #8c6873;
-}
-
-.foto {
-  width: 100%;
-  max-height: 480px;
-  object-fit: cover;
-  border-radius: 14px;
-  margin-top: 12px;
-}
-
-.mensagem {
-  line-height: 1.8;
-  font-size: 16px;
-  white-space: pre-line;
-}
-
-footer {
-  padding: 20px;
-  color: #986c79;
-  font-size: 13px;
-}
-
-/* BOTÃO FLUTUANTE DE MÚSICA */
-
-#botao-musica {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  width: 58px;
-  height: 58px;
-  border: none;
-  border-radius: 50%;
-  background: #bd3267;
-  color: white;
-  font-size: 25px;
-  cursor: pointer;
-  z-index: 1000;
-  box-shadow: 0 4px 18px #00000030;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s, background 0.2s;
-}
-
-#botao-musica:active {
-  transform: scale(0.88);
-}
-
-#botao-musica.tocando {
-  animation: pulsar-musica 2s infinite;
-}
-
-@keyframes pulsar-musica {
-  0%, 100% {
-    box-shadow: 0 4px 18px #bd326755;
-  }
-
-  50% {
-    box-shadow: 0 4px 28px #bd3267aa;
-  }
-}
-
-#status-musica {
-  position: fixed;
-  right: 18px;
-  bottom: 87px;
-  z-index: 1000;
-  background: #51343d;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-}
-
-#status-musica.visivel {
-  opacity: 1;
-}
-
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#fff5f7;color:#51343d;text-align:center}
+header{padding:45px 18px 25px}
+.coracao{font-size:38px}
+h1{font-family:Georgia,serif;font-size:36px;margin:12px 0}
+.subtitulo{color:#986c79;line-height:1.6}
+main{max-width:700px;margin:auto;padding:0 16px 40px}
+section{background:white;padding:24px 16px;margin:18px 0;border-radius:20px;box-shadow:0 5px 20px #713b4b12}
+h2{font-family:Georgia,serif;color:#a84f6b}
+#contador{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:20px}
+.tempo{background:#fff0f4;padding:15px 5px;border-radius:12px}
+.numero{display:block;font-size:26px;font-weight:bold;color:#b34467}
+.legenda{font-size:13px;color:#8c6873}
+.foto{width:100%;max-height:480px;object-fit:cover;border-radius:14px;margin-top:12px}
+.mensagem{line-height:1.8;font-size:16px;white-space:pre-line}
+footer{padding:20px;color:#986c79;font-size:13px}
+#galeria{display:grid;gap:22px}
+.item-foto{position:relative}
+.item-foto img{display:block}
+.botao-excluir{margin-top:10px;border:none;border-radius:20px;background:#fff0f4;color:#a83258;padding:10px 18px;font-size:14px;cursor:pointer}
+#adicionar-foto{margin-top:18px;border:none;border-radius:25px;padding:13px 22px;background:#bd3267;color:white;font-size:15px;cursor:pointer}
+#adicionar-foto:disabled{opacity:.6;cursor:wait}
+#arquivo-foto{display:none}
+#aviso-galeria{color:#986c79;font-size:13px;line-height:1.5;margin-top:14px}
+#botao-musica{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border:none;border-radius:50%;background:#bd3267;color:white;font-size:25px;cursor:pointer;z-index:1000;box-shadow:0 4px 18px #00000030;display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s}
+#botao-musica:active{transform:scale(.88)}
+#botao-musica.tocando{animation:pulsar-musica 2s infinite}
+@keyframes pulsar-musica{0%,100%{box-shadow:0 4px 18px #bd326755}50%{box-shadow:0 4px 28px #bd3267aa}}
+#status-musica{position:fixed;right:18px;bottom:87px;z-index:1000;background:#51343d;color:white;padding:8px 12px;border-radius:20px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .3s}
+#status-musica.visivel{opacity:1}
+@media(max-width:420px){h1{font-size:32px}section{padding:22px 13px}}
 </style>
 </head>
-
 <body>
-
-<!-- MÚSICA DE FUNDO -->
-
-<audio id="musica" loop preload="auto">
-  <source src="lofi.mp3" type="audio/mpeg">
-</audio>
-
-<button
-  id="botao-musica"
-  type="button"
-  aria-label="Ativar música"
-  title="Ativar ou pausar música"
->
-  🔇
-</button>
-
-<div id="status-musica">
-  Música pausada
-</div>
-
-
-<!-- CABEÇALHO -->
+<audio id="musica" loop preload="auto"><source src="lofi.mp3" type="audio/mpeg"></audio>
+<button id="botao-musica" type="button" aria-label="Ativar música" title="Ativar ou pausar música">🔇</button>
+<div id="status-musica">Música pausada</div>
 
 <header>
-
   <div class="coracao">❤️</div>
-
   <h1>Nossa História</h1>
-
-  <p class="subtitulo">
-    Desde que nossas vidas se tornaram uma só história.
-  </p>
-
+  <p class="subtitulo">Desde que nossas vidas se tornaram uma só história.</p>
 </header>
 
-
 <main>
-
-  <!-- CRONÔMETRO -->
-
   <section>
-
     <h2>Nosso tempo juntos</h2>
-
-    <p class="subtitulo">
-      Cada segundo com você é especial.
-    </p>
-
+    <p class="subtitulo">Cada segundo com você é especial.</p>
     <div id="contador">
-
-      <div class="tempo">
-        <span class="numero" id="anos">0</span>
-        <span class="legenda">Anos</span>
-      </div>
-
-      <div class="tempo">
-        <span class="numero" id="meses">0</span>
-        <span class="legenda">Meses</span>
-      </div>
-
-      <div class="tempo">
-        <span class="numero" id="dias">0</span>
-        <span class="legenda">Dias</span>
-      </div>
-
-      <div class="tempo">
-        <span class="numero" id="horas">00</span>
-        <span class="legenda">Horas</span>
-      </div>
-
-      <div class="tempo">
-        <span class="numero" id="minutos">00</span>
-        <span class="legenda">Minutos</span>
-      </div>
-
-      <div class="tempo">
-        <span class="numero" id="segundos">00</span>
-        <span class="legenda">Segundos</span>
-      </div>
-
+      <div class="tempo"><span class="numero" id="anos">0</span><span class="legenda">Anos</span></div>
+      <div class="tempo"><span class="numero" id="meses">0</span><span class="legenda">Meses</span></div>
+      <div class="tempo"><span class="numero" id="dias">0</span><span class="legenda">Dias</span></div>
+      <div class="tempo"><span class="numero" id="horas">00</span><span class="legenda">Horas</span></div>
+      <div class="tempo"><span class="numero" id="minutos">00</span><span class="legenda">Minutos</span></div>
+      <div class="tempo"><span class="numero" id="segundos">00</span><span class="legenda">Segundos</span></div>
     </div>
-
-    <p class="subtitulo">
-      Desde 19 de novembro de 2025, às 13:00 ❤️
-    </p>
-
+    <p class="subtitulo">Desde 19 de novembro de 2025, às 13:00 ❤️</p>
   </section>
 
-
-  <!-- FOTOS -->
-
   <section>
-
     <h2>Nossas lembranças 📸</h2>
-
-    <img
-      class="foto"
-      src="foto1.jpeg"
-      alt="Uma lembrança nossa"
-    >
-
-    <p class="subtitulo">
-      Um dos meus momentos favoritos com você.
-    </p>
-
-    <img
-      class="foto"
-      src="foto2.jpeg"
-      alt="Mais uma lembrança nossa"
-    >
-
-    <p class="subtitulo">
-      Quero viver muitos outros momentos assim.
-    </p>
-
-    <img
-      class="foto"
-      src="foto3.jpeg"
-      alt="Mais uma foto nossa"
-    >
-
-    <p class="subtitulo">
-      Você faz parte das minhas melhores lembranças.
-    </p>
-
+    <div id="galeria"><p class="subtitulo">Carregando nossas lembranças...</p></div>
+    <button id="adicionar-foto" type="button">＋ Adicionar foto</button>
+    <input id="arquivo-foto" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+    <p id="aviso-galeria">As fotos são compartilhadas com todos que visitam este site. ❤️</p>
   </section>
 
-
-  <!-- MENSAGEM -->
-
   <section>
-
     <h2>Uma mensagem para você 💌</h2>
-
     <p class="mensagem">Desde o dia em que começamos a namorar,
 você se tornou uma parte muito especial da minha vida.
 
@@ -311,256 +83,269 @@ compartilhando sorrisos e vivendo momentos ao seu lado.
 
 Obrigado por fazer parte da minha história.
 Eu te amo! ❤️</p>
-
   </section>
-
-
-  <footer>
-    Feito com amor, especialmente para você. ❤️
-  </footer>
-
+  <footer>Feito com amor, especialmente para você. ❤️</footer>
 </main>
 
-
 <script>
+/* CONFIGURAÇÃO DO SUPABASE */
+const SUPABASE_URL = "https://xttqhfaapgimaxfendzr.supabase.co";
+const SUPABASE_KEY = "sb_publishable_S-9cgYjs3tAlrb0_Z21pvg_PhQlr-GI";
+const BUCKET = "fotos";
+const FUNCTION_URL = SUPABASE_URL + "/functions/v1/gerenciar-fotos";
 
-/* =================================
-   CRONÔMETRO DO NAMORO
-================================= */
+const galeria = document.getElementById("galeria");
+const aviso = document.getElementById("aviso-galeria");
 
+/* CRONÔMETRO */
 const inicio = new Date(2025, 10, 19, 13, 0, 0);
 
 function adicionarMeses(data, quantidade) {
-
   const resultado = new Date(data);
   const diaOriginal = resultado.getDate();
-
   resultado.setDate(1);
-
-  resultado.setMonth(
-    resultado.getMonth() + quantidade
-  );
-
-  const ultimoDia = new Date(
-    resultado.getFullYear(),
-    resultado.getMonth() + 1,
-    0
-  ).getDate();
-
-  resultado.setDate(
-    Math.min(diaOriginal, ultimoDia)
-  );
-
+  resultado.setMonth(resultado.getMonth() + quantidade);
+  const ultimoDia = new Date(resultado.getFullYear(), resultado.getMonth() + 1, 0).getDate();
+  resultado.setDate(Math.min(diaOriginal, ultimoDia));
   return resultado;
 }
 
 function atualizarContador() {
-
   const agora = new Date();
-
   if (agora < inicio) return;
-
-  let anos =
-    agora.getFullYear() - inicio.getFullYear();
-
+  let anos = agora.getFullYear() - inicio.getFullYear();
   let marco = adicionarMeses(inicio, anos * 12);
-
   if (marco > agora) {
-
     anos--;
-
     marco = adicionarMeses(inicio, anos * 12);
-
   }
-
   let meses = 0;
-
   while (adicionarMeses(marco, 1) <= agora) {
-
     marco = adicionarMeses(marco, 1);
-
     meses++;
-
   }
-
-  let restante =
-    agora.getTime() - marco.getTime();
-
-  const dias = Math.floor(
-    restante / 86400000
-  );
-
+  let restante = agora.getTime() - marco.getTime();
+  const dias = Math.floor(restante / 86400000);
   restante %= 86400000;
-
-  const horas = Math.floor(
-    restante / 3600000
-  );
-
+  const horas = Math.floor(restante / 3600000);
   restante %= 3600000;
-
-  const minutos = Math.floor(
-    restante / 60000
-  );
-
-  const segundos = Math.floor(
-    (restante % 60000) / 1000
-  );
-
+  const minutos = Math.floor(restante / 60000);
+  const segundos = Math.floor((restante % 60000) / 1000);
   document.getElementById("anos").textContent = anos;
-
   document.getElementById("meses").textContent = meses;
-
   document.getElementById("dias").textContent = dias;
-
-  document.getElementById("horas").textContent =
-    String(horas).padStart(2, "0");
-
-  document.getElementById("minutos").textContent =
-    String(minutos).padStart(2, "0");
-
-  document.getElementById("segundos").textContent =
-    String(segundos).padStart(2, "0");
-
+  document.getElementById("horas").textContent = String(horas).padStart(2, "0");
+  document.getElementById("minutos").textContent = String(minutos).padStart(2, "0");
+  document.getElementById("segundos").textContent = String(segundos).padStart(2, "0");
 }
-
 atualizarContador();
-
 setInterval(atualizarContador, 1000);
 
+/* GALERIA */
+function urlDaFoto(nome) {
+  return SUPABASE_URL + "/storage/v1/object/public/" + BUCKET + "/" +
+    nome.split("/").map(encodeURIComponent).join("/");
+}
 
-/* =================================
-   CONTROLE DA MÚSICA
-================================= */
+function mostrarErro(mensagem) {
+  aviso.textContent = mensagem;
+}
 
+async function carregarFotos() {
+  galeria.innerHTML = "<p class='subtitulo'>Carregando nossas lembranças...</p>";
+  try {
+    const resposta = await fetch(SUPABASE_URL + "/storage/v1/object/list/" + BUCKET, {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + SUPABASE_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        prefix: "",
+        limit: 100,
+        offset: 0,
+        sortBy: { column: "created_at", order: "asc" }
+      })
+    });
+    if (!resposta.ok) {
+      const detalhe = await resposta.text();
+      throw new Error("Falha ao listar fotos (" + resposta.status + "). " + detalhe);
+    }
+    const arquivos = await resposta.json();
+    galeria.innerHTML = "";
+    const fotos = arquivos.filter(item =>
+      item.name && /\.(jpe?g|png|webp|gif)$/i.test(item.name)
+    );
+    if (fotos.length === 0) {
+      galeria.innerHTML = "<p class='subtitulo'>Nosso mural está esperando novas lembranças. ❤️</p>";
+      return;
+    }
+    fotos.forEach(item => {
+      const caminho = item.name;
+      const bloco = document.createElement("div");
+      bloco.className = "item-foto";
+      const imagem = document.createElement("img");
+      imagem.className = "foto";
+      imagem.src = urlDaFoto(caminho);
+      imagem.alt = "Uma lembrança nossa";
+      imagem.loading = "lazy";
+      const botaoExcluir = document.createElement("button");
+      botaoExcluir.className = "botao-excluir";
+      botaoExcluir.type = "button";
+      botaoExcluir.textContent = "Excluir foto";
+      botaoExcluir.addEventListener("click", () => excluirFoto(caminho));
+      bloco.appendChild(imagem);
+      bloco.appendChild(botaoExcluir);
+      galeria.appendChild(bloco);
+    });
+    mostrarErro("As fotos são compartilhadas com todos que visitam este site. ❤️");
+  } catch (erro) {
+    galeria.innerHTML = "<p class='subtitulo'>Não foi possível carregar as fotos.</p>";
+    mostrarErro(erro.message);
+  }
+}
+
+async function chamarFuncao(formulario) {
+  const resposta = await fetch(FUNCTION_URL, {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": "Bearer " + SUPABASE_KEY
+    },
+    body: formulario
+  });
+  const resultado = await resposta.json();
+  if (!resposta.ok) {
+    throw new Error(resultado.error || "Não foi possível concluir a operação.");
+  }
+  return resultado;
+}
+
+/* ADICIONAR FOTO */
+const botaoAdicionar = document.getElementById("adicionar-foto");
+const seletorArquivo = document.getElementById("arquivo-foto");
+
+botaoAdicionar.addEventListener("click", () => seletorArquivo.click());
+
+seletorArquivo.addEventListener("change", async () => {
+  const arquivo = seletorArquivo.files[0];
+  if (!arquivo) return;
+
+  const tiposPermitidos = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+  if (!tiposPermitidos.includes(arquivo.type)) {
+    alert("Envie uma imagem JPG, PNG, WEBP ou GIF.");
+    seletorArquivo.value = "";
+    return;
+  }
+  if (arquivo.size > 10 * 1024 * 1024) {
+    alert("A foto deve ter no máximo 10 MB.");
+    seletorArquivo.value = "";
+    return;
+  }
+
+  const senha = prompt("Digite a senha para adicionar uma foto:");
+  if (senha === null) {
+    seletorArquivo.value = "";
+    return;
+  }
+
+  const formulario = new FormData();
+  formulario.append("action", "upload");
+  formulario.append("password", senha);
+  formulario.append("file", arquivo);
+
+  try {
+    botaoAdicionar.disabled = true;
+    botaoAdicionar.textContent = "Enviando foto...";
+    await chamarFuncao(formulario);
+    alert("Foto adicionada com sucesso! ❤️");
+    await carregarFotos();
+  } catch (erro) {
+    alert(erro.message);
+  } finally {
+    botaoAdicionar.disabled = false;
+    botaoAdicionar.textContent = "＋ Adicionar foto";
+    seletorArquivo.value = "";
+  }
+});
+
+/* EXCLUIR FOTO */
+async function excluirFoto(caminho) {
+  if (!confirm("Tem certeza de que deseja excluir esta foto?")) return;
+  const senha = prompt("Digite a senha para excluir esta foto:");
+  if (senha === null) return;
+
+  const formulario = new FormData();
+  formulario.append("action", "delete");
+  formulario.append("password", senha);
+  formulario.append("path", caminho);
+
+  try {
+    await chamarFuncao(formulario);
+    alert("Foto excluída com sucesso.");
+    await carregarFotos();
+  } catch (erro) {
+    alert(erro.message);
+  }
+}
+carregarFotos();
+
+/* MÚSICA */
 const musica = document.getElementById("musica");
-
 const botao = document.getElementById("botao-musica");
-
 const statusMusica = document.getElementById("status-musica");
-
 let tocando = false;
 
 function atualizarBotao() {
-
   if (tocando && !musica.paused) {
-
     botao.textContent = "🔊";
-
     botao.classList.add("tocando");
-
     botao.setAttribute("aria-label", "Pausar música");
-
   } else {
-
     botao.textContent = "🔇";
-
     botao.classList.remove("tocando");
-
     botao.setAttribute("aria-label", "Ativar música");
-
   }
-
 }
 
 function mostrarStatus(mensagem) {
-
   statusMusica.textContent = mensagem;
-
   statusMusica.classList.add("visivel");
-
   clearTimeout(statusMusica.timer);
-
-  statusMusica.timer = setTimeout(() => {
-
-    statusMusica.classList.remove("visivel");
-
-  }, 1800);
-
+  statusMusica.timer = setTimeout(() => statusMusica.classList.remove("visivel"), 1800);
 }
 
 async function alternarMusica() {
-
   if (musica.paused) {
-
     try {
-
       await musica.play();
-
       tocando = true;
-
       atualizarBotao();
-
       mostrarStatus("♪ Música tocando");
-
     } catch (erro) {
-
       tocando = false;
-
       atualizarBotao();
-
       mostrarStatus("Não foi possível iniciar a música");
-
     }
-
   } else {
-
     musica.pause();
-
     tocando = false;
-
     atualizarBotao();
-
     mostrarStatus("Música pausada");
-
   }
-
 }
-
 botao.addEventListener("click", alternarMusica);
-
-musica.addEventListener("play", () => {
-
-  tocando = true;
-
-  atualizarBotao();
-
-});
-
-musica.addEventListener("pause", () => {
-
-  tocando = false;
-
-  atualizarBotao();
-
-});
-
+musica.addEventListener("play", () => { tocando = true; atualizarBotao(); });
+musica.addEventListener("pause", () => { tocando = false; atualizarBotao(); });
 musica.addEventListener("error", () => {
-
   tocando = false;
-
   atualizarBotao();
-
   mostrarStatus("Confira o arquivo lofi.mp3");
-
 });
-
 atualizarBotao();
-
-// Tenta iniciar automaticamente.
-// Alguns navegadores bloqueiam áudio sem interação.
-// Nesse caso, basta tocar no botão de música.
-
 musica.volume = 0.35;
-
-musica.play().catch(() => {
-
-  tocando = false;
-
-  atualizarBotao();
-
-});
-
+musica.play().catch(() => { tocando = false; atualizarBotao(); });
 </script>
-
 </body>
 </html>
