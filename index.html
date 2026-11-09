@@ -94,6 +94,17 @@ body.tema-escuro #recado-personagem::before{background:#30253e;border-color:#594
 body.tema-escuro #recarregar-personagem{background:#49335e;color:#f2d9ff}
 @media(max-width:360px){#personagem-com-recado{gap:9px}#personagem-com-recado .coracao{width:90px;height:90px}#recado-personagem{max-width:175px;font-size:11px;padding:9px}#recarregar-personagem{font-size:11px}}
 
+
+/* Botão de planos: recolhido por padrão, com abertura e fechamento acessíveis */
+#planos-casal{position:relative}
+#abrir-planos{display:block;width:100%;max-width:420px;margin:0 auto;border:2px solid #f5a9ca;border-radius:999px;background:linear-gradient(110deg,#ff76b3,#e68add,#ff9fbb);color:#fff;font-weight:800;font-size:1.08rem;letter-spacing:.3px;padding:16px 24px;box-shadow:0 7px 18px rgba(205,70,130,.23);cursor:pointer;transition:transform .18s,box-shadow .18s}
+#abrir-planos:hover,#abrir-planos:focus-visible{transform:translateY(-2px);box-shadow:0 9px 22px rgba(205,70,130,.35)}
+#conteudo-planos[hidden]{display:none!important}
+#conteudo-planos{margin-top:18px;position:relative}
+#fechar-planos{position:absolute;right:0;top:0;z-index:1;width:40px;height:40px;border-radius:50%;border:1px solid #e9a8c5;background:#fff1f8;color:#a42e68;font-size:26px;line-height:1;cursor:pointer}
+#conteudo-planos #titulo-planos{padding-right:45px}
+body.tema-escuro #fechar-planos{background:#4d315a;color:#ffe2f2;border-color:#815b91}
+
 /* Planos do casal — checkout de pagamentos únicos */
 #planos-casal .grade-planos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;text-align:left}
 #planos-casal .cartao-plano{border:1px solid #f2dce4;border-radius:16px;padding:16px;background:#fffafd}
@@ -124,9 +135,24 @@ body.tema-escuro #planos-casal .cartao-plano h3,body.tema-escuro #planos-casal .
 <section><h2>Minhas histórias ❤️</h2><div id="lista-historias">Carregando...</div><div id="sem-historias" hidden><p class="subtitulo">Sua história começa com uma conexão aceita. ❤️</p></div></section>
 <div id="historia-painel" hidden>
 <section><h2 id="titulo-historia">Nossa História</h2><p class="muted">Cada segundo com você é especial.</p><div id="contador"><div class="tempo"><span class="numero" id="anos">00</span><span class="legenda">Anos</span></div><div class="tempo"><span class="numero" id="meses">00</span><span class="legenda">Meses</span></div><div class="tempo"><span class="numero" id="dias">00</span><span class="legenda">Dias</span></div><div class="tempo"><span class="numero" id="horas">00</span><span class="legenda">Horas</span></div><div class="tempo"><span class="numero" id="minutos">00</span><span class="legenda">Minutos</span></div><div class="tempo"><span class="numero" id="segundos">00</span><span class="legenda">Segundos</span></div></div><p id="inicio-status">Aguardando a data de início ❤️</p><label for="data-inicio">Data e horário em que tudo começou</label><input id="data-inicio" type="datetime-local"><div class="actions"><button id="salvar-inicio" class="primary" type="button">Salvar data do casal</button></div></section>
+<div id="modal-limite-fotos" hidden role="dialog" aria-modal="true" aria-labelledby="titulo-limite-fotos" style="position:fixed;inset:0;background:rgba(25,15,30,.72);z-index:9999;display:none;align-items:center;justify-content:center;padding:18px;">
+ <div style="width:min(100%,430px);max-height:90vh;overflow:auto;background:#fff7fb;color:#503548;border-radius:20px;padding:25px;box-shadow:0 15px 45px #0005;text-align:center;">
+  <h2 id="titulo-limite-fotos">💗 Seu espaço de memórias está cheio!</h2>
+  <p id="texto-limite-fotos">Você atingiu o limite de fotos do seu plano. Para guardar mais lembranças, escolha um plano maior.</p>
+  <div class="actions" style="justify-content:center;flex-wrap:wrap;gap:10px;">
+   <button id="limite-comprar-essencial" class="primary" type="button">20 fotos — R$ 4,90</button>
+   <button id="limite-comprar-memorias" class="primary" type="button">50 fotos — R$ 9,90</button>
+  </div>
+  <p id="limite-status" role="status" style="font-size:.9rem;"></p>
+  <button id="limite-fechar" class="secondary" type="button" style="margin-top:12px;">Agora não</button>
+ </div>
+</div>
 <section><h2>Nossas lembranças 📸</h2><div id="galeria"><p class="subtitulo">Carregando...</p></div><button id="adicionar-foto" class="primary" type="button">＋ Adicionar foto</button><input id="arquivo-foto" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><p id="aviso-galeria" class="muted">Somente participantes desta história devem ter acesso às fotos privadas.</p></section>
 
- <section id="planos-casal" aria-labelledby="titulo-planos">
+ <section id="planos-casal" aria-label="Planos do casal">
+  <button id="abrir-planos" type="button" aria-expanded="false" aria-controls="conteudo-planos">💖✨ Planos do nosso amor ✨💖</button>
+  <div id="conteudo-planos" hidden>
+  <button id="fechar-planos" type="button" aria-label="Fechar planos" title="Fechar planos">×</button>
   <h2 id="titulo-planos">Mais espaço para nosso amor 💕</h2>
   <p class="muted">Os limites e as compras são compartilhados pelas duas pessoas do casal.</p>
   <div class="grade-planos">
@@ -136,6 +162,7 @@ body.tema-escuro #planos-casal .cartao-plano h3,body.tema-escuro #planos-casal .
    <div class="cartao-plano"><h3>Amor Sem Limites ♾️</h3><p>Fotos ilimitadas, sujeitas a regras razoáveis de armazenamento.</p><p class="preco-plano">R$ 19,90/mês</p><p class="muted">Assinatura mensal recorrente</p><button class="primary" type="button" disabled>Assinatura em preparação</button></div>
   </div>
   <p id="status-pagamentos" class="muted" role="status">Ao clicar em comprar, você será encaminhado à InfinitePay. Antes de publicar esta versão, confirme que a compra ativa o plano automaticamente.</p>
+  </div>
  </section>
 
 <section id="compartilhar-memorias">
@@ -191,7 +218,40 @@ async function carregarHistorias(){historias=await rpc('minhas_historias')||[];c
 async function selecionarHistoria(id){historiaAtual=historias.find(h=>h.historia_id===id)||null;$('historia-painel').hidden=!historiaAtual;if(!historiaAtual)return;atualizarTitulo();await carregarFotos();}
 async function carregarFotos(){fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];const area=$('galeria');limpar(area);if(!historiaAtual)return;const id=historiaAtual.historia_id;const {data,error}=await db.from('story_photos').select('id,file_path,uploaded_by,created_at').eq('story_id',id).order('created_at',{ascending:true});if(error){area.append(elemento('p','Não foi possível carregar as fotos: '+error.message,'muted'));return;}if(!data.length){area.append(elemento('p','Nosso mural está esperando novas lembranças. ❤️','muted'));return;}for(const f of data){const {data:blob,error:e}=await db.storage.from('fotos-privadas').download(f.file_path);if(e){area.append(elemento('p','Não foi possível abrir uma foto.','muted'));continue;}const url=URL.createObjectURL(blob);fotosUrls.push(url);const item=elemento('div',undefined,'item-foto');const img=elemento('img');img.src=url;img.alt='Uma lembrança nossa';img.className='foto';img.loading='lazy';item.append(img);const b=elemento('button','Excluir foto','botao-excluir');b.onclick=()=>excluirFoto(f);item.append(b);area.append(item);}}
 async function excluirFoto(f){if(!historiaAtual||!confirm('Excluir esta foto definitivamente?'))return;const {error:e}=await db.storage.from('fotos-privadas').remove([f.file_path]);if(e){erro(e);return;}const {error}=await db.from('story_photos').delete().eq('id',f.id);if(error){erro(error);return;}await carregarFotos();}
-async function enviarFoto(arquivo){if(!historiaAtual)return;const tipos=['image/jpeg','image/png','image/webp','image/gif'];if(!tipos.includes(arquivo.type)||arquivo.size>10*1024*1024){aviso('Escolha JPG, PNG, WEBP ou GIF de até 10 MB.');return;}const id=crypto.randomUUID(),caminho=`${historiaAtual.historia_id}/${id}`;const {error:cadastroErro}=await db.from('story_photos').insert({id,story_id:historiaAtual.historia_id,uploaded_by:usuario.id,file_path:caminho});if(cadastroErro){erro(cadastroErro);return;}const {error:uploadErro}=await db.storage.from('fotos-privadas').upload(caminho,arquivo,{contentType:arquivo.type,upsert:false});if(uploadErro){await db.from('story_photos').delete().eq('id',id);erro(uploadErro);return;}aviso('Foto enviada! ❤️');await carregarFotos();}
+function abrirAvisoLimite(quantidade){
+ const modal=$('modal-limite-fotos');
+ $('texto-limite-fotos').textContent=quantidade===null
+   ? 'Você atingiu o limite de fotos do seu plano. Para continuar, escolha um plano maior.'
+   : `Vocês já guardaram ${quantidade} fotos. Para adicionar mais lembranças, atualize o plano do casal.`;
+ $('limite-status').textContent='';
+ modal.hidden=false;modal.style.display='flex';
+ $('limite-fechar').focus();
+}
+function fecharAvisoLimite(){const modal=$('modal-limite-fotos');modal.hidden=true;modal.style.display='none';}
+$('limite-fechar').addEventListener('click',fecharAvisoLimite);
+$('modal-limite-fotos').addEventListener('click',e=>{if(e.target===$('modal-limite-fotos'))fecharAvisoLimite()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('modal-limite-fotos').hidden)fecharAvisoLimite()});
+function erroDeLimiteFotos(e){
+ const texto=[e?.message,e?.details,e?.hint].filter(Boolean).join(' ').toLowerCase();
+ return /limite.{0,90}(foto|imagem)|(foto|imagem).{0,90}limite|maximum.{0,40}(photo|image)|photo.{0,40}limit/.test(texto);
+}
+async function comprarDoAviso(plano){
+ const status=$('limite-status');
+ const botoes=[$('limite-comprar-essencial'),$('limite-comprar-memorias')];
+ botoes.forEach(b=>b.disabled=true);
+ status.textContent='Preparando pagamento seguro...';
+ try{await iniciarCompraCasal(plano)}catch(e){status.textContent=e?.message||'Não foi possível abrir o pagamento.'}
+ finally{botoes.forEach(b=>b.disabled=false)}
+}
+$('limite-comprar-essencial').addEventListener('click',()=>comprarDoAviso('essencial'));
+$('limite-comprar-memorias').addEventListener('click',()=>comprarDoAviso('memorias'));
+async function enviarFoto(arquivo){if(!historiaAtual)return;const tipos=['image/jpeg','image/png','image/webp','image/gif'];if(!tipos.includes(arquivo.type)||arquivo.size>10*1024*1024){aviso('Escolha JPG, PNG, WEBP ou GIF de até 10 MB.');return;}const id=crypto.randomUUID(),caminho=`${historiaAtual.historia_id}/${id}`;const {error:cadastroErro}=await db.from('story_photos').insert({id,story_id:historiaAtual.historia_id,uploaded_by:usuario.id,file_path:caminho});if(cadastroErro){
+  if(erroDeLimiteFotos(cadastroErro)){
+    const {count}=await db.from('story_photos').select('id',{count:'exact',head:true}).eq('story_id',historiaAtual.historia_id);
+    abrirAvisoLimite(typeof count==='number'?count:null);
+  }else{erro(cadastroErro)}
+  return;
+ }const {error:uploadErro}=await db.storage.from('fotos-privadas').upload(caminho,arquivo,{contentType:arquivo.type,upsert:false});if(uploadErro){await db.from('story_photos').delete().eq('id',id);erro(uploadErro);return;}aviso('Foto enviada! ❤️');await carregarFotos();}
 botao('salvar-nome',async()=>{const nome=$('nome-usuario').value.trim();if(!nome||nome.length>40){aviso('Digite um nome de 1 a 40 caracteres.');return;}const {error}=await db.from('profiles').update({username:nome}).eq('id',usuario.id);if(error)throw error;aviso('Nome atualizado! ❤️');await carregarPerfil();await carregarHistorias();});
 botao('copiar-codigo',async()=>{await navigator.clipboard.writeText(perfil.connection_code);aviso('Código copiado!');});
 botao('enviar-pedido',async()=>{await rpc('enviar_solicitacao',{codigo_digitado:$('codigo-outra-pessoa').value.trim()});$('codigo-outra-pessoa').value='';aviso('Solicitação enviada! ❤️');await carregarPedidos();});
@@ -309,6 +369,16 @@ temaBotao.onclick=()=>{
     document.querySelector('meta[name="theme-color"]').content=escuro?'#171321':'#fff5f7';
 };
 const musica=$('musica'),musicaBotao=$('botao-musica');function atualizarMusica(){musicaBotao.textContent=musica.paused?'🔇':'🔊';musicaBotao.classList.toggle('tocando',!musica.paused);}musicaBotao.onclick=async()=>{try{if(musica.paused)await musica.play();else musica.pause()}catch(e){$('status-musica').textContent='Não foi possível iniciar a música';$('status-musica').classList.add('visivel')}atualizarMusica()};musica.addEventListener('play',atualizarMusica);musica.addEventListener('pause',atualizarMusica);musica.volume=.35;
+/* Abre e fecha os planos no mesmo lugar, sem interferir nos botões de pagamento. */
+const botaoAbrirPlanos=$('abrir-planos'), conteudoPlanos=$('conteudo-planos'), botaoFecharPlanos=$('fechar-planos');
+function alternarPlanos(abrir){
+  conteudoPlanos.hidden=!abrir;
+  botaoAbrirPlanos.setAttribute('aria-expanded',String(abrir));
+  if(abrir)botaoFecharPlanos.focus();else botaoAbrirPlanos.focus();
+}
+botaoAbrirPlanos.addEventListener('click',()=>alternarPlanos(true));
+botaoFecharPlanos.addEventListener('click',()=>alternarPlanos(false));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!conteudoPlanos.hidden)alternarPlanos(false)});
 /* Checkout dos planos: habilitado para teste integrado; publicar somente após validação de pagamento e liberação do plano. */
 const PAGAMENTOS_VALIDADOS=true;
 async function iniciarCompraCasal(plano){
