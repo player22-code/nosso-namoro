@@ -65,6 +65,21 @@ body.tema-escuro #conteudo-configuracoes{background:#171321;color:#eee7f7}
 body.tema-escuro #fechar-configuracoes{background:#382747;color:#f4eaff}
 #conteudo-configuracoes section{margin:10px 0}
 @media(max-width:420px){#botao-configuracoes{top:12px;right:12px}#conteudo-configuracoes{padding-left:12px;padding-right:12px}}
+
+/* Compartilhar memórias — adição isolada */
+#memorias-fotos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}
+.memoria-foto-opcao{border:3px solid transparent;background:transparent;border-radius:14px;padding:2px;aspect-ratio:1;overflow:hidden}
+.memoria-foto-opcao.selecionada{border-color:#bd3267}
+.memoria-foto-opcao img{width:100%;height:100%;object-fit:cover;border-radius:9px}
+#memorias-temas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+#memorias-temas label{padding:12px;border:1px solid #e8cbd5;border-radius:15px;cursor:pointer;text-align:center}
+#memorias-temas input{width:auto;accent-color:#bd3267}
+#memorias-previa{width:100%;max-width:340px;aspect-ratio:9/16;object-fit:contain;display:block;margin:16px auto;border-radius:14px}
+#memorias-legenda{white-space:pre-wrap;text-align:left;overflow-wrap:anywhere;background:#fff0f4;border-radius:12px;padding:14px;font-size:14px;line-height:1.6}
+#memorias-status{font-size:13px;min-height:20px}
+body.tema-escuro #memorias-legenda{background:#382747;color:#eee7f7}
+body.tema-escuro #memorias-temas label{border-color:#59436d}
+body.tema-escuro .memoria-foto-opcao.selecionada{border-color:#d7a8ff}
 </style></head>
 <body><audio id="musica" loop preload="auto"><source src="lofi.mp3" type="audio/mpeg"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -87,6 +102,28 @@ body.tema-escuro #fechar-configuracoes{background:#382747;color:#f4eaff}
 <div id="historia-painel" hidden>
 <section><h2 id="titulo-historia">Nossa História</h2><p class="muted">Cada segundo com você é especial.</p><div id="contador"><div class="tempo"><span class="numero" id="anos">00</span><span class="legenda">Anos</span></div><div class="tempo"><span class="numero" id="meses">00</span><span class="legenda">Meses</span></div><div class="tempo"><span class="numero" id="dias">00</span><span class="legenda">Dias</span></div><div class="tempo"><span class="numero" id="horas">00</span><span class="legenda">Horas</span></div><div class="tempo"><span class="numero" id="minutos">00</span><span class="legenda">Minutos</span></div><div class="tempo"><span class="numero" id="segundos">00</span><span class="legenda">Segundos</span></div></div><p id="inicio-status">Aguardando a data de início ❤️</p><label for="data-inicio">Data e horário em que tudo começou</label><input id="data-inicio" type="datetime-local"><div class="actions"><button id="salvar-inicio" class="primary" type="button">Salvar data do casal</button></div></section>
 <section><h2>Nossas lembranças 📸</h2><div id="galeria"><p class="subtitulo">Carregando...</p></div><button id="adicionar-foto" class="primary" type="button">＋ Adicionar foto</button><input id="arquivo-foto" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><p id="aviso-galeria" class="muted">Somente participantes desta história devem ter acesso às fotos privadas.</p></section>
+
+<section id="compartilhar-memorias">
+ <h2>Compartilhar Memórias 💌</h2>
+ <p class="muted">Escolha uma foto da nossa galeria e crie uma lembrança para compartilhar.</p>
+ <div id="memorias-fotos" aria-label="Escolha uma foto"></div>
+ <div id="memorias-temas" role="group" aria-label="Tema da imagem">
+  <label><input type="radio" name="memorias-tema" value="claro" checked> ☀️ Hello Kitty</label>
+  <label><input type="radio" name="memorias-tema" value="escuro"> 🌙 Kuromi</label>
+ </div>
+ <button id="memorias-gerar" class="primary" type="button">✨ Gerar minha memória</button>
+ <p id="memorias-status" class="muted" role="status"></p>
+ <div id="memorias-resultado" hidden>
+  <img id="memorias-previa" alt="Prévia da memória pronta para compartilhar">
+  <p id="memorias-legenda"></p>
+  <div class="actions">
+   <button id="memorias-compartilhar" class="primary" type="button">↗ Compartilhar</button>
+   <button id="memorias-salvar" class="secondary" type="button">⬇ Salvar imagem</button>
+   <button id="memorias-copiar" class="secondary" type="button">🔗 Copiar descrição e link</button>
+  </div>
+  <p class="muted">No Instagram Stories, adicione o endereço usando a figurinha “Link”. A imagem, por si só, não contém um link clicável.</p>
+ </div>
+</section>
 <section><h2>Uma mensagem para você 💌</h2><p class="mensagem">Quero continuar criando lembranças, compartilhando sorrisos e vivendo momentos ao seu lado. ❤️</p></section>
 <section><h2>Conexão</h2><p class="muted">Ao desfazer a conexão, as duas pessoas perderão o acesso à história. As fotos não serão apagadas automaticamente.</p><button id="desfazer-conexao" class="secondary" type="button">Desfazer conexão</button></section>
 </div><footer>Feito com amor, especialmente para você. ❤️</footer></main>
@@ -243,4 +280,126 @@ botao('sair-conta',async()=>{const {error}=await db.auth.signOut();if(error)thro
 let sessaoId=0;async function mostrarSessao(u){const token=++sessaoId;usuario=u;$('login-painel').hidden=!!u;$('conteudo-privado').style.display=u?'block':'none';$('barra-conta').style.display=u?'flex':'none';musicaBotao.style.display=u?'flex':'none';$('botao-configuracoes').style.display=u?'flex':'none';if(!u){$('janela-configuracoes').hidden=true;historiaAtual=null;historias=[];perfil=null;musica.pause();fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];return;}$('janela-configuracoes').hidden=false;$('dados-conta').textContent=u.email||'Conectado';aviso('');try{await carregarPerfil();if(token!==sessaoId)return;await carregarPedidos();if(token!==sessaoId)return;await carregarHistorias();if(historias.length>0)$('janela-configuracoes').hidden=true}catch(e){if(token===sessaoId)erro(e)}}
 async function iniciar(){ $('login-painel').hidden=false;if(!db){$('mensagem-login').textContent='Falha ao carregar o login. Atualize a página.';return;}const {data}=await db.auth.getSession();await mostrarSessao(data?.session?.user||null);db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT')mostrarSessao(session?.user||null)});}
 iniciar();
+
+/* Compartilhar memórias — adição isolada, sem alterar autenticação ou galeria */
+(function(){
+ const area=$('memorias-fotos'),status=$('memorias-status');
+ const resultado=$('memorias-resultado'),previa=$('memorias-previa');
+ const urlSite='https://player22-code.github.io/nosso-namoro/';
+ let selecionada=null,imagemGerada=null,legendaGerada='';
+ const falar=t=>{status.textContent=t;};
+ function fotosDaGaleria(){return [...document.querySelectorAll('#galeria .item-foto img')];}
+ function atualizarEscolha(){
+  const fotos=fotosDaGaleria();
+  const urls=fotos.map(img=>img.src);
+  if(!urls.includes(selecionada))selecionada=null;
+  area.replaceChildren();
+  if(!fotos.length){area.append(elemento('p','Adicione uma foto em Nossas lembranças para começar.','muted'));return;}
+  fotos.forEach((img,i)=>{
+   const b=elemento('button',undefined,'memoria-foto-opcao');
+   b.type='button';b.setAttribute('aria-label','Escolher foto '+(i+1));
+   b.setAttribute('aria-pressed',String(img.src===selecionada));
+   if(img.src===selecionada)b.classList.add('selecionada');
+   const mini=elemento('img');mini.src=img.src;mini.alt='Foto '+(i+1);b.append(mini);
+   b.onclick=()=>{selecionada=img.src;resultado.hidden=true;atualizarEscolha();};
+   area.append(b);
+  });
+ }
+ const observador=new MutationObserver(()=>{
+  // A galeria é reconstruída ao trocar de história, enviar ou excluir fotos.
+  atualizarEscolha();resultado.hidden=true;
+ });
+ observador.observe($('galeria'),{childList:true});
+ function carregarImagem(src){return new Promise((resolve,reject)=>{
+  const im=new Image();im.onload=()=>resolve(im);im.onerror=()=>reject(new Error('Não foi possível abrir a imagem: '+src));im.src=src;
+ });}
+ function desenharCobrindo(ctx,img,x,y,w,h){
+  const proporcao=Math.max(w/img.width,h/img.height),iw=img.width*proporcao,ih=img.height*proporcao;
+  ctx.drawImage(img,x+(w-iw)/2,y+(h-ih)/2,iw,ih);
+ }
+ function escreverCentral(ctx,texto,y,tamanho,cor,maxLargura,peso='bold'){
+  ctx.fillStyle=cor;ctx.textAlign='center';ctx.textBaseline='middle';
+  let f=tamanho;
+  do{ctx.font=`${peso} ${f}px Arial, sans-serif`;f-=2;}while(ctx.measureText(texto).width>maxLargura&&f>26);
+  ctx.fillText(texto,540,y);
+ }
+ function duracaoRelacionamento(data){
+  const inicio=new Date(data),agora=new Date();
+  if(!data||isNaN(inicio)||inicio>agora)return null;
+  let anos=agora.getFullYear()-inicio.getFullYear();
+  let marco=adicionarMeses(inicio,anos*12);
+  if(marco>agora){anos--;marco=adicionarMeses(inicio,anos*12);}
+  let meses=0;while(adicionarMeses(marco,1)<=agora){marco=adicionarMeses(marco,1);meses++;}
+  const dias=Math.floor((agora-marco)/86400000);
+  const partes=[];
+  if(anos)partes.push(anos+' '+(anos===1?'ano':'anos'));
+  if(meses)partes.push(meses+' '+(meses===1?'mês':'meses'));
+  if(!anos&&!meses)partes.push(dias+' '+(dias===1?'dia':'dias'));
+  return partes.join(' e ');
+ }
+ function baixar(blob){
+  const u=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=u;a.download='nossa-memoria.png';document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),10000);
+ }
+ async function gerar(){
+  if(!historiaAtual){falar('Escolha uma história primeiro.');return;}
+  if(!selecionada){falar('Escolha uma foto da galeria.');return;}
+  const duracao=duracaoRelacionamento(historiaAtual.data_inicio);
+  if(!duracao){falar('Configure primeiro a data de início do relacionamento no contador.');return;}
+  const tema=document.querySelector('input[name="memorias-tema"]:checked').value;
+  const nomes=`${historiaAtual.meu_nome} e ${historiaAtual.parceiro_nome}`;
+  const bot=$('memorias-gerar');bot.disabled=true;falar('Gerando sua memória...');
+  try{
+   const foto=await carregarImagem(selecionada);
+   const arquivos=tema==='escuro'?['template_kuromi.png']:['template_hello_kitty.png','template_hello_kit.png'];
+   let moldura=null;
+   for(const arquivo of arquivos){try{moldura=await carregarImagem(arquivo);break;}catch(e){}}
+   if(!moldura)throw new Error('Moldura não encontrada no GitHub. Confira o nome do PNG enviado.');
+   const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;
+   const ctx=canvas.getContext('2d');
+   ctx.fillStyle=tema==='escuro'?'#171321':'#fff5f7';ctx.fillRect(0,0,1080,1920);
+   // Abertura transparente dos templates: região da fotografia.
+   ctx.save();ctx.beginPath();ctx.roundRect(64,222,952,1082,38);ctx.clip();
+   desenharCobrindo(ctx,foto,64,222,952,1082);ctx.restore();
+   ctx.drawImage(moldura,0,0,1080,1920);
+   const cor=tema==='escuro'?'#f4eaff':'#77364e';
+   const destaque=tema==='escuro'?'#e0b5ff':'#bd3267';
+   escreverCentral(ctx,nomes,1470,67,cor,920);
+   escreverCentral(ctx,'estão juntos há',1570,42,cor,880,'normal');
+   escreverCentral(ctx,duracao,1680,92,destaque,910);
+   escreverCentral(ctx,'Crie sua história de amor ♡',1810,31,cor,850,'normal');
+   escreverCentral(ctx,'player22-code.github.io/nosso-namoro/',1855,29,cor,950,'normal');
+   const blob=await new Promise((ok,fail)=>canvas.toBlob(b=>b?ok(b):fail(new Error('Falha ao gerar PNG')),'image/png'));
+   imagemGerada=blob;
+   previa.src=URL.createObjectURL(blob);
+   legendaGerada=`💕 ${nomes} estão juntos há ${duracao}!\n\nNossa história merece ser lembrada. ❤️\n\nCrie também sua história de amor! 💌\n🔗 ${urlSite}`;
+   $('memorias-legenda').textContent=legendaGerada;
+   resultado.hidden=false;falar('Sua memória está pronta! ❤️');
+  }catch(e){falar(e.message||String(e));}finally{bot.disabled=false;}
+ }
+ $('memorias-gerar').addEventListener('click',gerar);
+ $('memorias-salvar').addEventListener('click',()=>{if(imagemGerada)baixar(imagemGerada);});
+ $('memorias-copiar').addEventListener('click',async()=>{
+  try{await navigator.clipboard.writeText(legendaGerada);falar('Descrição e link copiados!');}
+  catch(e){falar('Não foi possível copiar automaticamente. Selecione a descrição acima para copiar.');}
+ });
+ $('memorias-compartilhar').addEventListener('click',async()=>{
+  if(!imagemGerada)return;
+  const arquivo=new File([imagemGerada],'nossa-memoria.png',{type:'image/png'});
+  try{
+   if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[arquivo]}))){
+    await navigator.share({files:[arquivo],text:legendaGerada,title:'Nossa História ❤️'});
+   }else if(navigator.share){
+    await navigator.share({text:legendaGerada,title:'Nossa História ❤️'});
+    falar('O aplicativo não aceitou a imagem. Use Salvar imagem para publicá-la.');
+   }else{
+    baixar(imagemGerada);
+    falar('Imagem salva. Copie a descrição e compartilhe no aplicativo desejado.');
+   }
+  }catch(e){if(e.name!=='AbortError')falar('Não foi possível compartilhar diretamente. Salve a imagem e copie a descrição.');}
+ });
+ document.querySelectorAll('input[name="memorias-tema"]').forEach(r=>r.addEventListener('change',()=>{resultado.hidden=true;}));
+ atualizarEscolha();
+})();
 </script></body></html>
