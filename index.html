@@ -51,6 +51,10 @@ footer{padding:20px;color:#986c79;font-size:13px}
 #abrir-config[hidden],#fundo-config[hidden],#menu-config[hidden]{display:none!important}
 body.config-aberta{overflow:hidden}
 @media(max-width:420px){#abrir-config{left:9px;top:10px;padding:9px 11px;font-size:13px}}
+/* Personagem animada acima do título */
+#personagem-animada{display:block;margin:0 auto 12px;padding:0;border:0;background:transparent;cursor:pointer;line-height:0;max-width:100%;touch-action:manipulation}
+#personagem-animada img{display:block;width:150px;height:150px;object-fit:contain;image-rendering:pixelated}
+#personagem-animada:focus-visible{outline:3px solid #bd3267;outline-offset:5px;border-radius:12px}
 </style></head>
 <body><audio id="musica" loop preload="auto"><source src="lofi.mp3" type="audio/mpeg"></audio>
 <button id="botao-musica" type="button" aria-label="Ativar música">🔇</button><div id="status-musica">Música pausada</div>
@@ -61,7 +65,7 @@ body.config-aberta{overflow:hidden}
 <aside id="menu-config" role="dialog" aria-modal="true" aria-label="Configurações" hidden>
 <button id="fechar-config" type="button">✕ Fechar</button><h2>Configurações ⚙️</h2><div id="conteudo-config"></div>
 </aside>
-<header><div class="coracao">❤️</div><h1 id="titulo-site">Nossa História</h1><p class="subtitulo">Cada história merece um lugar especial.</p></header>
+<header><button id="personagem-animada" type="button" aria-label="Toque para receber um beijo" title="Toque para receber um beijo"><img id="imagem-personagem" src="danca.png" alt="Gatinha dançando"></button><h1 id="titulo-site">Nossa História</h1><p class="subtitulo">Cada história merece um lugar especial.</p></header>
 <main id="conteudo-privado"><p id="aviso-global" role="status"></p>
 <section id="secao-perfil"><h2>Meu perfil 💗</h2><div class="stack"><div><label for="nome-usuario">Seu nome</label><input id="nome-usuario" maxlength="40" placeholder="Como deseja ser chamado(a)?"></div><button id="salvar-nome" class="primary" type="button">Salvar nome</button><div><p class="muted">Seu código pessoal de conexão:</p><p id="codigo-conexao">Carregando...</p><button id="copiar-codigo" class="secondary" type="button">Copiar código</button></div></div></section>
 <section id="secao-conexoes"><h2>Conectar com alguém 💌</h2><label for="codigo-outra-pessoa">Código da outra pessoa</label><input id="codigo-outra-pessoa" placeholder="Cole o código aqui"><div class="actions"><button id="enviar-pedido" class="primary" type="button">Enviar solicitação</button></div><h3>Solicitações pendentes</h3><div id="solicitacoes">Carregando...</div></section>
@@ -74,6 +78,24 @@ body.config-aberta{overflow:hidden}
 </div><footer>Feito com amor, especialmente para você. ❤️</footer></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+/* A dança é um PNG animado (APNG), com looping próprio.
+   O beijo é um GIF de 9 quadros x 140 ms = 1260 ms. */
+const personagemBotao=document.getElementById('personagem-animada');
+const personagemImagem=document.getElementById('imagem-personagem');
+let temporizadorBeijo=null;
+let contadorBeijos=0;
+personagemBotao.addEventListener('click',()=>{
+  clearTimeout(temporizadorBeijo);
+  contadorBeijos++;
+  personagemImagem.alt='Gatinha mandando um beijo';
+  // Um endereço novo reinicia a animação a cada toque, mesmo em cache.
+  personagemImagem.src='beijo.gif?repeticao='+contadorBeijos;
+  temporizadorBeijo=setTimeout(()=>{
+    personagemImagem.src='danca.png';
+    personagemImagem.alt='Gatinha dançando';
+    temporizadorBeijo=null;
+  },1260);
+});
 const SUPABASE_URL='https://xttqhfaapgimaxfendzr.supabase.co';
 const SUPABASE_KEY='sb_publishable_S-9cgYjs3tAlrb0_Z21pvg_PhQlr-GI';
 const db=window.supabase?.createClient(SUPABASE_URL,SUPABASE_KEY);
