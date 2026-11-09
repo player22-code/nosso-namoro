@@ -10,6 +10,7 @@
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#fff5f7;color:#51343d;text-align:center}
 header{padding:45px 18px 25px}
+.coracao{font-size:38px}
 h1{font-family:Georgia,serif;font-size:36px;margin:12px 0}
 .subtitulo{color:#986c79;line-height:1.6}
 main{max-width:700px;margin:auto;padding:0 16px 40px}
@@ -71,55 +72,68 @@ body.config-aberta{overflow:hidden}
 #personagem-animada{display:block;margin:0 auto 12px;padding:0;border:0;background:transparent;cursor:pointer;line-height:0;max-width:100%;touch-action:manipulation}
 #personagem-animada img{display:block;width:150px;height:150px;object-fit:contain;image-rendering:pixelated}
 #personagem-animada:focus-visible{outline:3px solid #bd3267;outline-offset:5px;border-radius:12px}
+@media(max-width:420px){h1{font-size:32px}section{padding:22px 13px}#abrir-config{left:9px;top:10px;padding:9px 11px}}
+
+/* Apenas as novas cores do tema escuro */
 body.tema-escuro{background:#17101f;color:#f7eafa;color-scheme:dark}
 body.tema-escuro section,body.tema-escuro #login-painel{background:#291d35;color:#f7eafa;box-shadow:0 5px 20px #0004}
 body.tema-escuro #menu-config{background:#1c1427;color:#f7eafa}
 body.tema-escuro h2,body.tema-escuro h3{color:#e3a6f5}
 body.tema-escuro .tempo,body.tema-escuro .item{background:#382745;border-color:#594166}
 body.tema-escuro .numero{color:#e3a6f5}
-body.tema-escuro .subtitulo,body.tema-escuro .muted,body.tema-escuro .legenda,body.tema-escuro footer,body.tema-escuro #inicio-status,body.tema-escuro #aviso-galeria{color:#cbb0d5}
+body.tema-escuro .subtitulo,body.tema-escuro .muted,body.tema-escuro .legenda,body.tema-escuro footer,body.tema-escuro #inicio-status{color:#cbb0d5}
 body.tema-escuro input,body.tema-escuro select,body.tema-escuro textarea{background:#21182d;color:#f7eafa;border-color:#674c78}
-body.tema-escuro .primary,body.tema-escuro #login-google,body.tema-escuro #abrir-config,body.tema-escuro #botao-musica{background:#77399c;color:#fff}
+body.tema-escuro .primary,body.tema-escuro #login-google,body.tema-escuro #abrir-config,body.tema-escuro #botao-musica{background:#77399c;color:white}
 body.tema-escuro .secondary,body.tema-escuro #fechar-config,body.tema-escuro .botao-excluir{background:#493158;color:#f2d7fa}
-#painel-conta-menu{overflow-wrap:anywhere}
-#painel-tema button[aria-pressed="true"]{outline:2px solid #bd3267;outline-offset:2px}
-body.tema-escuro #painel-tema button[aria-pressed="true"]{outline-color:#e3a6f5}
-@media(max-width:420px){h1{font-size:32px}section{padding:22px 13px}#abrir-config{left:9px;top:10px;padding:9px 11px}}
+#nome-menu,#email-menu{overflow-wrap:anywhere}
+#tema-claro[aria-pressed="true"],#tema-escuro[aria-pressed="true"]{outline:2px solid #bd3267;outline-offset:2px}
+body.tema-escuro #tema-claro[aria-pressed="true"],body.tema-escuro #tema-escuro[aria-pressed="true"]{outline-color:#e3a6f5}
 </style>
 </head>
 <body>
-<audio id="musica" loop preload="auto"><source src="lofi.mp3" type="audio/mpeg"></audio>
+
+<audio id="musica" loop preload="auto">
+<source src="lofi.mp3" type="audio/mpeg">
+</audio>
 <button id="botao-musica" type="button" aria-label="Ativar música">🔇</button>
 <div id="status-musica">Música pausada</div>
+
 <div id="login-painel" hidden>
 <h2>Bem-vindo ao Nossa História ❤️</h2>
 <p class="subtitulo">Entre com sua conta Google para continuar.</p>
 <button id="login-google" class="primary" type="button">Continuar com Google</button>
 <p id="mensagem-login" role="status"></p>
 </div>
+
 <div id="barra-conta">
 <span id="dados-conta"></span>
 <button id="sair-conta" class="secondary" type="button">Sair da conta</button>
 </div>
+
 <button id="abrir-config" type="button" aria-label="Abrir menu" aria-controls="menu-config" aria-expanded="false" hidden>☰</button>
 <div id="fundo-config" hidden></div>
+
 <aside id="menu-config" role="dialog" aria-modal="true" aria-label="Configurações" hidden>
 <button id="fechar-config" type="button">✕ Fechar</button>
 <h2>Meu menu</h2>
-<section id="painel-conta-menu">
-<h3 id="nome-menu">Meu perfil</h3>
+
+<section>
+<h2 id="nome-menu">Meu perfil</h2>
 <p class="muted" id="email-menu"></p>
 <button id="sair-menu" class="secondary" type="button">Sair da conta</button>
 </section>
-<section id="painel-tema">
-<h3>Aparência</h3>
+
+<section>
+<h2>Aparência</h2>
 <div class="actions">
-<button type="button" id="tema-claro" class="secondary" aria-pressed="true">☀️ Claro</button>
-<button type="button" id="tema-escuro" class="secondary" aria-pressed="false">🌙 Escuro</button>
+<button id="tema-claro" class="secondary" type="button" aria-pressed="true">☀️ Claro</button>
+<button id="tema-escuro" class="secondary" type="button" aria-pressed="false">🌙 Escuro</button>
 </div>
 </section>
+
 <div id="conteudo-config"></div>
 </aside>
+
 <header>
 <button id="personagem-animada" type="button" aria-label="Toque para receber um beijo" title="Toque para receber um beijo">
 <img id="imagem-personagem" src="danca.png" alt="Gatinha dançando">
@@ -127,8 +141,10 @@ body.tema-escuro #painel-tema button[aria-pressed="true"]{outline-color:#e3a6f5}
 <h1 id="titulo-site">Nossa História</h1>
 <p class="subtitulo">Cada história merece um lugar especial.</p>
 </header>
+
 <main id="conteudo-privado">
 <p id="aviso-global" role="status"></p>
+
 <section id="secao-perfil">
 <h2>Meu perfil 💗</h2>
 <div class="stack">
@@ -144,6 +160,7 @@ body.tema-escuro #painel-tema button[aria-pressed="true"]{outline-color:#e3a6f5}
 </div>
 </div>
 </section>
+
 <section id="secao-conexoes">
 <h2>Conectar com alguém 💌</h2>
 <label for="codigo-outra-pessoa">Código da outra pessoa</label>
@@ -154,6 +171,7 @@ body.tema-escuro #painel-tema button[aria-pressed="true"]{outline-color:#e3a6f5}
 <h3>Solicitações pendentes</h3>
 <div id="solicitacoes">Carregando...</div>
 </section>
+
 <section>
 <h2>Minhas histórias ❤️</h2>
 <div id="lista-historias">Carregando...</div>
@@ -161,6 +179,7 @@ body.tema-escuro #painel-tema button[aria-pressed="true"]{outline-color:#e3a6f5}
 <p class="subtitulo">Sua história começa com uma conexão aceita. ❤️</p>
 </div>
 </section>
+
 <div id="historia-painel" hidden>
 <section>
 <h2 id="titulo-historia">Nossa História</h2>
@@ -180,6 +199,7 @@ body.tema-escuro #painel-tema button[aria-pressed="true"]{outline-color:#e3a6f5}
 <button id="salvar-inicio" class="primary" type="button">Salvar data do casal</button>
 </div>
 </section>
+
 <section>
 <h2>Nossas lembranças 📸</h2>
 <div id="galeria"><p class="subtitulo">Carregando...</p></div>
@@ -187,10 +207,12 @@ body.tema-escuro #painel-tema button[aria-pressed="true"]{outline-color:#e3a6f5}
 <input id="arquivo-foto" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
 <p id="aviso-galeria" class="muted">Somente participantes desta história devem ter acesso às fotos privadas.</p>
 </section>
+
 <section>
 <h2>Uma mensagem para você 💌</h2>
 <p class="mensagem">Quero continuar criando lembranças, compartilhando sorrisos e vivendo momentos ao seu lado. ❤️</p>
 </section>
+
 <section>
 <h2>Conexão</h2>
 <p class="muted">Ao desfazer a conexão, as duas pessoas perderão o acesso à história. As fotos não serão apagadas automaticamente.</p>
@@ -199,46 +221,58 @@ body.tema-escuro #painel-tema button[aria-pressed="true"]{outline-color:#e3a6f5}
 </div>
 <footer>Feito com amor, especialmente para você. ❤️</footer>
 </main>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+/* Animações: Hello Kitty no claro, Kuromi no escuro */
 const personagemBotao=document.getElementById('personagem-animada');
 const personagemImagem=document.getElementById('imagem-personagem');
 let temporizadorBeijo=null;
-let temaAtual=localStorage.getItem('nossa-historia-tema')==='escuro'?'escuro':'claro';
-const gifsTema={
+let contadorBeijos=0;
+const arquivosPersonagem={
  claro:{danca:'danca.png',beijo:'beijo.gif',nome:'Hello Kitty'},
  escuro:{danca:'kuromid.gif',beijo:'kuromib.gif',nome:'Kuromi'}
 };
+let temaAtual='claro';
+
 function aplicarTema(tema){
  temaAtual=tema==='escuro'?'escuro':'claro';
  document.body.classList.toggle('tema-escuro',temaAtual==='escuro');
  document.getElementById('tema-claro').setAttribute('aria-pressed',String(temaAtual==='claro'));
  document.getElementById('tema-escuro').setAttribute('aria-pressed',String(temaAtual==='escuro'));
- localStorage.setItem('nossa-historia-tema',temaAtual);
  clearTimeout(temporizadorBeijo);
- personagemImagem.src=gifsTema[temaAtual].danca;
- personagemImagem.alt=gifsTema[temaAtual].nome+' dançando';
+ personagemImagem.src=arquivosPersonagem[temaAtual].danca;
+ personagemImagem.alt=arquivosPersonagem[temaAtual].nome+' dançando';
+ try{
+  localStorage.setItem('nossa-historia-tema',temaAtual);
+ }catch(e){}
 }
 document.getElementById('tema-claro').addEventListener('click',()=>aplicarTema('claro'));
 document.getElementById('tema-escuro').addEventListener('click',()=>aplicarTema('escuro'));
-aplicarTema(temaAtual);
-let contadorBeijos=0;
+try{
+ aplicarTema(localStorage.getItem('nossa-historia-tema'));
+}catch(e){
+ aplicarTema('claro');
+}
+
 personagemBotao.addEventListener('click',()=>{
  clearTimeout(temporizadorBeijo);
  contadorBeijos++;
- personagemImagem.alt=gifsTema[temaAtual].nome+' mandando um beijo';
- personagemImagem.src=gifsTema[temaAtual].beijo+'?repeticao='+contadorBeijos;
+ personagemImagem.alt=arquivosPersonagem[temaAtual].nome+' mandando um beijo';
+ personagemImagem.src=arquivosPersonagem[temaAtual].beijo+'?repeticao='+contadorBeijos;
  temporizadorBeijo=setTimeout(()=>{
-  personagemImagem.src=gifsTema[temaAtual].danca;
-  personagemImagem.alt=gifsTema[temaAtual].nome+' dançando';
+  personagemImagem.src=arquivosPersonagem[temaAtual].danca;
+  personagemImagem.alt=arquivosPersonagem[temaAtual].nome+' dançando';
   temporizadorBeijo=null;
  },1260);
 });
+
 const SUPABASE_URL='https://xttqhfaapgimaxfendzr.supabase.co';
 const SUPABASE_KEY='sb_publishable_S-9cgYjs3tAlrb0_Z21pvg_PhQlr-GI';
 const db=window.supabase?.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);
 let usuario=null,perfil=null,historias=[],historiaAtual=null,fotosUrls=[];
+
 function aviso(t){$('aviso-global').textContent=t||''}
 function erro(e){aviso(e?.message||String(e))}
 async function rpc(nome,args={}){
@@ -250,7 +284,8 @@ function botao(id,fn){
  $(id).addEventListener('click',async()=>{
   const b=$(id);
   b.disabled=true;
-  try{await fn()}catch(e){erro(e)}finally{b.disabled=false}
+  try{await fn()}catch(e){erro(e)}
+  finally{b.disabled=false}
  });
 }
 function elemento(tag,text,classe){
@@ -301,6 +336,7 @@ function atualizarContador(){
  });
 }
 setInterval(atualizarContador,1000);
+
 function atualizarTitulo(){
  if(!historiaAtual)return;
  const nome=`História de ${historiaAtual.meu_nome} + ${historiaAtual.parceiro_nome}`;
@@ -314,8 +350,8 @@ function atualizarTitulo(){
 async function carregarPerfil(){
  perfil=await rpc('criar_meu_perfil');
  $('nome-usuario').value=perfil.username;
- $('nome-menu').textContent=perfil.username||'Meu perfil';
  $('codigo-conexao').textContent=perfil.connection_code;
+ $('nome-menu').textContent=perfil.username||'Meu perfil';
 }
 async function carregarPedidos(){
  const pedidos=await rpc('minhas_solicitacoes');
@@ -337,7 +373,8 @@ async function carregarPedidos(){
      await fn();
      await carregarPedidos();
      await carregarHistorias();
-    }catch(e){erro(e)}finally{b.disabled=false}
+    }catch(e){erro(e)}
+    finally{b.disabled=false}
    };
    a.append(b);
   };
@@ -351,10 +388,13 @@ async function carregarPedidos(){
   area.append(item);
  }
 }
+
+/* Menu lateral: preserva os campos e funções existentes */
 const areaPrincipal=$('secao-perfil').parentElement;
 const secaoPerfil=$('secao-perfil');
 const secaoConexoes=$('secao-conexoes');
 const referenciaHistorias=$('lista-historias').closest('section');
+
 function fecharConfiguracoes(){
  $('menu-config').hidden=true;
  $('fundo-config').hidden=true;
@@ -375,8 +415,7 @@ document.addEventListener('keydown',e=>{
  if(e.key==='Escape')fecharConfiguracoes();
 });
 function atualizarMenuConfiguracoes(){
- const pareado=historias.length>0;
- if(pareado){
+ if(usuario){
   $('conteudo-config').append(secaoPerfil,secaoConexoes);
  }else{
   areaPrincipal.insertBefore(secaoPerfil,referenciaHistorias);
@@ -385,6 +424,7 @@ function atualizarMenuConfiguracoes(){
  }
  $('abrir-config').hidden=!usuario;
 }
+
 async function carregarHistorias(){
  historias=await rpc('minhas_historias')||[];
  atualizarMenuConfiguracoes();
@@ -420,13 +460,4 @@ async function carregarFotos(){
  const area=$('galeria');
  limpar(area);
  if(!historiaAtual)return;
- const id=historiaAtual.historia_id;
- const {data,error}=await db.from('story_photos')
-  .select('id,file_path,uploaded_by,created_at')
-  .eq('story_id',id)
-  .order('created_at',{ascending:true});
- if(error){
-  area.append(elemento('p','Não foi possível carregar as fotos: '+error.message,'muted'));
-  return;
- }
- if(!data.l
+ const id=historiaAtual.historia_id
