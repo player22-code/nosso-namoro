@@ -131,11 +131,11 @@ body.tema-escuro #planos-casal .cartao-plano h3,body.tema-escuro #planos-casal .
   <p class="muted">Os limites e as compras são compartilhados pelas duas pessoas do casal.</p>
   <div class="grade-planos">
    <div class="cartao-plano"><h3>Gratuito 🌷</h3><p>Até 5 fotos por casal.</p><p class="preco-plano">Grátis</p><button class="secondary" type="button" disabled>Plano inicial</button></div>
-   <div class="cartao-plano"><h3>Amor Essencial 💗</h3><p>Até 20 fotos por casal.</p><p class="preco-plano">R$ 4,90</p><p class="muted">Pagamento único</p><button class="primary" type="button" disabled>Compra em preparação</button></div>
-   <div class="cartao-plano"><h3>Mais Memórias 📸</h3><p>Até 50 fotos por casal.</p><p class="preco-plano">R$ 9,90</p><p class="muted">Pagamento único</p><button class="primary" type="button" disabled>Compra em preparação</button></div>
+   <div class="cartao-plano"><h3>Amor Essencial 💗</h3><p>Até 20 fotos por casal.</p><p class="preco-plano">R$ 4,90</p><p class="muted">Pagamento único</p><button id="comprar-essencial" class="primary" type="button" disabled>Compra em preparação</button></div>
+   <div class="cartao-plano"><h3>Mais Memórias 📸</h3><p>Até 50 fotos por casal.</p><p class="preco-plano">R$ 9,90</p><p class="muted">Pagamento único</p><button id="comprar-memorias" class="primary" type="button" disabled>Compra em preparação</button></div>
    <div class="cartao-plano"><h3>Amor Sem Limites ♾️</h3><p>Fotos ilimitadas, sujeitas a regras razoáveis de armazenamento.</p><p class="preco-plano">R$ 19,90/mês</p><p class="muted">Assinatura mensal recorrente</p><button class="primary" type="button" disabled>Assinatura em preparação</button></div>
   </div>
-  <p class="muted">Os pagamentos serão liberados após a validação do checkout e da confirmação automática. Nenhuma cobrança é feita nesta versão.</p>
+  <p id="status-pagamentos" class="muted" role="status">Pagamentos em validação. Os botões serão liberados após os testes de confirmação automática.</p>
  </section>
 
 <section id="compartilhar-memorias">
@@ -309,6 +309,35 @@ temaBotao.onclick=()=>{
     document.querySelector('meta[name="theme-color"]').content=escuro?'#171321':'#fff5f7';
 };
 const musica=$('musica'),musicaBotao=$('botao-musica');function atualizarMusica(){musicaBotao.textContent=musica.paused?'🔇':'🔊';musicaBotao.classList.toggle('tocando',!musica.paused);}musicaBotao.onclick=async()=>{try{if(musica.paused)await musica.play();else musica.pause()}catch(e){$('status-musica').textContent='Não foi possível iniciar a música';$('status-musica').classList.add('visivel')}atualizarMusica()};musica.addEventListener('play',atualizarMusica);musica.addEventListener('pause',atualizarMusica);musica.volume=.35;
+/* Checkout dos planos: integração preparada, mas bloqueada até validação real do backend. */
+const PAGAMENTOS_VALIDADOS=false;
+async function iniciarCompraCasal(plano){
+  if(!PAGAMENTOS_VALIDADOS){$('status-pagamentos').textContent='Pagamentos ainda em validação. Nenhuma cobrança foi iniciada.';return;}
+  if(!historiaAtual?.historia_id){$('status-pagamentos').textContent='Selecione uma história do casal antes de comprar.';return;}
+  const {data:{session},error:erroSessao}=await db.auth.getSession();
+  if(erroSessao||!session?.access_token){$('status-pagamentos').textContent='Faça login novamente para continuar.';return;}
+  const resposta=await fetch(SUPABASE_URL+'/functions/v1/criar-checkout-casal',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+session.access_token},
+    body:JSON.stringify({historia_id:historiaAtual.historia_id,plano})
+  });
+  const dados=await resposta.json().catch(()=>({}));
+  if(!resposta.ok||!/^https:\/\//i.test(dados.url||''))throw new Error(dados.erro||'Não foi possível preparar o pagamento.');
+  const destino=new URL(dados.url);
+  if(destino.protocol!=='https:')throw new Error('Endereço de pagamento inválido.');
+  window.location.assign(destino.href);
+}
+for(const [id,plano] of [['comprar-essencial','essencial'],['comprar-memorias','memorias']]){
+  const b=$(id);
+  b.disabled=!PAGAMENTOS_VALIDADOS;
+  if(PAGAMENTOS_VALIDADOS)b.textContent='Comprar agora';
+  b.addEventListener('click',async()=>{
+    b.disabled=true;
+    $('status-pagamentos').textContent='Preparando pagamento...';
+    try{await iniciarCompraCasal(plano)}catch(e){$('status-pagamentos').textContent=e.message||String(e)}
+    finally{b.disabled=!PAGAMENTOS_VALIDADOS;}
+  });
+}
 const redirectTo=location.origin+location.pathname;
 botao('login-google',async()=>{if(!db)return;const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo}});if(error)throw error;});
 botao('sair-conta',async()=>{const {error}=await db.auth.signOut();if(error)throw error;await mostrarSessao(null);});
