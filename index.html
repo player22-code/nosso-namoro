@@ -80,6 +80,12 @@ body.tema-escuro #fechar-configuracoes{background:#382747;color:#f4eaff}
 body.tema-escuro #memorias-legenda{background:#382747;color:#eee7f7}
 body.tema-escuro #memorias-temas label{border-color:#59436d}
 body.tema-escuro .memoria-foto-opcao.selecionada{border-color:#d7a8ff}
+/* Atualização discreta, independente do login e do tema */
+#atualizar-pagina{display:inline-flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;padding:8px 14px;border:1px solid #e8cbd5;border-radius:999px;background:transparent;color:#986c79;font:inherit;font-size:12px;cursor:pointer;transition:background .2s}
+#atualizar-pagina:hover,#atualizar-pagina:focus-visible{background:#fff0f4}
+body.tema-escuro #atualizar-pagina{border-color:#59436d;color:#b9a9ce}
+body.tema-escuro #atualizar-pagina:hover,body.tema-escuro #atualizar-pagina:focus-visible{background:#382747}
+#dica-atualizar{display:block;margin-top:5px;font-size:11px;opacity:.8}
 </style></head>
 <body><audio id="musica" loop preload="auto"><source src="lofi.mp3" type="audio/mpeg"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -126,7 +132,7 @@ body.tema-escuro .memoria-foto-opcao.selecionada{border-color:#d7a8ff}
 </section>
 <section><h2>Uma mensagem para você 💌</h2><p class="mensagem">Quero continuar criando lembranças, compartilhando sorrisos e vivendo momentos ao seu lado. ❤️</p></section>
 <section><h2>Conexão</h2><p class="muted">Ao desfazer a conexão, as duas pessoas perderão o acesso à história. As fotos não serão apagadas automaticamente.</p><button id="desfazer-conexao" class="secondary" type="button">Desfazer conexão</button></section>
-</div><footer>Feito com amor, especialmente para você. ❤️</footer></main>
+</div><footer>Feito com amor, especialmente para você. ❤️<div><button id="atualizar-pagina" type="button" onclick="window.location.reload()" aria-label="Atualizar a página" title="Recarregar o site">↻ Atualizar</button><span id="dica-atualizar">Algo não carregou? Atualize a página.</span></div></footer></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 const SUPABASE_URL='https://xttqhfaapgimaxfendzr.supabase.co';
