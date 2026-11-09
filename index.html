@@ -1,154 +1,616 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#fff5f7"><title>Nossa História ❤️</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fff5f7">
+<title>Nossa História ❤️</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#fff5f7;color:#51343d;text-align:center}
 header{padding:45px 18px 25px}
-.coracao{font-size:38px}
 h1{font-family:Georgia,serif;font-size:36px;margin:12px 0}
 .subtitulo{color:#986c79;line-height:1.6}
 main{max-width:700px;margin:auto;padding:0 16px 40px}
 section{background:white;padding:24px 16px;margin:18px 0;border-radius:20px;box-shadow:0 5px 20px #713b4b12}
 h2{font-family:Georgia,serif;color:#a84f6b}
-#contador{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:20px}
+#contador{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
 .tempo{background:#fff0f4;padding:15px 5px;border-radius:12px}
 .numero{display:block;font-size:26px;font-weight:bold;color:#b34467}
 .legenda{font-size:13px;color:#8c6873}
-.foto{width:100%;max-height:480px;object-fit:cover;border-radius:14px;margin-top:12px}
-.mensagem{line-height:1.8;font-size:16px;white-space:pre-line}
+.foto{width:100%;max-height:440px;object-fit:cover;border-radius:14px;margin-top:12px}
+.mensagem{line-height:1.8;font-size:16px;white-space:pre-wrap;text-align:left}
 footer{padding:20px;color:#986c79;font-size:13px}
 #galeria{display:grid;gap:22px}
-.item-foto{position:relative}
+.item-foto{position:relative;margin:10px 0 24px}
 .item-foto img{display:block}
 .botao-excluir{margin-top:10px;border:none;border-radius:20px;background:#fff0f4;color:#a83258;padding:10px 18px;font-size:14px;cursor:pointer}
 #adicionar-foto{margin-top:18px;border:none;border-radius:25px;padding:13px 22px;background:#bd3267;color:white;font-size:15px;cursor:pointer}
-#adicionar-foto:disabled{opacity:.6;cursor:wait}
 #arquivo-foto{display:none}
 #aviso-galeria{color:#986c79;font-size:13px;line-height:1.5;margin-top:14px}
-#botao-musica{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border:none;border-radius:50%;background:#bd3267;color:white;font-size:25px;cursor:pointer;z-index:1000;box-shadow:0 4px 18px #00000030;display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s}
-#botao-musica:active{transform:scale(.88)}
+#botao-musica{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border:none;border-radius:50%;background:#bd3267;color:white;font-size:25px;cursor:pointer;z-index:1000;box-shadow:0 4px 18px #00000030;display:none;align-items:center;justify-content:center}
 #botao-musica.tocando{animation:pulsar-musica 2s infinite}
 @keyframes pulsar-musica{0%,100%{box-shadow:0 4px 18px #bd326755}50%{box-shadow:0 4px 28px #bd3267aa}}
 #status-musica{position:fixed;right:18px;bottom:87px;z-index:1000;background:#51343d;color:white;padding:8px 12px;border-radius:20px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .3s}
 #status-musica.visivel{opacity:1}
-@media(max-width:420px){h1{font-size:32px}section{padding:22px 13px}}
 #login-painel{max-width:460px;margin:35px auto;padding:30px 22px;background:white;border-radius:20px;box-shadow:0 5px 20px #713b4b12}
 #login-google,#sair-conta{border:0;border-radius:25px;padding:13px 22px;background:#bd3267;color:white;cursor:pointer;font-size:15px}
-#barra-conta{display:none;max-width:700px;margin:12px auto;padding:10px 16px;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-#dados-conta{font-size:13px;overflow-wrap:anywhere}
+#barra-conta{display:none}
 #conteudo-privado{display:none}
-#mensagem-login{color:#a83258;font-size:14px}
+#mensagem-login{color:#a83258;font-size:14px;line-height:1.6}
+[hidden]{display:none!important}
+button{cursor:pointer}
+button:disabled{opacity:.55;cursor:wait}
+input,select,textarea{width:100%;padding:12px;border:1px solid #e8cbd5;border-radius:12px;font:inherit;color:#51343d;background:white}
+textarea{min-height:105px;resize:vertical}
+.primary{background:#bd3267;color:white;border:0;border-radius:24px;padding:12px 19px}
+.secondary{background:#fff0f4;color:#a83258;border:0;border-radius:24px;padding:10px 16px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+.stack{display:grid;gap:12px}
+.muted{font-size:13px;color:#986c79;line-height:1.5}
+.item{border:1px solid #f2dce4;border-radius:14px;padding:14px;margin:12px 0;text-align:left}
+.item .actions{justify-content:flex-start}
+#aviso-global{color:#a83258;white-space:pre-wrap}
+#inicio-status{font-size:14px;color:#986c79}
+label{display:block;text-align:left;font-size:14px;margin-bottom:5px}
+#codigo-conexao{font-weight:bold;letter-spacing:1px;overflow-wrap:anywhere}
+#galeria .item-foto{margin:10px 0 24px}
 
-#login-painel[hidden]{display:none!important}button{cursor:pointer}button:disabled{opacity:.55;cursor:wait}input,select,textarea{width:100%;padding:12px;border:1px solid #e8cbd5;border-radius:12px;font:inherit;color:#51343d;background:white}textarea{min-height:105px;resize:vertical}.primary{background:#bd3267;color:white;border:0;border-radius:24px;padding:12px 19px}.secondary{background:#fff0f4;color:#a83258;border:0;border-radius:24px;padding:10px 16px}.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:12px 0}.stack{display:grid;gap:12px}.muted{font-size:13px;color:#986c79;line-height:1.5}.item{border:1px solid #f2dce4;border-radius:14px;padding:14px;margin:12px 0;text-align:left}.item .actions{justify-content:flex-start}#contador{grid-template-columns:repeat(3,1fr)}#aviso-global{color:#a83258;white-space:pre-wrap}#conteudo-privado{display:none}#botao-musica{display:none}.foto{max-height:440px}#arquivo-foto{display:none}#historia-painel[hidden],#sem-historias[hidden]{display:none!important}#inicio-status{font-size:14px;color:#986c79}label{display:block;text-align:left;font-size:14px;margin-bottom:5px}#codigo-conexao{font-weight:bold;letter-spacing:1px;overflow-wrap:anywhere}#galeria .item-foto{margin:10px 0 24px}.mensagem{white-space:pre-wrap;text-align:left}.tag{font-size:12px;color:#a84f6b}
-/* Menu lateral de configurações, exibido após o primeiro pareamento */
-#abrir-config{display:none;position:fixed;left:14px;top:16px;z-index:1101;border:0;border-radius:24px;background:#bd3267;color:white;padding:11px 15px;box-shadow:0 4px 16px #0002;font-size:15px}
+/* Menu lateral */
+#abrir-config{
+ display:block;
+ position:fixed;
+ left:14px;
+ top:16px;
+ z-index:1101;
+ border:0;
+ border-radius:12px;
+ background:#bd3267;
+ color:white;
+ padding:9px 15px;
+ box-shadow:0 4px 16px #0002;
+ font-size:24px;
+ line-height:1;
+}
 #fundo-config{position:fixed;inset:0;background:#29151d88;z-index:1102}
-#menu-config{position:fixed;left:0;top:0;bottom:0;width:min(370px,90vw);background:#fff5f7;z-index:1103;overflow-y:auto;padding:15px 15px 28px;box-shadow:6px 0 25px #0002;text-align:left}
-#menu-config h2{margin:8px 0 12px}#menu-config section{margin:12px 0;padding:18px 13px}#menu-config .actions{justify-content:flex-start}
+#menu-config{
+ position:fixed;
+ left:0;
+ top:0;
+ bottom:0;
+ width:min(370px,90vw);
+ background:#fff5f7;
+ z-index:1103;
+ overflow-y:auto;
+ padding:15px 15px 28px;
+ box-shadow:6px 0 25px #0002;
+ text-align:left;
+}
+#menu-config h2{margin:8px 0 12px}
+#menu-config section{margin:12px 0;padding:18px 13px}
+#menu-config .actions{justify-content:flex-start}
 #fechar-config{border:0;background:#fff0f4;color:#a83258;border-radius:20px;padding:9px 14px;font-size:15px}
-#abrir-config[hidden],#fundo-config[hidden],#menu-config[hidden]{display:none!important}
 body.config-aberta{overflow:hidden}
-@media(max-width:420px){#abrir-config{left:9px;top:10px;padding:9px 11px;font-size:13px}}
-/* Personagem animada acima do título */
-#personagem-animada{display:block;margin:0 auto 12px;padding:0;border:0;background:transparent;cursor:pointer;line-height:0;max-width:100%;touch-action:manipulation}
-#personagem-animada img{display:block;width:150px;height:150px;object-fit:contain;image-rendering:pixelated}
+
+/* Personagem */
+#personagem-animada{
+ display:block;
+ margin:0 auto 12px;
+ padding:0;
+ border:0;
+ background:transparent;
+ cursor:pointer;
+ line-height:0;
+ max-width:100%;
+ touch-action:manipulation;
+}
+#personagem-animada img{
+ display:block;
+ width:150px;
+ height:150px;
+ object-fit:contain;
+ image-rendering:pixelated;
+}
 #personagem-animada:focus-visible{outline:3px solid #bd3267;outline-offset:5px;border-radius:12px}
-</style></head>
-<body><audio id="musica" loop preload="auto"><source src="lofi.mp3" type="audio/mpeg"></audio>
-<button id="botao-musica" type="button" aria-label="Ativar música">🔇</button><div id="status-musica">Música pausada</div>
-<div id="login-painel" hidden><h2>Bem-vindo ao Nossa História ❤️</h2><p class="subtitulo">Entre com sua conta Google para continuar.</p><button id="login-google" class="primary" type="button">Continuar com Google</button><p id="mensagem-login" role="status"></p></div>
-<div id="barra-conta"><span id="dados-conta"></span><button id="sair-conta" class="secondary" type="button">Sair da conta</button></div>
-<button id="abrir-config" type="button" aria-label="Abrir configurações e adicionar pessoas" aria-controls="menu-config" aria-expanded="false" hidden>⚙️ Configurações</button>
+
+/* Tema escuro */
+body.tema-escuro{background:#17101f;color:#f7eafa;color-scheme:dark}
+body.tema-escuro section,
+body.tema-escuro #login-painel{
+ background:#291d35;
+ color:#f7eafa;
+ box-shadow:0 5px 20px #0004;
+}
+body.tema-escuro #menu-config{background:#1c1427;color:#f7eafa}
+body.tema-escuro h2,
+body.tema-escuro h3{color:#e3a6f5}
+body.tema-escuro .tempo,
+body.tema-escuro .item{background:#382745;border-color:#594166}
+body.tema-escuro .numero{color:#e3a6f5}
+body.tema-escuro .subtitulo,
+body.tema-escuro .muted,
+body.tema-escuro .legenda,
+body.tema-escuro footer,
+body.tema-escuro #inicio-status,
+body.tema-escuro #aviso-galeria{color:#cbb0d5}
+body.tema-escuro input,
+body.tema-escuro select,
+body.tema-escuro textarea{
+ background:#21182d;
+ color:#f7eafa;
+ border-color:#674c78;
+}
+body.tema-escuro .primary,
+body.tema-escuro #login-google,
+body.tema-escuro #abrir-config,
+body.tema-escuro #botao-musica{
+ background:#77399c;
+ color:white;
+}
+body.tema-escuro .secondary,
+body.tema-escuro #fechar-config,
+body.tema-escuro .botao-excluir{
+ background:#493158;
+ color:#f2d7fa;
+}
+#nome-menu,#email-menu{overflow-wrap:anywhere}
+#tema-claro[aria-pressed="true"],
+#tema-escuro[aria-pressed="true"]{
+ outline:2px solid #bd3267;
+ outline-offset:2px;
+}
+body.tema-escuro #tema-claro[aria-pressed="true"],
+body.tema-escuro #tema-escuro[aria-pressed="true"]{
+ outline-color:#e3a6f5;
+}
+@media(max-width:420px){
+ h1{font-size:32px}
+ section{padding:22px 13px}
+ #abrir-config{left:9px;top:10px;padding:9px 11px}
+}
+</style>
+</head>
+<body>
+
+<audio id="musica" loop preload="auto">
+ <source src="lofi.mp3" type="audio/mpeg">
+</audio>
+<button id="botao-musica" type="button" aria-label="Ativar música">🔇</button>
+<div id="status-musica">Música pausada</div>
+
+<!-- Login começa visível para evitar tela vazia -->
+<div id="login-painel">
+ <h2>Bem-vindo ao Nossa História ❤️</h2>
+ <p class="subtitulo">Entre com sua conta Google para continuar.</p>
+ <button id="login-google" class="primary" type="button">Continuar com Google</button>
+ <p id="mensagem-login" role="status"></p>
+</div>
+
+<div id="barra-conta">
+ <span id="dados-conta"></span>
+ <button id="sair-conta" class="secondary" type="button">Sair da conta</button>
+</div>
+
+<button id="abrir-config" type="button"
+ aria-label="Abrir menu"
+ aria-controls="menu-config"
+ aria-expanded="false" hidden>☰</button>
+
 <div id="fundo-config" hidden></div>
-<aside id="menu-config" role="dialog" aria-modal="true" aria-label="Configurações" hidden>
-<button id="fechar-config" type="button">✕ Fechar</button><h2>Configurações ⚙️</h2><div id="conteudo-config"></div>
+
+<aside id="menu-config" role="dialog" aria-modal="true"
+ aria-label="Configurações" hidden>
+ <button id="fechar-config" type="button">✕ Fechar</button>
+ <h2>Meu menu</h2>
+
+ <section>
+  <h2 id="nome-menu">Meu perfil</h2>
+  <p class="muted" id="email-menu"></p>
+  <button id="sair-menu" class="secondary" type="button">Sair da conta</button>
+ </section>
+
+ <section>
+  <h2>Aparência</h2>
+  <div class="actions">
+   <button id="tema-claro" class="secondary" type="button"
+    aria-pressed="true">☀️ Claro</button>
+   <button id="tema-escuro" class="secondary" type="button"
+    aria-pressed="false">🌙 Escuro</button>
+  </div>
+ </section>
+
+ <div id="conteudo-config"></div>
 </aside>
-<header><button id="personagem-animada" type="button" aria-label="Toque para receber um beijo" title="Toque para receber um beijo"><img id="imagem-personagem" src="danca.png" alt="Gatinha dançando"></button><h1 id="titulo-site">Nossa História</h1><p class="subtitulo">Cada história merece um lugar especial.</p></header>
-<main id="conteudo-privado"><p id="aviso-global" role="status"></p>
-<section id="secao-perfil"><h2>Meu perfil 💗</h2><div class="stack"><div><label for="nome-usuario">Seu nome</label><input id="nome-usuario" maxlength="40" placeholder="Como deseja ser chamado(a)?"></div><button id="salvar-nome" class="primary" type="button">Salvar nome</button><div><p class="muted">Seu código pessoal de conexão:</p><p id="codigo-conexao">Carregando...</p><button id="copiar-codigo" class="secondary" type="button">Copiar código</button></div></div></section>
-<section id="secao-conexoes"><h2>Conectar com alguém 💌</h2><label for="codigo-outra-pessoa">Código da outra pessoa</label><input id="codigo-outra-pessoa" placeholder="Cole o código aqui"><div class="actions"><button id="enviar-pedido" class="primary" type="button">Enviar solicitação</button></div><h3>Solicitações pendentes</h3><div id="solicitacoes">Carregando...</div></section>
-<section><h2>Minhas histórias ❤️</h2><div id="lista-historias">Carregando...</div><div id="sem-historias" hidden><p class="subtitulo">Sua história começa com uma conexão aceita. ❤️</p></div></section>
-<div id="historia-painel" hidden>
-<section><h2 id="titulo-historia">Nossa História</h2><p class="muted">Cada segundo com você é especial.</p><div id="contador"><div class="tempo"><span class="numero" id="anos">00</span><span class="legenda">Anos</span></div><div class="tempo"><span class="numero" id="meses">00</span><span class="legenda">Meses</span></div><div class="tempo"><span class="numero" id="dias">00</span><span class="legenda">Dias</span></div><div class="tempo"><span class="numero" id="horas">00</span><span class="legenda">Horas</span></div><div class="tempo"><span class="numero" id="minutos">00</span><span class="legenda">Minutos</span></div><div class="tempo"><span class="numero" id="segundos">00</span><span class="legenda">Segundos</span></div></div><p id="inicio-status">Aguardando a data de início ❤️</p><label for="data-inicio">Data e horário em que tudo começou</label><input id="data-inicio" type="datetime-local"><div class="actions"><button id="salvar-inicio" class="primary" type="button">Salvar data do casal</button></div></section>
-<section><h2>Nossas lembranças 📸</h2><div id="galeria"><p class="subtitulo">Carregando...</p></div><button id="adicionar-foto" class="primary" type="button">＋ Adicionar foto</button><input id="arquivo-foto" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><p id="aviso-galeria" class="muted">Somente participantes desta história devem ter acesso às fotos privadas.</p></section>
-<section><h2>Uma mensagem para você 💌</h2><p class="mensagem">Quero continuar criando lembranças, compartilhando sorrisos e vivendo momentos ao seu lado. ❤️</p></section>
-<section><h2>Conexão</h2><p class="muted">Ao desfazer a conexão, as duas pessoas perderão o acesso à história. As fotos não serão apagadas automaticamente.</p><button id="desfazer-conexao" class="secondary" type="button">Desfazer conexão</button></section>
-</div><footer>Feito com amor, especialmente para você. ❤️</footer></main>
+
+<header>
+ <button id="personagem-animada" type="button"
+  aria-label="Toque para receber um beijo"
+  title="Toque para receber um beijo">
+  <img id="imagem-personagem" src="danca.png" alt="Gatinha dançando">
+ </button>
+ <h1 id="titulo-site">Nossa História</h1>
+ <p class="subtitulo">Cada história merece um lugar especial.</p>
+</header>
+
+<main id="conteudo-privado">
+ <p id="aviso-global" role="status"></p>
+
+ <section id="secao-perfil">
+  <h2>Meu perfil 💗</h2>
+  <div class="stack">
+   <div>
+    <label for="nome-usuario">Seu nome</label>
+    <input id="nome-usuario" maxlength="40"
+     placeholder="Como deseja ser chamado(a)?">
+   </div>
+   <button id="salvar-nome" class="primary" type="button">Salvar nome</button>
+   <div>
+    <p class="muted">Seu código pessoal de conexão:</p>
+    <p id="codigo-conexao">Carregando...</p>
+    <button id="copiar-codigo" class="secondary" type="button">Copiar código</button>
+   </div>
+  </div>
+ </section>
+
+ <section id="secao-conexoes">
+  <h2>Conectar com alguém 💌</h2>
+  <label for="codigo-outra-pessoa">Código da outra pessoa</label>
+  <input id="codigo-outra-pessoa" placeholder="Cole o código aqui">
+  <div class="actions">
+   <button id="enviar-pedido" class="primary" type="button">Enviar solicitação</button>
+  </div>
+  <h3>Solicitações pendentes</h3>
+  <div id="solicitacoes">Carregando...</div>
+ </section>
+
+ <section>
+  <h2>Minhas histórias ❤️</h2>
+  <div id="lista-historias">Carregando...</div>
+  <div id="sem-historias" hidden>
+   <p class="subtitulo">Sua história começa com uma conexão aceita. ❤️</p>
+  </div>
+ </section>
+
+ <div id="historia-painel" hidden>
+  <section>
+   <h2 id="titulo-historia">Nossa História</h2>
+   <p class="muted">Cada segundo com você é especial.</p>
+   <div id="contador">
+    <div class="tempo"><span class="numero" id="anos">00</span><span class="legenda">Anos</span></div>
+    <div class="tempo"><span class="numero" id="meses">00</span><span class="legenda">Meses</span></div>
+    <div class="tempo"><span class="numero" id="dias">00</span><span class="legenda">Dias</span></div>
+    <div class="tempo"><span class="numero" id="horas">00</span><span class="legenda">Horas</span></div>
+    <div class="tempo"><span class="numero" id="minutos">00</span><span class="legenda">Minutos</span></div>
+    <div class="tempo"><span class="numero" id="segundos">00</span><span class="legenda">Segundos</span></div>
+   </div>
+   <p id="inicio-status">Aguardando a data de início ❤️</p>
+   <label for="data-inicio">Data e horário em que tudo começou</label>
+   <input id="data-inicio" type="datetime-local">
+   <div class="actions">
+    <button id="salvar-inicio" class="primary" type="button">Salvar data do casal</button>
+   </div>
+  </section>
+
+  <section>
+   <h2>Nossas lembranças 📸</h2>
+   <div id="galeria">
+    <p class="subtitulo">Carregando...</p>
+   </div>
+   <button id="adicionar-foto" class="primary" type="button">＋ Adicionar foto</button>
+   <input id="arquivo-foto" type="file"
+    accept="image/jpeg,image/png,image/webp,image/gif">
+   <p id="aviso-galeria" class="muted">
+    Somente participantes desta história devem ter acesso às fotos privadas.
+   </p>
+  </section>
+
+  <section>
+   <h2>Uma mensagem para você 💌</h2>
+   <p class="mensagem">Quero continuar criando lembranças, compartilhando sorrisos e vivendo momentos ao seu lado. ❤️</p>
+  </section>
+
+  <section>
+   <h2>Conexão</h2>
+   <p class="muted">
+    Ao desfazer a conexão, as duas pessoas perderão o acesso à história.
+    As fotos não serão apagadas automaticamente.
+   </p>
+   <button id="desfazer-conexao" class="secondary" type="button">Desfazer conexão</button>
+  </section>
+ </div>
+
+ <footer>Feito com amor, especialmente para você. ❤️</footer>
+</main>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-/* A dança é um PNG animado (APNG), com looping próprio.
-   O beijo é um GIF de 9 quadros x 140 ms = 1260 ms. */
-const personagemBotao=document.getElementById('personagem-animada');
-const personagemImagem=document.getElementById('imagem-personagem');
+const $=id=>document.getElementById(id);
+
+/* Temas e personagens */
+const personagemBotao=$('personagem-animada');
+const personagemImagem=$('imagem-personagem');
 let temporizadorBeijo=null;
 let contadorBeijos=0;
+let temaAtual='claro';
+
+const arquivosPersonagem={
+ claro:{danca:'danca.png',beijo:'beijo.gif',nome:'Hello Kitty'},
+ escuro:{danca:'kuromid.gif',beijo:'kuromib.gif',nome:'Kuromi'}
+};
+
+function aplicarTema(tema){
+ temaAtual=tema==='escuro'?'escuro':'claro';
+ document.body.classList.toggle('tema-escuro',temaAtual==='escuro');
+ $('tema-claro').setAttribute('aria-pressed',String(temaAtual==='claro'));
+ $('tema-escuro').setAttribute('aria-pressed',String(temaAtual==='escuro'));
+
+ clearTimeout(temporizadorBeijo);
+ personagemImagem.src=arquivosPersonagem[temaAtual].danca;
+ personagemImagem.alt=arquivosPersonagem[temaAtual].nome+' dançando';
+
+ try{
+  localStorage.setItem('nossa-historia-tema',temaAtual);
+ }catch(e){}
+}
+
+$('tema-claro').addEventListener('click',()=>aplicarTema('claro'));
+$('tema-escuro').addEventListener('click',()=>aplicarTema('escuro'));
+
+try{
+ aplicarTema(localStorage.getItem('nossa-historia-tema'));
+}catch(e){
+ aplicarTema('claro');
+}
+
 personagemBotao.addEventListener('click',()=>{
-  clearTimeout(temporizadorBeijo);
-  contadorBeijos++;
-  personagemImagem.alt='Gatinha mandando um beijo';
-  // Um endereço novo reinicia a animação a cada toque, mesmo em cache.
-  personagemImagem.src='beijo.gif?repeticao='+contadorBeijos;
-  temporizadorBeijo=setTimeout(()=>{
-    personagemImagem.src='danca.png';
-    personagemImagem.alt='Gatinha dançando';
-    temporizadorBeijo=null;
-  },1260);
+ clearTimeout(temporizadorBeijo);
+ contadorBeijos++;
+ const personagem=arquivosPersonagem[temaAtual];
+ personagemImagem.alt=personagem.nome+' mandando um beijo';
+ personagemImagem.src=personagem.beijo+'?repeticao='+contadorBeijos;
+ temporizadorBeijo=setTimeout(()=>{
+  personagemImagem.src=arquivosPersonagem[temaAtual].danca;
+  personagemImagem.alt=arquivosPersonagem[temaAtual].nome+' dançando';
+  temporizadorBeijo=null;
+ },1260);
 });
+
+/* Supabase */
 const SUPABASE_URL='https://xttqhfaapgimaxfendzr.supabase.co';
 const SUPABASE_KEY='sb_publishable_S-9cgYjs3tAlrb0_Z21pvg_PhQlr-GI';
 const db=window.supabase?.createClient(SUPABASE_URL,SUPABASE_KEY);
-const $=id=>document.getElementById(id);
-let usuario=null, perfil=null, historias=[], historiaAtual=null, fotosUrls=[];
+
+let usuario=null;
+let perfil=null;
+let historias=[];
+let historiaAtual=null;
+let fotosUrls=[];
+
 function aviso(t){$('aviso-global').textContent=t||''}
-function erro(e){aviso(e?.message||String(e));}
-async function rpc(nome,args={}){const {data,error}=await db.rpc(nome,args);if(error)throw error;return data;}
-function botao(id,fn){$(id).addEventListener('click',async()=>{const b=$(id);b.disabled=true;try{await fn()}catch(e){erro(e)}finally{b.disabled=false}})}
-function elemento(tag,text,classe){const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(classe)el.className=classe;return el;}
+function erro(e){aviso(e?.message||String(e))}
+
+async function rpc(nome,args={}){
+ const {data,error}=await db.rpc(nome,args);
+ if(error)throw error;
+ return data;
+}
+
+function botao(id,fn){
+ $(id).addEventListener('click',async()=>{
+  const b=$(id);
+  b.disabled=true;
+  try{
+   await fn();
+  }catch(e){
+   erro(e);
+  }finally{
+   b.disabled=false;
+  }
+ });
+}
+
+function elemento(tag,text,classe){
+ const el=document.createElement(tag);
+ if(text!==undefined)el.textContent=text;
+ if(classe)el.className=classe;
+ return el;
+}
+
 function limpar(el){el.replaceChildren()}
-function adicionarMeses(data,n){const d=new Date(data),dia=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+n);d.setDate(Math.min(dia,new Date(d.getFullYear(),d.getMonth()+1,0).getDate()));return d;}
-function atualizarContador(){const campos=['anos','meses','dias','horas','minutos','segundos'];if(!historiaAtual?.data_inicio){campos.forEach(k=>$(k).textContent='00');return;}const inicio=new Date(historiaAtual.data_inicio),agora=new Date();if(isNaN(inicio)||inicio>agora){campos.forEach(k=>$(k).textContent='00');return;}let anos=agora.getFullYear()-inicio.getFullYear(),marco=adicionarMeses(inicio,anos*12);if(marco>agora){anos--;marco=adicionarMeses(inicio,anos*12);}let meses=0;while(adicionarMeses(marco,1)<=agora){marco=adicionarMeses(marco,1);meses++;}let r=agora-marco;const dias=Math.floor(r/86400000);r%=86400000;const horas=Math.floor(r/3600000);r%=3600000;const minutos=Math.floor(r/60000);const segundos=Math.floor((r%60000)/1000);[anos,meses,dias,horas,minutos,segundos].forEach((v,i)=>$(campos[i]).textContent=String(v).padStart(2,'0'));}
+
+function adicionarMeses(data,n){
+ const d=new Date(data),dia=d.getDate();
+ d.setDate(1);
+ d.setMonth(d.getMonth()+n);
+ d.setDate(Math.min(dia,new Date(d.getFullYear(),d.getMonth()+1,0).getDate()));
+ return d;
+}
+
+function atualizarContador(){
+ const campos=['anos','meses','dias','horas','minutos','segundos'];
+ if(!historiaAtual?.data_inicio){
+  campos.forEach(k=>$(k).textContent='00');
+  return;
+ }
+ const inicio=new Date(historiaAtual.data_inicio),agora=new Date();
+ if(isNaN(inicio)||inicio>agora){
+  campos.forEach(k=>$(k).textContent='00');
+  return;
+ }
+ let anos=agora.getFullYear()-inicio.getFullYear();
+ let marco=adicionarMeses(inicio,anos*12);
+ if(marco>agora){
+  anos--;
+  marco=adicionarMeses(inicio,anos*12);
+ }
+ let meses=0;
+ while(adicionarMeses(marco,1)<=agora){
+  marco=adicionarMeses(marco,1);
+  meses++;
+ }
+ let r=agora-marco;
+ const dias=Math.floor(r/86400000);
+ r%=86400000;
+ const horas=Math.floor(r/3600000);
+ r%=3600000;
+ const minutos=Math.floor(r/60000);
+ const segundos=Math.floor((r%60000)/1000);
+ [anos,meses,dias,horas,minutos,segundos].forEach((v,i)=>{
+  $(campos[i]).textContent=String(v).padStart(2,'0');
+ });
+}
 setInterval(atualizarContador,1000);
-function atualizarTitulo(){if(!historiaAtual)return;const nome=`História de ${historiaAtual.meu_nome} + ${historiaAtual.parceiro_nome}`;$('titulo-historia').textContent=nome;$('titulo-site').textContent=nome;const data=historiaAtual.data_inicio?new Date(historiaAtual.data_inicio):null;$('inicio-status').textContent=data?'Desde '+data.toLocaleString('pt-BR')+' ❤️':'Aguardando a data de início ❤️';$('data-inicio').value=data?new Date(data.getTime()-data.getTimezoneOffset()*60000).toISOString().slice(0,16):'';atualizarContador();}
-async function carregarPerfil(){perfil=await rpc('criar_meu_perfil');$('nome-usuario').value=perfil.username;$('codigo-conexao').textContent=perfil.connection_code;}
-async function carregarPedidos(){const pedidos=await rpc('minhas_solicitacoes');const area=$('solicitacoes');limpar(area);if(!pedidos?.length){area.append(elemento('p','Nenhuma solicitação pendente.','muted'));return;}for(const p of pedidos){const item=elemento('div',undefined,'item');item.append(elemento('div',`${p.nome_usuario} — ${p.tipo==='recebida'?'recebida':'enviada'}`));const a=elemento('div',undefined,'actions');const acao=(titulo,fn)=>{const b=elemento('button',titulo,'secondary');b.onclick=async()=>{b.disabled=true;try{await fn();await carregarPedidos();await carregarHistorias()}catch(e){erro(e)}finally{b.disabled=false}};a.append(b)};if(p.tipo==='recebida'){acao('Aceitar',()=>rpc('aceitar_conexao',{pedido_id:p.pedido_id}));acao('Recusar',()=>rpc('responder_solicitacao',{pedido_id:p.pedido_id,nova_situacao:'rejected'}));}else{acao('Cancelar',()=>rpc('responder_solicitacao',{pedido_id:p.pedido_id,nova_situacao:'cancelled'}));}item.append(a);area.append(item);}}
-// Antes do pareamento, perfil e conexões ficam visíveis na página.
-// Depois, são movidos para o menu lateral, sem perder eventos ou dados.
+
+function atualizarTitulo(){
+ if(!historiaAtual)return;
+ const nome=`História de ${historiaAtual.meu_nome} + ${historiaAtual.parceiro_nome}`;
+ $('titulo-historia').textContent=nome;
+ $('titulo-site').textContent=nome;
+ const data=historiaAtual.data_inicio?new Date(historiaAtual.data_inicio):null;
+ $('inicio-status').textContent=data
+  ?'Desde '+data.toLocaleString('pt-BR')+' ❤️'
+  :'Aguardando a data de início ❤️';
+ $('data-inicio').value=data
+  ?new Date(data.getTime()-data.getTimezoneOffset()*60000).toISOString().slice(0,16)
+  :'';
+ atualizarContador();
+}
+
+async function carregarPerfil(){
+ perfil=await rpc('criar_meu_perfil');
+ $('nome-usuario').value=perfil.username;
+ $('codigo-conexao').textContent=perfil.connection_code;
+ $('nome-menu').textContent=perfil.username||'Meu perfil';
+}
+
+async function carregarPedidos(){
+ const pedidos=await rpc('minhas_solicitacoes');
+ const area=$('solicitacoes');
+ limpar(area);
+
+ if(!pedidos?.length){
+  area.append(elemento('p','Nenhuma solicitação pendente.','muted'));
+  return;
+ }
+
+ for(const p of pedidos){
+  const item=elemento('div',undefined,'item');
+  item.append(elemento('div',
+   `${p.nome_usuario} — ${p.tipo==='recebida'?'recebida':'enviada'}`));
+
+  const a=elemento('div',undefined,'actions');
+  const acao=(titulo,fn)=>{
+   const b=elemento('button',titulo,'secondary');
+   b.onclick=async()=>{
+    b.disabled=true;
+    try{
+     await fn();
+     await carregarPedidos();
+     await carregarHistorias();
+    }catch(e){
+     erro(e);
+    }finally{
+     b.disabled=false;
+    }
+   };
+   a.append(b);
+  };
+
+  if(p.tipo==='recebida'){
+   acao('Aceitar',()=>rpc('aceitar_conexao',{pedido_id:p.pedido_id}));
+   acao('Recusar',()=>rpc('responder_solicitacao',{
+    pedido_id:p.pedido_id,nova_situacao:'rejected'
+   }));
+  }else{
+   acao('Cancelar',()=>rpc('responder_solicitacao',{
+    pedido_id:p.pedido_id,nova_situacao:'cancelled'
+   }));
+  }
+  item.append(a);
+  area.append(item);
+ }
+}
+
+/* Menu lateral */
 const areaPrincipal=$('secao-perfil').parentElement;
-const secaoPerfil=$('secao-perfil'),secaoConexoes=$('secao-conexoes');
+const secaoPerfil=$('secao-perfil');
+const secaoConexoes=$('secao-conexoes');
 const referenciaHistorias=$('lista-historias').closest('section');
+
 function fecharConfiguracoes(){
- $('menu-config').hidden=true;$('fundo-config').hidden=true;
+ $('menu-config').hidden=true;
+ $('fundo-config').hidden=true;
  $('abrir-config').setAttribute('aria-expanded','false');
  document.body.classList.remove('config-aberta');
 }
+
 function abrirConfiguracoes(){
- $('menu-config').hidden=false;$('fundo-config').hidden=false;
+ $('menu-config').hidden=false;
+ $('fundo-config').hidden=false;
  $('abrir-config').setAttribute('aria-expanded','true');
- document.body.classList.add('config-aberta');$('fechar-config').focus();
+ document.body.classList.add('config-aberta');
+ $('fechar-config').focus();
 }
+
 $('abrir-config').addEventListener('click',abrirConfiguracoes);
 $('fechar-config').addEventListener('click',fecharConfiguracoes);
 $('fundo-config').addEventListener('click',fecharConfiguracoes);
-document.addEventListener('keydown',e=>{if(e.key==='Escape')fecharConfiguracoes();});
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape')fecharConfiguracoes();
+});
+
 function atualizarMenuConfiguracoes(){
- const pareado=historias.length>0;
- if(pareado){
-   $('conteudo-config').append(secaoPerfil,secaoConexoes);
+ if(usuario){
+  $('conteudo-config').append(secaoPerfil,secaoConexoes);
  }else{
-   areaPrincipal.insertBefore(secaoPerfil,referenciaHistorias);
-   areaPrincipal.insertBefore(secaoConexoes,referenciaHistorias);
-   fecharConfiguracoes();
+  areaPrincipal.insertBefore(secaoPerfil,referenciaHistorias);
+  areaPrincipal.insertBefore(secaoConexoes,referenciaHistorias);
+  fecharConfiguracoes();
  }
- $('abrir-config').hidden=!pareado||!usuario;
+ $('abrir-config').hidden=!usuario;
 }
-async function carregarHistorias(){historias=await rpc('minhas_historias')||[];atualizarMenuConfiguracoes();const area=$('lista-historias');limpar(area);$('sem-historias').hidden=historias.length>0;if(!historias.length){historiaAtual=null;$('historia-painel').hidden=true;$('titulo-site').textContent='Nossa História';return;}for(const h of historias){const b=elemento('button',`❤️ ${h.meu_nome} + ${h.parceiro_nome}`,'secondary');b.style.margin='5px';b.onclick=()=>selecionarHistoria(h.historia_id);area.append(b);}const id=historias.some(h=>h.historia_id===historiaAtual?.historia_id)?historiaAtual.historia_id:historias[0].historia_id;await selecionarHistoria(id);}
-async function selecionarHistoria(id){historiaAtual=historias.find(h=>h.historia_id===id)||null;$('historia-painel').hidden=!historiaAtual;if(!historiaAtual)return;atualizarTitulo();await carregarFotos();}
-async function carregarFotos(){fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];const area=$('galeria');limpar(area);if(!historiaAtual)return;const id=historiaAtual.historia_id;const {data,error}=await db.from('story_photos').select('id,file_path,uploaded_by,created_at').eq('story_id',id).order('created_at',{ascending:true});if(error){area.append(elemento('p','Não foi possível carregar as fotos: '+error.message,'muted'));return;}if(!data.length){area.append(elemento('p','Nosso mural está esperando novas lembranças. ❤️','muted'));return;}for(const f of data){const {data:blob,error:e}=await db.storage.from('fotos-privadas').download(f.file_path);if(e){area.append(elemento('p','Não foi possível abrir uma foto.','muted'));continue;}const url=URL.createObjectURL(blob);fotosUrls.push(url);const item=elemento('div',undefined,'item-foto');const img=elemento('img');img.src=url;img.alt='Uma lembrança nossa';img.className='foto';img.loading='lazy';item.append(img);const b=elemento('button','Excluir foto','botao-excluir');b.onclick=()=>excluirFoto(f);item.append(b);area.append(item);}}
-async function excluirFoto(f){if(!historiaAtual||!confirm('Excluir esta foto definitivamente?'))return;const {error:e}=await db.storage.from('fotos-privadas').remove([f.file_path]);if(e){erro(e);return;}const {error}=await db.from('story_photos').delete().eq('id',f.id);if(error){erro(error);return;}await carregarFotos();}
-async function enviarFoto(arquivo){if(!historiaAtual)return;const tipos=['image/jpeg','image/png','image/webp','image/gif'];if(!tipos.includes(arquivo.type)||arquivo.size>10*1024*1024){aviso('Escolha JPG, PNG, WEBP ou GIF de até 10 MB.');return;}const id=crypto.randomUUID(),caminho=`${historiaAtual.historia_id}/${id}`;const {error:cadastroErro}=await db.from('story_photos').insert({id,story_id:historiaAtual.historia_id,uploaded_by:usuario.id,file_path:caminho});if(cadastroErro){erro(cadastroErro);return;}const {error:uploadErro}=await db.storage.from('fotos-privadas').upload(caminho,arquivo,{contentType:arquivo.type,upsert:false});if(uploadErro){await db.from('story_photos').delete().eq('id',id);erro(uploadErro);return;}aviso('Foto enviada! ❤️');await carregarFotos();}
-botao('salvar-nome',async()=>{const nome=$('nome-usuario').value.trim();if(!nome||nome.length>40){aviso('Digite um nome de 1 a 40 caracteres.');return;}const {error}=await db.from('profiles').update({username:nome}).eq('id',usuario.id);if(error)throw error;aviso('Nome atualizado! ❤️');await carregarPerfil();await carregarHistorias();});
-botao('copiar-codigo',async()=>{await navigator.clipboard.writeText(perfil.connection_code);aviso('Código copiado!');});
-botao('enviar-pedido',async()=>{await rpc('enviar_solicitacao',{codigo_digitado:$('codigo-outra-pessoa').value.trim()});$('codigo-outra-pessoa').value='';aviso('Solicitação enviada! ❤️');await carregarPedidos();});
-botao('salvar-inicio',async
+
+async function carregarHistorias(){
+ historias=await rpc('minhas_historias')||[];
+ atualizarMenuConfiguracoes();
+ const area=$('lista-historias');
+ limpar(area);
+ $('sem-historias').hidden=historias.length>0;
+
+ if(!historias.length){
+  historiaAtual=null;
+  $('historia-painel').hidden=true;
+  $('titulo-site').textContent='Nossa História';
+  return;
+ }
+
+ for(const h of historias){
+  const b=elemento('button',
+   `❤️ ${h.meu_nome} + ${h.parceiro_nome}`,'secondary');
+  b.style.margin='5px';
+  b.onclick=()=>selecionarHistoria(h.historia_id);
+  area.append(b);
+ }
+
+ const id=historias.some(h=>h.historia_id===historiaAtual?.historia_id)
+  ?historiaAtual.historia_id:historias[0].historia_id;
+ await selecionarHistoria(id);
+}
+
+async function selecionarHistoria(id){
+ historiaAtual=historias.find(h=>h.historia_id===id)||null;
+ $('historia-painel').hidden=!historiaAtual;
+ if(!historiaAtual)return;
+ atualizarTitulo();
+ await carregarFotos();
+}
+
+async function carregarFotos(){
+ fotosUrls.forEach(url=>URL.revokeObjectURL(url));
+ fotosUrls=[];
+ const area=$('galeria');
+ limpar(area);
+ if(!historiaAtual)return;
+
+ const id
