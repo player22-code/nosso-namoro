@@ -93,6 +93,16 @@ body.tema-escuro #recado-personagem{background:#30253e;border-color:#59436d;colo
 body.tema-escuro #recado-personagem::before{background:#30253e;border-color:#59436d}
 body.tema-escuro #recarregar-personagem{background:#49335e;color:#f2d9ff}
 @media(max-width:360px){#personagem-com-recado{gap:9px}#personagem-com-recado .coracao{width:90px;height:90px}#recado-personagem{max-width:175px;font-size:11px;padding:9px}#recarregar-personagem{font-size:11px}}
+
+/* Planos do casal — pagamentos ainda não habilitados */
+#planos-casal .grade-planos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;text-align:left}
+#planos-casal .cartao-plano{border:1px solid #f2dce4;border-radius:16px;padding:16px;background:#fffafd}
+#planos-casal .cartao-plano h3{margin:0 0 9px;color:#a84f6b}
+#planos-casal .preco-plano{font-size:22px;font-weight:bold;color:#bd3267;margin:10px 0}
+#planos-casal .cartao-plano button{width:100%;margin-top:9px}
+body.tema-escuro #planos-casal .cartao-plano{background:#30253e;border-color:#59436d}
+body.tema-escuro #planos-casal .cartao-plano h3,body.tema-escuro #planos-casal .preco-plano{color:#d7a8ff}
+@media(max-width:520px){#planos-casal .grade-planos{grid-template-columns:1fr}}
 </style></head>
 <body><audio id="musica" loop preload="auto"><source src="lofi.mp3" type="audio/mpeg"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -115,6 +125,18 @@ body.tema-escuro #recarregar-personagem{background:#49335e;color:#f2d9ff}
 <div id="historia-painel" hidden>
 <section><h2 id="titulo-historia">Nossa História</h2><p class="muted">Cada segundo com você é especial.</p><div id="contador"><div class="tempo"><span class="numero" id="anos">00</span><span class="legenda">Anos</span></div><div class="tempo"><span class="numero" id="meses">00</span><span class="legenda">Meses</span></div><div class="tempo"><span class="numero" id="dias">00</span><span class="legenda">Dias</span></div><div class="tempo"><span class="numero" id="horas">00</span><span class="legenda">Horas</span></div><div class="tempo"><span class="numero" id="minutos">00</span><span class="legenda">Minutos</span></div><div class="tempo"><span class="numero" id="segundos">00</span><span class="legenda">Segundos</span></div></div><p id="inicio-status">Aguardando a data de início ❤️</p><label for="data-inicio">Data e horário em que tudo começou</label><input id="data-inicio" type="datetime-local"><div class="actions"><button id="salvar-inicio" class="primary" type="button">Salvar data do casal</button></div></section>
 <section><h2>Nossas lembranças 📸</h2><div id="galeria"><p class="subtitulo">Carregando...</p></div><button id="adicionar-foto" class="primary" type="button">＋ Adicionar foto</button><input id="arquivo-foto" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><p id="aviso-galeria" class="muted">Somente participantes desta história devem ter acesso às fotos privadas.</p></section>
+
+ <section id="planos-casal" aria-labelledby="titulo-planos">
+  <h2 id="titulo-planos">Mais espaço para nosso amor 💕</h2>
+  <p class="muted">Os limites e as compras são compartilhados pelas duas pessoas do casal.</p>
+  <div class="grade-planos">
+   <div class="cartao-plano"><h3>Gratuito 🌷</h3><p>Até 5 fotos por casal.</p><p class="preco-plano">Grátis</p><button class="secondary" type="button" disabled>Plano inicial</button></div>
+   <div class="cartao-plano"><h3>Amor Essencial 💗</h3><p>Até 20 fotos por casal.</p><p class="preco-plano">R$ 4,90</p><p class="muted">Pagamento único</p><button class="primary" type="button" disabled>Compra em preparação</button></div>
+   <div class="cartao-plano"><h3>Mais Memórias 📸</h3><p>Até 50 fotos por casal.</p><p class="preco-plano">R$ 9,90</p><p class="muted">Pagamento único</p><button class="primary" type="button" disabled>Compra em preparação</button></div>
+   <div class="cartao-plano"><h3>Amor Sem Limites ♾️</h3><p>Fotos ilimitadas, sujeitas a regras razoáveis de armazenamento.</p><p class="preco-plano">R$ 19,90/mês</p><p class="muted">Assinatura mensal recorrente</p><button class="primary" type="button" disabled>Assinatura em preparação</button></div>
+  </div>
+  <p class="muted">Os pagamentos serão liberados após a validação do checkout e da confirmação automática. Nenhuma cobrança é feita nesta versão.</p>
+ </section>
 
 <section id="compartilhar-memorias">
  <h2>Compartilhar Memórias 💌</h2>
