@@ -80,12 +80,19 @@ body.tema-escuro #fechar-configuracoes{background:#382747;color:#f4eaff}
 body.tema-escuro #memorias-legenda{background:#382747;color:#eee7f7}
 body.tema-escuro #memorias-temas label{border-color:#59436d}
 body.tema-escuro .memoria-foto-opcao.selecionada{border-color:#d7a8ff}
-/* Atualização discreta, independente do login e do tema */
-#atualizar-pagina{display:inline-flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;padding:8px 14px;border:1px solid #e8cbd5;border-radius:999px;background:transparent;color:#986c79;font:inherit;font-size:12px;cursor:pointer;transition:background .2s}
-#atualizar-pagina:hover,#atualizar-pagina:focus-visible{background:#fff0f4}
-body.tema-escuro #atualizar-pagina{border-color:#59436d;color:#b9a9ce}
-body.tema-escuro #atualizar-pagina:hover,body.tema-escuro #atualizar-pagina:focus-visible{background:#382747}
-#dica-atualizar{display:block;margin-top:5px;font-size:11px;opacity:.8}
+
+/* Balão de fala da personagem — atualização manual da página */
+#personagem-com-recado{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;width:max-content;max-width:100%;margin:0 auto}
+#personagem-com-recado .coracao{margin:0;flex-shrink:0}
+#recado-personagem{position:relative;max-width:185px;padding:10px 12px;border:1px solid #f0d3df;border-radius:16px;background:#fffafd;color:#865267;box-shadow:0 3px 12px #713b4b12;text-align:left;font-size:12px;line-height:1.4}
+#recado-personagem::before{content:'';position:absolute;left:-7px;top:26px;width:12px;height:12px;background:#fffafd;border-left:1px solid #f0d3df;border-bottom:1px solid #f0d3df;transform:rotate(45deg)}
+#recado-personagem p{margin:0 0 7px}
+#recarregar-personagem{display:inline-flex;align-items:center;gap:5px;border:0;border-radius:999px;background:#fce5ee;color:#a83258;padding:6px 11px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+#recarregar-personagem:active{transform:scale(.96)}
+body.tema-escuro #recado-personagem{background:#30253e;border-color:#59436d;color:#ead8f7}
+body.tema-escuro #recado-personagem::before{background:#30253e;border-color:#59436d}
+body.tema-escuro #recarregar-personagem{background:#49335e;color:#f2d9ff}
+@media(max-width:360px){#personagem-com-recado{gap:9px}#personagem-com-recado .coracao{width:90px;height:90px}#recado-personagem{max-width:175px;font-size:11px;padding:9px}#recarregar-personagem{font-size:11px}}
 </style></head>
 <body><audio id="musica" loop preload="auto"><source src="lofi.mp3" type="audio/mpeg"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -93,7 +100,7 @@ body.tema-escuro #atualizar-pagina:hover,body.tema-escuro #atualizar-pagina:focu
 <button id="botao-musica" type="button" aria-label="Ativar música">🔇</button><div id="status-musica">Música pausada</div>
 <div id="login-painel" hidden><h2>Bem-vindo ao Nossa História ❤️</h2><p class="subtitulo">Entre com sua conta Google para continuar.</p><button id="login-google" class="primary" type="button">Continuar com Google</button><p id="mensagem-login" role="status"></p></div>
 <div id="barra-conta"><span id="dados-conta"></span><button id="sair-conta" class="secondary" type="button">Sair da conta</button></div>
-<header><img id="animacao-cabecalho" class="coracao" src="danca.png" alt="Animação do casal" role="button" tabindex="0" aria-label="Reproduzir animação de beijo"><h1 id="titulo-site">Nossa História</h1><p class="subtitulo">Cada história merece um lugar especial.</p></header>
+<header><div id="personagem-com-recado"><img id="animacao-cabecalho" class="coracao" src="danca.png" alt="Animação do casal" role="button" tabindex="0" aria-label="Reproduzir animação de beijo"><div id="recado-personagem"><p>Não carregou direitinho? 💗</p><button id="recarregar-personagem" type="button" onclick="window.location.reload()" aria-label="Recarregar a página">↻ Atualizar</button></div></div><h1 id="titulo-site">Nossa História</h1><p class="subtitulo">Cada história merece um lugar especial.</p></header>
 <main id="conteudo-privado"><p id="aviso-global" role="status"></p>
 <div id="janela-configuracoes" hidden role="dialog" aria-modal="true" aria-labelledby="titulo-configuracoes">
 <div id="conteudo-configuracoes">
@@ -132,7 +139,7 @@ body.tema-escuro #atualizar-pagina:hover,body.tema-escuro #atualizar-pagina:focu
 </section>
 <section><h2>Uma mensagem para você 💌</h2><p class="mensagem">Quero continuar criando lembranças, compartilhando sorrisos e vivendo momentos ao seu lado. ❤️</p></section>
 <section><h2>Conexão</h2><p class="muted">Ao desfazer a conexão, as duas pessoas perderão o acesso à história. As fotos não serão apagadas automaticamente.</p><button id="desfazer-conexao" class="secondary" type="button">Desfazer conexão</button></section>
-</div><footer>Feito com amor, especialmente para você. ❤️<div><button id="atualizar-pagina" type="button" onclick="window.location.reload()" aria-label="Atualizar a página" title="Recarregar o site">↻ Atualizar</button><span id="dica-atualizar">Algo não carregou? Atualize a página.</span></div></footer></main>
+</div><footer>Feito com amor, especialmente para você. ❤️</footer></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 const SUPABASE_URL='https://xttqhfaapgimaxfendzr.supabase.co';
