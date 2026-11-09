@@ -41,15 +41,30 @@ footer{padding:20px;color:#986c79;font-size:13px}
 #conteudo-privado{display:none}
 #mensagem-login{color:#a83258;font-size:14px}
 
-#login-painel[hidden]{display:none!important}button{cursor:pointer}button:disabled{opacity:.55;cursor:wait}input,select,textarea{width:100%;padding:12px;border:1px solid #e8cbd5;border-radius:12px;font:inherit;color:#51343d;background:white}textarea{min-height:105px;resize:vertical}.primary{background:#bd3267;color:white;border:0;border-radius:24px;padding:12px 19px}.secondary{background:#fff0f4;color:#a83258;border:0;border-radius:24px;padding:10px 16px}.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:12px 0}.stack{display:grid;gap:12px}.muted{font-size:13px;color:#986c79;line-height:1.5}.item{border:1px solid #f2dce4;border-radius:14px;padding:14px;margin:12px 0;text-align:left}.item .actions{justify-content:flex-start}#contador{grid-template-columns:repeat(3,1fr)}#aviso-global{color:#a83258;white-space:pre-wrap}#conteudo-privado{display:none}#botao-musica{display:none}.foto{max-height:440px}#arquivo-foto{display:none}#historia-painel[hidden],#sem-historias[hidden]{display:none!important}#inicio-status{font-size:14px;color:#986c79}label{display:block;text-align:left;font-size:14px;margin-bottom:5px}#codigo-conexao{font-weight:bold;letter-spacing:1px;overflow-wrap:anywhere}#galeria .item-foto{margin:10px 0 24px}.mensagem{white-space:pre-wrap;text-align:left}.tag{font-size:12px;color:#a84f6b}</style></head>
+#login-painel[hidden]{display:none!important}button{cursor:pointer}button:disabled{opacity:.55;cursor:wait}input,select,textarea{width:100%;padding:12px;border:1px solid #e8cbd5;border-radius:12px;font:inherit;color:#51343d;background:white}textarea{min-height:105px;resize:vertical}.primary{background:#bd3267;color:white;border:0;border-radius:24px;padding:12px 19px}.secondary{background:#fff0f4;color:#a83258;border:0;border-radius:24px;padding:10px 16px}.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:12px 0}.stack{display:grid;gap:12px}.muted{font-size:13px;color:#986c79;line-height:1.5}.item{border:1px solid #f2dce4;border-radius:14px;padding:14px;margin:12px 0;text-align:left}.item .actions{justify-content:flex-start}#contador{grid-template-columns:repeat(3,1fr)}#aviso-global{color:#a83258;white-space:pre-wrap}#conteudo-privado{display:none}#botao-musica{display:none}.foto{max-height:440px}#arquivo-foto{display:none}#historia-painel[hidden],#sem-historias[hidden]{display:none!important}#inicio-status{font-size:14px;color:#986c79}label{display:block;text-align:left;font-size:14px;margin-bottom:5px}#codigo-conexao{font-weight:bold;letter-spacing:1px;overflow-wrap:anywhere}#galeria .item-foto{margin:10px 0 24px}.mensagem{white-space:pre-wrap;text-align:left}.tag{font-size:12px;color:#a84f6b}
+/* Menu lateral de configurações, exibido após o primeiro pareamento */
+#abrir-config{display:none;position:fixed;left:14px;top:16px;z-index:1101;border:0;border-radius:24px;background:#bd3267;color:white;padding:11px 15px;box-shadow:0 4px 16px #0002;font-size:15px}
+#fundo-config{position:fixed;inset:0;background:#29151d88;z-index:1102}
+#menu-config{position:fixed;left:0;top:0;bottom:0;width:min(370px,90vw);background:#fff5f7;z-index:1103;overflow-y:auto;padding:15px 15px 28px;box-shadow:6px 0 25px #0002;text-align:left}
+#menu-config h2{margin:8px 0 12px}#menu-config section{margin:12px 0;padding:18px 13px}#menu-config .actions{justify-content:flex-start}
+#fechar-config{border:0;background:#fff0f4;color:#a83258;border-radius:20px;padding:9px 14px;font-size:15px}
+#abrir-config[hidden],#fundo-config[hidden],#menu-config[hidden]{display:none!important}
+body.config-aberta{overflow:hidden}
+@media(max-width:420px){#abrir-config{left:9px;top:10px;padding:9px 11px;font-size:13px}}
+</style></head>
 <body><audio id="musica" loop preload="auto"><source src="lofi.mp3" type="audio/mpeg"></audio>
 <button id="botao-musica" type="button" aria-label="Ativar música">🔇</button><div id="status-musica">Música pausada</div>
 <div id="login-painel" hidden><h2>Bem-vindo ao Nossa História ❤️</h2><p class="subtitulo">Entre com sua conta Google para continuar.</p><button id="login-google" class="primary" type="button">Continuar com Google</button><p id="mensagem-login" role="status"></p></div>
 <div id="barra-conta"><span id="dados-conta"></span><button id="sair-conta" class="secondary" type="button">Sair da conta</button></div>
+<button id="abrir-config" type="button" aria-label="Abrir configurações e adicionar pessoas" aria-controls="menu-config" aria-expanded="false" hidden>⚙️ Configurações</button>
+<div id="fundo-config" hidden></div>
+<aside id="menu-config" role="dialog" aria-modal="true" aria-label="Configurações" hidden>
+<button id="fechar-config" type="button">✕ Fechar</button><h2>Configurações ⚙️</h2><div id="conteudo-config"></div>
+</aside>
 <header><div class="coracao">❤️</div><h1 id="titulo-site">Nossa História</h1><p class="subtitulo">Cada história merece um lugar especial.</p></header>
 <main id="conteudo-privado"><p id="aviso-global" role="status"></p>
-<section><h2>Meu perfil 💗</h2><div class="stack"><div><label for="nome-usuario">Seu nome</label><input id="nome-usuario" maxlength="40" placeholder="Como deseja ser chamado(a)?"></div><button id="salvar-nome" class="primary" type="button">Salvar nome</button><div><p class="muted">Seu código pessoal de conexão:</p><p id="codigo-conexao">Carregando...</p><button id="copiar-codigo" class="secondary" type="button">Copiar código</button></div></div></section>
-<section><h2>Conectar com alguém 💌</h2><label for="codigo-outra-pessoa">Código da outra pessoa</label><input id="codigo-outra-pessoa" placeholder="Cole o código aqui"><div class="actions"><button id="enviar-pedido" class="primary" type="button">Enviar solicitação</button></div><h3>Solicitações pendentes</h3><div id="solicitacoes">Carregando...</div></section>
+<section id="secao-perfil"><h2>Meu perfil 💗</h2><div class="stack"><div><label for="nome-usuario">Seu nome</label><input id="nome-usuario" maxlength="40" placeholder="Como deseja ser chamado(a)?"></div><button id="salvar-nome" class="primary" type="button">Salvar nome</button><div><p class="muted">Seu código pessoal de conexão:</p><p id="codigo-conexao">Carregando...</p><button id="copiar-codigo" class="secondary" type="button">Copiar código</button></div></div></section>
+<section id="secao-conexoes"><h2>Conectar com alguém 💌</h2><label for="codigo-outra-pessoa">Código da outra pessoa</label><input id="codigo-outra-pessoa" placeholder="Cole o código aqui"><div class="actions"><button id="enviar-pedido" class="primary" type="button">Enviar solicitação</button></div><h3>Solicitações pendentes</h3><div id="solicitacoes">Carregando...</div></section>
 <section><h2>Minhas histórias ❤️</h2><div id="lista-historias">Carregando...</div><div id="sem-historias" hidden><p class="subtitulo">Sua história começa com uma conexão aceita. ❤️</p></div></section>
 <div id="historia-painel" hidden>
 <section><h2 id="titulo-historia">Nossa História</h2><p class="muted">Cada segundo com você é especial.</p><div id="contador"><div class="tempo"><span class="numero" id="anos">00</span><span class="legenda">Anos</span></div><div class="tempo"><span class="numero" id="meses">00</span><span class="legenda">Meses</span></div><div class="tempo"><span class="numero" id="dias">00</span><span class="legenda">Dias</span></div><div class="tempo"><span class="numero" id="horas">00</span><span class="legenda">Horas</span></div><div class="tempo"><span class="numero" id="minutos">00</span><span class="legenda">Minutos</span></div><div class="tempo"><span class="numero" id="segundos">00</span><span class="legenda">Segundos</span></div></div><p id="inicio-status">Aguardando a data de início ❤️</p><label for="data-inicio">Data e horário em que tudo começou</label><input id="data-inicio" type="datetime-local"><div class="actions"><button id="salvar-inicio" class="primary" type="button">Salvar data do casal</button></div></section>
@@ -76,7 +91,37 @@ setInterval(atualizarContador,1000);
 function atualizarTitulo(){if(!historiaAtual)return;const nome=`História de ${historiaAtual.meu_nome} + ${historiaAtual.parceiro_nome}`;$('titulo-historia').textContent=nome;$('titulo-site').textContent=nome;const data=historiaAtual.data_inicio?new Date(historiaAtual.data_inicio):null;$('inicio-status').textContent=data?'Desde '+data.toLocaleString('pt-BR')+' ❤️':'Aguardando a data de início ❤️';$('data-inicio').value=data?new Date(data.getTime()-data.getTimezoneOffset()*60000).toISOString().slice(0,16):'';atualizarContador();}
 async function carregarPerfil(){perfil=await rpc('criar_meu_perfil');$('nome-usuario').value=perfil.username;$('codigo-conexao').textContent=perfil.connection_code;}
 async function carregarPedidos(){const pedidos=await rpc('minhas_solicitacoes');const area=$('solicitacoes');limpar(area);if(!pedidos?.length){area.append(elemento('p','Nenhuma solicitação pendente.','muted'));return;}for(const p of pedidos){const item=elemento('div',undefined,'item');item.append(elemento('div',`${p.nome_usuario} — ${p.tipo==='recebida'?'recebida':'enviada'}`));const a=elemento('div',undefined,'actions');const acao=(titulo,fn)=>{const b=elemento('button',titulo,'secondary');b.onclick=async()=>{b.disabled=true;try{await fn();await carregarPedidos();await carregarHistorias()}catch(e){erro(e)}finally{b.disabled=false}};a.append(b)};if(p.tipo==='recebida'){acao('Aceitar',()=>rpc('aceitar_conexao',{pedido_id:p.pedido_id}));acao('Recusar',()=>rpc('responder_solicitacao',{pedido_id:p.pedido_id,nova_situacao:'rejected'}));}else{acao('Cancelar',()=>rpc('responder_solicitacao',{pedido_id:p.pedido_id,nova_situacao:'cancelled'}));}item.append(a);area.append(item);}}
-async function carregarHistorias(){historias=await rpc('minhas_historias')||[];const area=$('lista-historias');limpar(area);$('sem-historias').hidden=historias.length>0;if(!historias.length){historiaAtual=null;$('historia-painel').hidden=true;$('titulo-site').textContent='Nossa História';return;}for(const h of historias){const b=elemento('button',`❤️ ${h.meu_nome} + ${h.parceiro_nome}`,'secondary');b.style.margin='5px';b.onclick=()=>selecionarHistoria(h.historia_id);area.append(b);}const id=historias.some(h=>h.historia_id===historiaAtual?.historia_id)?historiaAtual.historia_id:historias[0].historia_id;await selecionarHistoria(id);}
+// Antes do pareamento, perfil e conexões ficam visíveis na página.
+// Depois, são movidos para o menu lateral, sem perder eventos ou dados.
+const areaPrincipal=$('secao-perfil').parentElement;
+const secaoPerfil=$('secao-perfil'),secaoConexoes=$('secao-conexoes');
+const referenciaHistorias=$('lista-historias').closest('section');
+function fecharConfiguracoes(){
+ $('menu-config').hidden=true;$('fundo-config').hidden=true;
+ $('abrir-config').setAttribute('aria-expanded','false');
+ document.body.classList.remove('config-aberta');
+}
+function abrirConfiguracoes(){
+ $('menu-config').hidden=false;$('fundo-config').hidden=false;
+ $('abrir-config').setAttribute('aria-expanded','true');
+ document.body.classList.add('config-aberta');$('fechar-config').focus();
+}
+$('abrir-config').addEventListener('click',abrirConfiguracoes);
+$('fechar-config').addEventListener('click',fecharConfiguracoes);
+$('fundo-config').addEventListener('click',fecharConfiguracoes);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')fecharConfiguracoes();});
+function atualizarMenuConfiguracoes(){
+ const pareado=historias.length>0;
+ if(pareado){
+   $('conteudo-config').append(secaoPerfil,secaoConexoes);
+ }else{
+   areaPrincipal.insertBefore(secaoPerfil,referenciaHistorias);
+   areaPrincipal.insertBefore(secaoConexoes,referenciaHistorias);
+   fecharConfiguracoes();
+ }
+ $('abrir-config').hidden=!pareado||!usuario;
+}
+async function carregarHistorias(){historias=await rpc('minhas_historias')||[];atualizarMenuConfiguracoes();const area=$('lista-historias');limpar(area);$('sem-historias').hidden=historias.length>0;if(!historias.length){historiaAtual=null;$('historia-painel').hidden=true;$('titulo-site').textContent='Nossa História';return;}for(const h of historias){const b=elemento('button',`❤️ ${h.meu_nome} + ${h.parceiro_nome}`,'secondary');b.style.margin='5px';b.onclick=()=>selecionarHistoria(h.historia_id);area.append(b);}const id=historias.some(h=>h.historia_id===historiaAtual?.historia_id)?historiaAtual.historia_id:historias[0].historia_id;await selecionarHistoria(id);}
 async function selecionarHistoria(id){historiaAtual=historias.find(h=>h.historia_id===id)||null;$('historia-painel').hidden=!historiaAtual;if(!historiaAtual)return;atualizarTitulo();await carregarFotos();}
 async function carregarFotos(){fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];const area=$('galeria');limpar(area);if(!historiaAtual)return;const id=historiaAtual.historia_id;const {data,error}=await db.from('story_photos').select('id,file_path,uploaded_by,created_at').eq('story_id',id).order('created_at',{ascending:true});if(error){area.append(elemento('p','Não foi possível carregar as fotos: '+error.message,'muted'));return;}if(!data.length){area.append(elemento('p','Nosso mural está esperando novas lembranças. ❤️','muted'));return;}for(const f of data){const {data:blob,error:e}=await db.storage.from('fotos-privadas').download(f.file_path);if(e){area.append(elemento('p','Não foi possível abrir uma foto.','muted'));continue;}const url=URL.createObjectURL(blob);fotosUrls.push(url);const item=elemento('div',undefined,'item-foto');const img=elemento('img');img.src=url;img.alt='Uma lembrança nossa';img.className='foto';img.loading='lazy';item.append(img);const b=elemento('button','Excluir foto','botao-excluir');b.onclick=()=>excluirFoto(f);item.append(b);area.append(item);}}
 async function excluirFoto(f){if(!historiaAtual||!confirm('Excluir esta foto definitivamente?'))return;const {error:e}=await db.storage.from('fotos-privadas').remove([f.file_path]);if(e){erro(e);return;}const {error}=await db.from('story_photos').delete().eq('id',f.id);if(error){erro(error);return;}await carregarFotos();}
@@ -91,7 +136,7 @@ const musica=$('musica'),musicaBotao=$('botao-musica');function atualizarMusica(
 const redirectTo=location.origin+location.pathname;
 botao('login-google',async()=>{if(!db)return;const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo}});if(error)throw error;});
 botao('sair-conta',async()=>{const {error}=await db.auth.signOut();if(error)throw error;await mostrarSessao(null);});
-let sessaoId=0;async function mostrarSessao(u){const token=++sessaoId;usuario=u;$('login-painel').hidden=!!u;$('conteudo-privado').style.display=u?'block':'none';$('barra-conta').style.display=u?'flex':'none';musicaBotao.style.display=u?'flex':'none';if(!u){historiaAtual=null;historias=[];perfil=null;musica.pause();fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];return;}$('dados-conta').textContent=u.email||'Conectado';aviso('');try{await carregarPerfil();if(token!==sessaoId)return;await carregarPedidos();if(token!==sessaoId)return;await carregarHistorias()}catch(e){if(token===sessaoId)erro(e)}}
+let sessaoId=0;async function mostrarSessao(u){const token=++sessaoId;usuario=u;$('login-painel').hidden=!!u;$('conteudo-privado').style.display=u?'block':'none';$('barra-conta').style.display=u?'flex':'none';musicaBotao.style.display=u?'flex':'none';if(!u){historiaAtual=null;historias=[];perfil=null;atualizarMenuConfiguracoes();musica.pause();fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];return;}$('dados-conta').textContent=u.email||'Conectado';aviso('');try{await carregarPerfil();if(token!==sessaoId)return;await carregarPedidos();if(token!==sessaoId)return;await carregarHistorias()}catch(e){if(token===sessaoId)erro(e)}}
 async function iniciar(){ $('login-painel').hidden=false;if(!db){$('mensagem-login').textContent='Falha ao carregar o login. Atualize a página.';return;}const {data}=await db.auth.getSession();await mostrarSessao(data?.session?.user||null);db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT')mostrarSessao(session?.user||null)});}
 iniciar();
 </script></body></html>
