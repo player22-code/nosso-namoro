@@ -114,11 +114,37 @@ body.tema-escuro #fechar-planos{background:#4d315a;color:#ffe2f2;border-color:#8
 body.tema-escuro #planos-casal .cartao-plano{background:#30253e;border-color:#59436d}
 body.tema-escuro #planos-casal .cartao-plano h3,body.tema-escuro #planos-casal .preco-plano{color:#d7a8ff}
 @media(max-width:520px){#planos-casal .grade-planos{grid-template-columns:1fr}}
+
+#janela-musicas[hidden]{display:none!important}
+#janela-musicas{position:fixed;right:12px;bottom:90px;width:min(350px,calc(100vw - 24px));z-index:1002;background:linear-gradient(145deg,#fff7fc,#ffe7f5 65%,#f4e6ff);border:3px solid #f6b4db;border-radius:45% 45% 27px 27px / 28px 28px 27px 27px;padding:24px 16px 17px;box-shadow:0 12px 35px #7d30504d;text-align:center;color:#85345e}
+#janela-musicas:after{content:"";position:absolute;right:30px;bottom:-12px;width:25px;height:25px;background:#ffe7f5;border-right:3px solid #f6b4db;border-bottom:3px solid #f6b4db;transform:rotate(45deg);z-index:-1}
+#janela-musicas h3{margin:5px 30px 8px;font-size:18px;color:#a42e68}
+#fechar-musicas{position:absolute;right:15px;top:12px;border:0;background:#fff;color:#a42e68;border-radius:50%;width:32px;height:32px;font-size:21px}
+#personagem-musica{width:88px;height:88px;object-fit:contain;margin:0 auto 5px;display:block}
+#lista-musicas{display:grid;gap:6px;margin:12px 0;max-height:200px;overflow-y:auto}
+.faixa-musica{border:1px solid #efb9d3;border-radius:15px;padding:10px;background:#fffafc;color:#7d3558;text-align:left;font-size:13px;white-space:normal}
+.faixa-musica.ativa{background:#fbd3e8;border-color:#d668a3;font-weight:bold}
+#controles-musicas{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+#controles-musicas button{background:#e16aa7;color:#fff;border:0;border-radius:25px;padding:10px 14px;font-weight:bold}
+#musica-atual{font-size:12px;min-height:18px;margin:6px 0}
+body.tema-escuro #janela-musicas{background:linear-gradient(145deg,#3e2b50,#51345d);color:#ffe4f3;border-color:#a87bbd}
+body.tema-escuro #janela-musicas h3{color:#ffe4f3}
+body.tema-escuro .faixa-musica{background:#3c2c4a;color:#ffe4f3;border-color:#805e91}
+body.tema-escuro .faixa-musica.ativa{background:#714580}
+
 </style></head>
-<body><audio id="musica" loop preload="auto"><source src="lofi.mp3" type="audio/mpeg"></audio>
+<body><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
 <button id="botao-configuracoes" type="button" aria-label="Abrir configurações" title="Configurações">⚙️</button>
-<button id="botao-musica" type="button" aria-label="Ativar música">🔇</button><div id="status-musica">Música pausada</div>
+<button id="botao-musica" type="button" aria-label="Abrir nuvem de músicas" aria-expanded="false" aria-controls="janela-musicas">🎵</button>
+<div id="janela-musicas" hidden role="dialog" aria-label="Nuvem de músicas">
+<button id="fechar-musicas" type="button" aria-label="Fechar músicas">×</button>
+<img id="personagem-musica" src="musicaboa.gif" alt="Personagem dançando">
+<h3>☁️ Nossas melodias 💕</h3>
+<p id="musica-atual" aria-live="polite">Escolha uma música para começar 🎶</p>
+<div id="lista-musicas" aria-label="Lista de músicas"></div>
+<div id="controles-musicas"><button id="alternar-musica" type="button">▶ Tocar aleatório</button><button id="proxima-musica" type="button">⏭ Próxima</button></div>
+</div><div id="status-musica">Música pausada</div>
 <div id="login-painel" hidden><h2>Bem-vindo ao Nossa História ❤️</h2><p class="subtitulo">Entre com sua conta Google para continuar.</p><button id="login-google" class="primary" type="button">Continuar com Google</button><p id="mensagem-login" role="status"></p></div>
 <div id="barra-conta"><span id="dados-conta"></span><button id="sair-conta" class="secondary" type="button">Sair da conta</button></div>
 <header><div id="personagem-com-recado"><img id="animacao-cabecalho" class="coracao" src="danca.png" alt="Animação do casal" role="button" tabindex="0" aria-label="Reproduzir animação de beijo"><div id="recado-personagem"><p>Não carregou direitinho? 💗</p><button id="recarregar-personagem" type="button" onclick="window.location.reload()" aria-label="Recarregar a página">↻ Atualizar</button></div></div><h1 id="titulo-site">Nossa História</h1><p class="subtitulo">Cada história merece um lugar especial.</p></header>
@@ -368,7 +394,75 @@ temaBotao.onclick=()=>{
     temaBotao.setAttribute('aria-label',escuro?'Ativar tema claro':'Ativar tema escuro');
     document.querySelector('meta[name="theme-color"]').content=escuro?'#171321':'#fff5f7';
 };
-const musica=$('musica'),musicaBotao=$('botao-musica');function atualizarMusica(){musicaBotao.textContent=musica.paused?'🔇':'🔊';musicaBotao.classList.toggle('tocando',!musica.paused);}musicaBotao.onclick=async()=>{try{if(musica.paused)await musica.play();else musica.pause()}catch(e){$('status-musica').textContent='Não foi possível iniciar a música';$('status-musica').classList.add('visivel')}atualizarMusica()};musica.addEventListener('play',atualizarMusica);musica.addEventListener('pause',atualizarMusica);musica.volume=.35;
+const musica=$('musica'),musicaBotao=$('botao-musica');
+const faixasMusicais=[{"nome": "01 - Cafe de Carinhos", "arquivo": "01 - Cafe de Carinhos.mp3"}, {"nome": "02 - Dois Coracoes e um Cafe", "arquivo": "02 - Dois Coracoes e um Cafe.mp3"}, {"nome": "03 - Abraco de Algodao", "arquivo": "03 - Abraco de Algodao.mp3"}, {"nome": "04 - Encontro sob as Estrelas", "arquivo": "04 - Encontro sob as Estrelas.mp3"}, {"nome": "05 - Nosso Cantinho de Paz", "arquivo": "05 - Nosso Cantinho de Paz.mp3"}];
+let faixaAtual=-1;
+const listaMusicas=$('lista-musicas');
+function atualizarMusica(){
+ musicaBotao.classList.toggle('tocando',!musica.paused);
+ $('alternar-musica').textContent=musica.paused?'▶ Tocar aleatório':'⏸ Pausar';
+ document.querySelectorAll('.faixa-musica').forEach((b,i)=>{
+  b.classList.toggle('ativa',i===faixaAtual);
+  b.setAttribute('aria-pressed',String(i===faixaAtual));
+ });
+}
+function selecionarProximaAleatoria(){
+ if(faixasMusicais.length===1)return 0;
+ let i;do{i=Math.floor(Math.random()*faixasMusicais.length)}while(i===faixaAtual);
+ return i;
+}
+async function tocarFaixa(i){
+ faixaAtual=i;
+ const faixa=faixasMusicais[i];
+ faixa.tentativaAlternativa=false;
+ musica.src=encodeURI(faixa.arquivo);
+ $('musica-atual').textContent='🎵 '+faixa.nome;
+ atualizarMusica();
+ try{await musica.play();}catch(e){$('musica-atual').textContent='Toque em ▶ para iniciar a música';}
+ atualizarMusica();
+}
+faixasMusicais.forEach((faixa,i)=>{
+ const b=document.createElement('button');b.type='button';b.className='faixa-musica';
+ b.textContent='♡ '+faixa.nome;b.addEventListener('click',()=>tocarFaixa(i));
+ listaMusicas.appendChild(b);
+});
+function fecharNuvem(){$('janela-musicas').hidden=true;musicaBotao.setAttribute('aria-expanded','false');}
+musicaBotao.onclick=()=>{
+ const nuvem=$('janela-musicas');nuvem.hidden=!nuvem.hidden;
+ musicaBotao.setAttribute('aria-expanded',String(!nuvem.hidden));
+};
+$('fechar-musicas').onclick=fecharNuvem;
+$('alternar-musica').onclick=async()=>{
+ if(!musica.paused)musica.pause();
+ else if(faixaAtual<0)await tocarFaixa(selecionarProximaAleatoria());
+ else try{await musica.play();}catch(e){$('musica-atual').textContent='Não foi possível tocar. Confira os arquivos MP3.';}
+ atualizarMusica();
+};
+$('proxima-musica').onclick=()=>tocarFaixa(selecionarProximaAleatoria());
+// Se o arquivo sem acentos não existir, tenta automaticamente o nome com acentos.
+const nomesComAcentos=[
+ '01 - Café de Carinhos.mp3',
+ '02 - Dois Corações e um Café.mp3',
+ '03 - Abraço de Algodão.mp3',
+ '04 - Encontro sob as Estrelas.mp3',
+ '05 - Nosso Cantinho de Paz.mp3'
+];
+musica.addEventListener('error',async()=>{
+ if(faixaAtual<0)return;
+ const faixa=faixasMusicais[faixaAtual];
+ if(!faixa.tentativaAlternativa){
+  faixa.tentativaAlternativa=true;
+  musica.src=encodeURI(nomesComAcentos[faixaAtual]);
+  try{await musica.play();}catch(e){}
+ }else{
+  $('musica-atual').textContent='Arquivo não encontrado: confira o nome da música no GitHub.';
+ }
+});
+musica.addEventListener('ended',()=>tocarFaixa(selecionarProximaAleatoria()));
+musica.addEventListener('play',atualizarMusica);
+musica.addEventListener('pause',atualizarMusica);
+musica.volume=.35;
+
 /* Abre e fecha os planos no mesmo lugar, sem interferir nos botões de pagamento. */
 const botaoAbrirPlanos=$('abrir-planos'), conteudoPlanos=$('conteudo-planos'), botaoFecharPlanos=$('fechar-planos');
 function alternarPlanos(abrir){
@@ -411,7 +505,7 @@ for(const [id,plano] of [['comprar-essencial','essencial'],['comprar-memorias','
 const redirectTo=location.origin+location.pathname;
 botao('login-google',async()=>{if(!db)return;const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo}});if(error)throw error;});
 botao('sair-conta',async()=>{const {error}=await db.auth.signOut();if(error)throw error;await mostrarSessao(null);});
-let sessaoId=0;async function mostrarSessao(u){const token=++sessaoId;usuario=u;$('login-painel').hidden=!!u;$('conteudo-privado').style.display=u?'block':'none';$('barra-conta').style.display=u?'flex':'none';musicaBotao.style.display=u?'flex':'none';$('botao-configuracoes').style.display=u?'flex':'none';if(!u){$('janela-configuracoes').hidden=true;historiaAtual=null;historias=[];perfil=null;musica.pause();fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];return;}$('janela-configuracoes').hidden=false;$('dados-conta').textContent=u.email||'Conectado';aviso('');try{await carregarPerfil();if(token!==sessaoId)return;await carregarPedidos();if(token!==sessaoId)return;await carregarHistorias();if(historias.length>0)$('janela-configuracoes').hidden=true}catch(e){if(token===sessaoId)erro(e)}}
+let sessaoId=0;async function mostrarSessao(u){const token=++sessaoId;usuario=u;$('login-painel').hidden=!!u;$('conteudo-privado').style.display=u?'block':'none';$('barra-conta').style.display=u?'flex':'none';musicaBotao.style.display=u?'flex':'none';$('botao-configuracoes').style.display=u?'flex':'none';if(!u){$('janela-configuracoes').hidden=true;historiaAtual=null;historias=[];perfil=null;musica.pause();fecharNuvem();fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];return;}$('janela-configuracoes').hidden=false;$('dados-conta').textContent=u.email||'Conectado';aviso('');try{await carregarPerfil();if(token!==sessaoId)return;await carregarPedidos();if(token!==sessaoId)return;await carregarHistorias();if(historias.length>0)$('janela-configuracoes').hidden=true}catch(e){if(token===sessaoId)erro(e)}}
 async function iniciar(){ $('login-painel').hidden=false;if(!db){$('mensagem-login').textContent='Falha ao carregar o login. Atualize a página.';return;}const {data}=await db.auth.getSession();await mostrarSessao(data?.session?.user||null);db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT')mostrarSessao(session?.user||null)});}
 iniciar();
 
