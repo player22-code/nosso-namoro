@@ -261,6 +261,11 @@ body.tema-escuro #mascote-balao-mensagem,body.tema-escuro .mascote-medidor{backg
 body.tema-escuro #mascote-moedas{background:#5c452d;color:#ffe9b9}
 body.tema-escuro #mascote-premios-caixa{background:#2c2039;color:#f7e6f5}
 body.tema-escuro .mascote-dia{background:#493453}body.tema-escuro .mascote-dia.concluido{background:#2c644b}
+
+/* Mascote animado com GIFs transparentes */
+#mascote-figura{display:flex!important;align-items:center;justify-content:center;animation:none!important;transform:none!important;min-width:145px;min-height:145px}
+#mascote-figura img{display:block;width:min(190px,42vw);height:190px;max-width:100%;object-fit:contain;animation:none!important}
+#mascote-figura.brincando{animation:none!important}
 </style></head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -1099,9 +1104,36 @@ let mascoteDados=null,mascoteCanal=null,mascoteHistoriaId=null,mascoteVersao=0,m
 const mascoteLimitar=v=>Math.max(0,Math.min(100,Number(v)||0));
 function mascoteBotoes(habilitar){document.querySelectorAll('[data-mascote-acao]').forEach(b=>b.disabled=!habilitar);}
 function mascoteMensagem(t){$('mascote-status').textContent=t||'';}
+const mascoteGifs={parado:'coelho.gif',alimentar:'comendo.gif',dormir:'sono.gif',banho:'banho.gif',carinho:'carinho.gif',brincar:'brincadeira.gif'};
+let mascoteAnimacaoTimer=null,mascoteAnimacaoAtiva=false;
+function mascoteGif(acao,temporaria=false){
+ const figura=$('mascote-figura');if(!figura)return;
+ if(mascoteAnimacaoTimer){clearTimeout(mascoteAnimacaoTimer);mascoteAnimacaoTimer=null;}
+ const img=figura.querySelector('img')||document.createElement('img');
+ img.alt='Coelhinho Juntos';
+ const arquivo=mascoteGifs[acao]||mascoteGifs.parado;
+ img.src=arquivo+(temporaria?'?replay='+Date.now():'');
+ figura.replaceChildren(img);
+ mascoteAnimacaoAtiva=temporaria;
+ if(temporaria){
+  // GIF não oferece evento de fim no navegador: após ~3 s retorna ao estado permanente.
+  mascoteAnimacaoTimer=setTimeout(()=>{mascoteAnimacaoAtiva=false;mascoteAnimacaoTimer=null;mascoteGif(mascoteDados?.estado==='dormindo'?'dormir':'parado');},3200);
+ }
+}
+function mascoteNecessidadesAtuais(d){
+ const hora=new Date(d.necessidades_at||d.updated_at||Date.now()).getTime();
+ const horas=Math.max(0,(Date.now()-hora)/3600000);
+ const dormindo=d.estado==='dormindo';
+ const ajustar=(n,delta)=>mascoteLimitar((Number(n)||0)+delta);
+ return {...d,
+  fome:ajustar(d.fome,horas*(dormindo?1.5:3)),
+  energia:ajustar(d.energia,horas*(dormindo?8:-2)),
+  sono:ajustar(d.sono,horas*(dormindo?-9:4)),
+  felicidade:ajustar(d.felicidade,horas*(dormindo?-0.5:-2))};
+}
 function atualizarInterfaceMascote(){
  if(!mascoteDados)return;
- const d=mascoteDados, dormindo=d.estado==='dormindo';
+ const d=mascoteNecessidadesAtuais(mascoteDados),dormindo=d.estado==='dormindo';
  $('mascote-nome-titulo').textContent=d.nome||'Juntos';
  for(const [chave,valorId,barraId] of [['fome','val-fome','barra-fome'],['felicidade','val-felicidade','barra-felicidade'],['energia','val-energia','barra-energia'],['sono','val-sono','barra-sono']]){
   const valor=mascoteLimitar(d[chave]);$(valorId).textContent=valor+'%';$(barraId).style.width=valor+'%';
@@ -1109,14 +1141,15 @@ function atualizarInterfaceMascote(){
  const xp=Math.max(0,Number(d.experiencia)||0),nivel=Math.floor(xp/100)+1;
  $('mascote-saldo').textContent='🪙 '+Math.max(0,Number(d.moedas)||0);mascoteAtualizarPremios();$('mascote-nivel').textContent=nivel;$('mascote-xp').textContent=xp+' XP';$('mascote-xp-barra').style.width=(xp%100)+'%';
  const figura=$('mascote-figura');figura.classList.toggle('dormindo',dormindo);
- figura.textContent=dormindo?'🐰💤':d.felicidade<30?'🥺🐰':d.fome>70?'🐰🥕':'🐰';
- $('mascote-balao-mensagem').textContent=dormindo?'Zzz... Que soninho bom! 😴':d.fome>70?'Estou com muita fome! 🥕':d.sono>70?'Estou com soninho... 🥱':d.felicidade<30?'Quero um carinho! 🥺':'Amo estar com vocês! 💕';
+ if(!mascoteAnimacaoAtiva){const img=figura.querySelector('img');const alvo=dormindo?mascoteGifs.dormir:mascoteGifs.parado;if(!img||!img.getAttribute('src')?.startsWith(alvo))mascoteGif(dormindo?'dormir':'parado');}
+ $('mascote-balao-mensagem').textContent=dormindo?'Zzz... Que soninho bom! 😴':d.fome>70?'Estou com muita fome! 🥕':d.sono>70?'Estou com soninho... 🥱':d.energia<25?'Estou sem energia... 😵':d.felicidade<30?'Quero um carinho! 🥺':'Amo estar com vocês! 💕';
  $('btn-mascote-dormir').textContent=dormindo?'☀️ Acordar · grátis':'😴 Dormir · grátis';
 }
 function mascoteDesligar(){
  ++mascoteVersao;
  if(mascoteCanal&&db)db.removeChannel(mascoteCanal);
  mascoteCanal=null;mascoteHistoriaId=null;mascoteDados=null;mascoteOcupado=false;
+ if(mascoteAnimacaoTimer)clearTimeout(mascoteAnimacaoTimer);mascoteAnimacaoTimer=null;mascoteAnimacaoAtiva=false;
  mascoteBotoes(false);mascoteMensagem('Aguardando história...');
 }
 async function mascoteBuscar(id,versao){
@@ -1155,7 +1188,7 @@ async function mascoteExecutar(acao){
   if(error)throw error;
   if(versao!==mascoteVersao||mascoteHistoriaId!==id)return;
   mascoteDados=data;atualizarInterfaceMascote();
-  if(acao==='brincar'||acao==='carinho'){$('mascote-figura').classList.remove('brincando');void $('mascote-figura').offsetWidth;$('mascote-figura').classList.add('brincando');}
+  mascoteGif(acao==='dormir'?(data.estado==='dormindo'?'dormir':'parado'):acao,acao!=='dormir');
   mascoteMensagem(acao==='dormir'?'Tudo certo! 😴':'Prontinho! O Juntos está feliz 💗');
  }catch(e){if(versao===mascoteVersao)mascoteMensagem('Não foi possível: '+e.message);}
  finally{if(versao===mascoteVersao){mascoteOcupado=false;mascoteBotoes(!!mascoteDados);}}
@@ -1201,9 +1234,9 @@ $('mascote-coletar').addEventListener('click',async()=>{
  }catch(e){mascoteMensagem('Recompensa: '+e.message);alert(e.message||'Não foi possível coletar.');}
  finally{if(versao===mascoteVersao){mascoteOcupado=false;mascoteBotoes(!!mascoteDados);mascoteAtualizarPremios();}}
 });
-mascoteRelogio=setInterval(()=>{if(mascoteDados&&!document.hidden)mascoteAtualizarPremios();},1000);
+mascoteRelogio=setInterval(()=>{if(mascoteDados&&!document.hidden){mascoteAtualizarPremios();atualizarInterfaceMascote();}},1000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&mascoteHistoriaId)mascoteBuscar(mascoteHistoriaId,mascoteVersao).catch(console.warn);});
 
 
 </script><script src="https://www.youtube.com/iframe_api" async></script></body></html>
-Exibindo index_nossa_historia_mascote_moedas.html…
+Exibindo index(2).html…
