@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -216,6 +217,32 @@ body.tema-escuro .cartao-mensagem h2::after{background:linear-gradient(90deg,#d7
 .memorias-tema-opcao:has(input:checked){border-color:#bd3267!important;box-shadow:0 0 0 2px #bd326740}
 body.tema-escuro .memorias-tema-previa{background:#382747;border-color:#59436d}
 body.tema-escuro .memorias-tema-opcao:has(input:checked){border-color:#d7a8ff!important;box-shadow:0 0 0 2px #d7a8ff40}
+
+/* Mascote compartilhado Juntos */
+#mascote-juntos{background:linear-gradient(160deg,#fffafd,#ffe9f3);border:1px solid #f8c9de}
+#mascote-cenario{position:relative;max-width:330px;margin:12px auto 18px;padding:15px;border-radius:30px;background:radial-gradient(circle at 50% 25%,#fff 0,#ffe0f0 75%);min-height:255px}
+#mascote-figura{font-size:118px;line-height:1.5;display:block;transform-origin:50% 85%;animation:juntos-flutuar 3s ease-in-out infinite;user-select:none}
+#mascote-figura.dormindo{animation:juntos-respirar 3.2s ease-in-out infinite;filter:saturate(.8)}
+#mascote-figura.brincando{animation:juntos-pular .5s ease-in-out 3}
+#mascote-balao-mensagem{display:block;margin:0 auto;background:#fff;border-radius:20px;padding:10px 12px;max-width:290px;color:#9c436c;font-size:14px;box-shadow:0 3px 14px #ac5a7c22}
+#mascote-estatisticas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;text-align:left}
+.mascote-medidor{background:#fff8fc;border:1px solid #f4d7e4;border-radius:14px;padding:10px;font-size:13px}
+.mascote-medidor-topo{display:flex;justify-content:space-between;gap:5px;margin-bottom:8px}
+.mascote-trilho{height:11px;border-radius:30px;background:#f0dbe7;overflow:hidden}
+.mascote-preenchimento{height:100%;width:0;background:linear-gradient(90deg,#f69bc5,#c94b8d);border-radius:30px;transition:width .4s}
+#mascote-xp-trilho{height:9px;background:#f0dbe7;border-radius:20px;overflow:hidden}
+#mascote-xp-barra{height:100%;width:0;background:#ae83df;transition:width .4s}
+#mascote-acoes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
+#mascote-acoes button{padding:12px 7px;border:0;border-radius:16px;background:#d94c8b;color:white;font-weight:bold;font-size:14px}
+#mascote-acoes button:disabled{opacity:.5}
+#mascote-status{min-height:20px;font-size:13px;color:#985b75}
+@keyframes juntos-flutuar{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
+@keyframes juntos-respirar{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+@keyframes juntos-pular{0%,100%{transform:translateY(0)}50%{transform:translateY(-23px)}}
+body.tema-escuro #mascote-juntos{background:linear-gradient(160deg,#2e223c,#3c284a);border-color:#59436d}
+body.tema-escuro #mascote-cenario{background:radial-gradient(circle,#4b345e,#31203e)}
+body.tema-escuro #mascote-balao-mensagem,body.tema-escuro .mascote-medidor{background:#3a2b4b;color:#f5d9ec;border-color:#59436d}
+@media(prefers-reduced-motion:reduce){#mascote-figura{animation:none!important}}
 </style></head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -279,6 +306,22 @@ body.tema-escuro .memorias-tema-opcao:has(input:checked){border-color:#d7a8ff!im
 </div>
 <div class="aba-painel" id="aba-inicio" role="tabpanel" aria-labelledby="aba-btn-inicio">
 <section><h2 id="titulo-historia">Nossa História</h2><p class="muted">Cada segundo com você é especial.</p><div id="contador"><div class="tempo"><span class="numero" id="anos">00</span><span class="legenda">Anos</span></div><div class="tempo"><span class="numero" id="meses">00</span><span class="legenda">Meses</span></div><div class="tempo"><span class="numero" id="dias">00</span><span class="legenda">Dias</span></div><div class="tempo"><span class="numero" id="horas">00</span><span class="legenda">Horas</span></div><div class="tempo"><span class="numero" id="minutos">00</span><span class="legenda">Minutos</span></div><div class="tempo"><span class="numero" id="segundos">00</span><span class="legenda">Segundos</span></div></div><p id="inicio-status">Aguardando a data de início ❤️</p><label for="data-inicio">Data e horário em que tudo começou</label><input id="data-inicio" type="datetime-local"><div class="actions"><button id="salvar-inicio" class="primary" type="button">Salvar data do casal</button></div></section>
+
+<section id="mascote-juntos" aria-labelledby="mascote-titulo">
+ <h2 id="mascote-titulo">🐰 Nosso mascote: <span id="mascote-nome-titulo">Juntos</span> 💕</h2>
+ <p class="muted">Um coelhinho para vocês cuidarem juntos, em tempo real!</p>
+ <div id="mascote-cenario"><span id="mascote-figura" role="img" aria-label="Coelhinho Juntos">🐰</span><span id="mascote-balao-mensagem" aria-live="polite">Carregando nosso coelhinho... 💗</span></div>
+ <div id="mascote-estatisticas">
+  <div class="mascote-medidor"><div class="mascote-medidor-topo"><span>🥕 Fome</span><b id="val-fome">--</b></div><div class="mascote-trilho"><div class="mascote-preenchimento" id="barra-fome"></div></div></div>
+  <div class="mascote-medidor"><div class="mascote-medidor-topo"><span>💗 Felicidade</span><b id="val-felicidade">--</b></div><div class="mascote-trilho"><div class="mascote-preenchimento" id="barra-felicidade"></div></div></div>
+  <div class="mascote-medidor"><div class="mascote-medidor-topo"><span>⚡ Energia</span><b id="val-energia">--</b></div><div class="mascote-trilho"><div class="mascote-preenchimento" id="barra-energia"></div></div></div>
+  <div class="mascote-medidor"><div class="mascote-medidor-topo"><span>🌙 Sono</span><b id="val-sono">--</b></div><div class="mascote-trilho"><div class="mascote-preenchimento" id="barra-sono"></div></div></div>
+ </div>
+ <p>⭐ Nível <strong id="mascote-nivel">1</strong> · <span id="mascote-xp">0 XP</span></p>
+ <div id="mascote-xp-trilho"><div id="mascote-xp-barra"></div></div>
+ <div id="mascote-acoes"><button type="button" data-mascote-acao="alimentar" disabled>🥕 Alimentar</button><button type="button" data-mascote-acao="brincar" disabled>🎾 Brincar</button><button type="button" data-mascote-acao="carinho" disabled>💖 Dar carinho</button><button type="button" id="btn-mascote-dormir" data-mascote-acao="dormir" disabled>😴 Dormir</button></div>
+ <p id="mascote-status" role="status">Aguardando conexão...</p>
+</section>
 <section id="nosso-cineminha" aria-label="Nosso Cineminha">
  <h2>🍿 Nosso Cineminha 💕</h2>
  <p class="muted">Cole um link do YouTube para vocês assistirem juntos. Os dois podem escolher, pausar e avançar o vídeo.</p>
@@ -400,8 +443,8 @@ function iniciarMonitorConexoes(){
  conexaoMonitorTimer=setInterval(verificarNovasConexoes,4000);
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)verificarNovasConexoes()});
-async function carregarHistorias(){historias=await rpc('minhas_historias')||[];const area=$('lista-historias');limpar(area);$('sem-historias').hidden=historias.length>0;if(!historias.length){historiaAtual=null;chatDesligar();vozDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;$('historia-painel').hidden=true;$('titulo-site').textContent='Nossa História';return;}for(const h of historias){const b=elemento('button',`❤️ ${h.meu_nome} + ${h.parceiro_nome}`,'secondary');b.style.margin='5px';b.onclick=()=>selecionarHistoria(h.historia_id);area.append(b);}const id=historias.some(h=>h.historia_id===historiaAtual?.historia_id)?historiaAtual.historia_id:historias[0].historia_id;await selecionarHistoria(id);}
-async function selecionarHistoria(id){historiaAtual=historias.find(h=>h.historia_id===id)||null;$('historia-painel').hidden=!historiaAtual;if(!historiaAtual)return;atualizarTitulo();await carregarFotos();await chatConectarHistoria();await vozConectarHistoria();await cinemaConectarHistoria();}
+async function carregarHistorias(){historias=await rpc('minhas_historias')||[];const area=$('lista-historias');limpar(area);$('sem-historias').hidden=historias.length>0;if(!historias.length){historiaAtual=null;mascoteDesligar();chatDesligar();vozDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;$('historia-painel').hidden=true;$('titulo-site').textContent='Nossa História';return;}for(const h of historias){const b=elemento('button',`❤️ ${h.meu_nome} + ${h.parceiro_nome}`,'secondary');b.style.margin='5px';b.onclick=()=>selecionarHistoria(h.historia_id);area.append(b);}const id=historias.some(h=>h.historia_id===historiaAtual?.historia_id)?historiaAtual.historia_id:historias[0].historia_id;await selecionarHistoria(id);}
+async function selecionarHistoria(id){historiaAtual=historias.find(h=>h.historia_id===id)||null;$('historia-painel').hidden=!historiaAtual;if(!historiaAtual)return;atualizarTitulo();await carregarFotos();await chatConectarHistoria();await vozConectarHistoria();await cinemaConectarHistoria();await mascoteConectarHistoria();}
 async function carregarFotos(){fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];const area=$('galeria');limpar(area);if(!historiaAtual)return;const id=historiaAtual.historia_id;const {data,error}=await db.from('story_photos').select('id,file_path,uploaded_by,created_at').eq('story_id',id).order('created_at',{ascending:true});if(error){area.append(elemento('p','Não foi possível carregar as fotos: '+error.message,'muted'));return;}if(!data.length){area.append(elemento('p','Nosso mural está esperando novas lembranças. ❤️','muted'));return;}for(const f of data){const {data:blob,error:e}=await db.storage.from('fotos-privadas').download(f.file_path);if(e){area.append(elemento('p','Não foi possível abrir uma foto.','muted'));continue;}const url=URL.createObjectURL(blob);fotosUrls.push(url);const item=elemento('div',undefined,'item-foto');const img=elemento('img');img.src=url;img.alt='Uma lembrança nossa';img.className='foto';img.loading='lazy';item.append(img);const b=elemento('button','Excluir foto','botao-excluir');b.onclick=()=>excluirFoto(f);item.append(b);area.append(item);}}
 async function excluirFoto(f){if(!historiaAtual||!confirm('Excluir esta foto definitivamente?'))return;const {error:e}=await db.storage.from('fotos-privadas').remove([f.file_path]);if(e){erro(e);return;}const {error}=await db.from('story_photos').delete().eq('id',f.id);if(error){erro(error);return;}await carregarFotos();}
 function abrirAvisoLimite(quantidade){
@@ -665,7 +708,7 @@ for(const [id,plano] of [['comprar-essencial','essencial'],['comprar-memorias','
 const redirectTo=location.origin+location.pathname;
 botao('login-google',async()=>{if(!db)return;const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo}});if(error)throw error;});
 botao('sair-conta',async()=>{const {error}=await db.auth.signOut();if(error)throw error;await mostrarSessao(null);});
-let sessaoId=0;async function mostrarSessao(u){const token=++sessaoId;usuario=u;$('login-painel').hidden=!!u;$('conteudo-privado').style.display=u?'block':'none';$('barra-conta').style.display=u?'flex':'none';musicaBotao.style.display=u?'flex':'none';$('botao-configuracoes').style.display=u?'flex':'none';if(!u){clearInterval(conexaoMonitorTimer);conexaoMonitorTimer=null;conexaoPedidosAnterior=null;$('janela-configuracoes').hidden=true;historiaAtual=null;historias=[];perfil=null;chatDesligar();vozDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;musica.pause();fecharNuvem();fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];return;}$('janela-configuracoes').hidden=false;$('dados-conta').textContent=u.email||'Conectado';aviso('');try{await carregarPerfil();if(token!==sessaoId)return;await carregarPedidos();if(token!==sessaoId)return;iniciarMonitorConexoes();await carregarHistorias();if(historias.length>0)$('janela-configuracoes').hidden=true}catch(e){if(token===sessaoId)erro(e)}}
+let sessaoId=0;async function mostrarSessao(u){const token=++sessaoId;usuario=u;$('login-painel').hidden=!!u;$('conteudo-privado').style.display=u?'block':'none';$('barra-conta').style.display=u?'flex':'none';musicaBotao.style.display=u?'flex':'none';$('botao-configuracoes').style.display=u?'flex':'none';if(!u){clearInterval(conexaoMonitorTimer);conexaoMonitorTimer=null;conexaoPedidosAnterior=null;$('janela-configuracoes').hidden=true;historiaAtual=null;historias=[];perfil=null;mascoteDesligar();chatDesligar();vozDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;musica.pause();fecharNuvem();fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];return;}$('janela-configuracoes').hidden=false;$('dados-conta').textContent=u.email||'Conectado';aviso('');try{await carregarPerfil();if(token!==sessaoId)return;await carregarPedidos();if(token!==sessaoId)return;iniciarMonitorConexoes();await carregarHistorias();if(historias.length>0)$('janela-configuracoes').hidden=true}catch(e){if(token===sessaoId)erro(e)}}
 async function iniciar(){ $('login-painel').hidden=false;if(!db){$('mensagem-login').textContent='Falha ao carregar o login. Atualize a página.';return;}const {data}=await db.auth.getSession();await mostrarSessao(data?.session?.user||null);db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT')mostrarSessao(session?.user||null)});}
 iniciar();
 
@@ -1019,4 +1062,74 @@ $('cinema-sincronizar').onclick=async()=>{await cinemaBuscar();if(cinemaEstado)c
  mostrarAba(salva);
 })();
 
+
+/* Juntos: usa o cliente Supabase existente e RPC transacional no banco. */
+let mascoteDados=null,mascoteCanal=null,mascoteHistoriaId=null,mascoteVersao=0,mascoteOcupado=false;
+const mascoteLimitar=v=>Math.max(0,Math.min(100,Number(v)||0));
+function mascoteBotoes(habilitar){document.querySelectorAll('[data-mascote-acao]').forEach(b=>b.disabled=!habilitar);}
+function mascoteMensagem(t){$('mascote-status').textContent=t||'';}
+function atualizarInterfaceMascote(){
+ if(!mascoteDados)return;
+ const d=mascoteDados, dormindo=d.estado==='dormindo';
+ $('mascote-nome-titulo').textContent=d.nome||'Juntos';
+ for(const [chave,valorId,barraId] of [['fome','val-fome','barra-fome'],['felicidade','val-felicidade','barra-felicidade'],['energia','val-energia','barra-energia'],['sono','val-sono','barra-sono']]){
+  const valor=mascoteLimitar(d[chave]);$(valorId).textContent=valor+'%';$(barraId).style.width=valor+'%';
+ }
+ const xp=Math.max(0,Number(d.experiencia)||0),nivel=Math.floor(xp/100)+1;
+ $('mascote-nivel').textContent=nivel;$('mascote-xp').textContent=xp+' XP';$('mascote-xp-barra').style.width=(xp%100)+'%';
+ const figura=$('mascote-figura');figura.classList.toggle('dormindo',dormindo);
+ figura.textContent=dormindo?'🐰💤':d.felicidade<30?'🥺🐰':d.fome>70?'🐰🥕':'🐰';
+ $('mascote-balao-mensagem').textContent=dormindo?'Zzz... Que soninho bom! 😴':d.fome>70?'Estou com muita fome! 🥕':d.sono>70?'Estou com soninho... 🥱':d.felicidade<30?'Quero um carinho! 🥺':'Amo estar com vocês! 💕';
+ $('btn-mascote-dormir').textContent=dormindo?'☀️ Acordar':'😴 Dormir';
+}
+function mascoteDesligar(){
+ ++mascoteVersao;
+ if(mascoteCanal&&db)db.removeChannel(mascoteCanal);
+ mascoteCanal=null;mascoteHistoriaId=null;mascoteDados=null;mascoteOcupado=false;
+ mascoteBotoes(false);mascoteMensagem('Aguardando história...');
+}
+async function mascoteBuscar(id,versao){
+ const {data,error}=await db.from('mascote_casal').select('*').eq('story_id',id).maybeSingle();
+ if(error)throw error;
+ if(versao!==mascoteVersao||mascoteHistoriaId!==id)return;
+ mascoteDados=data;
+ if(data){atualizarInterfaceMascote();mascoteBotoes(!mascoteOcupado);mascoteMensagem('Conectado ao mascote do casal 💗');}
+ else {mascoteBotoes(false);mascoteMensagem('Mascote ainda não criado. Execute o SQL de instalação.');}
+}
+async function mascoteConectarHistoria(){
+ const id=historiaAtual?.historia_id;
+ if(!id){mascoteDesligar();return;}
+ if(mascoteHistoriaId===id)return;
+ mascoteDesligar();mascoteHistoriaId=id;
+ const versao=mascoteVersao;
+ mascoteMensagem('Carregando Juntos...');
+ try{
+  // A RPC cria o mascote uma única vez com validação de participação.
+  const {error}=await db.rpc('mascote_casal_iniciar',{p_story_id:id});
+  if(error)throw error;
+  if(versao!==mascoteVersao||mascoteHistoriaId!==id)return;
+  await mascoteBuscar(id,versao);
+  if(versao!==mascoteVersao||mascoteHistoriaId!==id)return;
+  mascoteCanal=db.channel('mascote-juntos-'+id).on('postgres_changes',{event:'*',schema:'public',table:'mascote_casal',filter:'story_id=eq.'+id},()=>{
+   if(versao===mascoteVersao&&mascoteHistoriaId===id)mascoteBuscar(id,versao).catch(e=>mascoteMensagem(e.message));
+  }).subscribe(status=>{if(status==='CHANNEL_ERROR'&&versao===mascoteVersao)mascoteMensagem('Realtime indisponível. Atualize a página para sincronizar.');});
+ }catch(e){if(versao===mascoteVersao){mascoteBotoes(false);mascoteMensagem('Erro ao carregar: '+e.message);}}
+}
+async function mascoteExecutar(acao){
+ if(mascoteOcupado||!mascoteDados||!historiaAtual||mascoteHistoriaId!==historiaAtual.historia_id)return;
+ const id=mascoteHistoriaId,versao=mascoteVersao;
+ mascoteOcupado=true;mascoteBotoes(false);mascoteMensagem('Cuidando do Juntos... 💕');
+ try{
+  const {data,error}=await db.rpc('mascote_casal_acao',{p_story_id:id,p_acao:acao});
+  if(error)throw error;
+  if(versao!==mascoteVersao||mascoteHistoriaId!==id)return;
+  mascoteDados=data;atualizarInterfaceMascote();
+  if(acao==='brincar'||acao==='carinho'){$('mascote-figura').classList.remove('brincando');void $('mascote-figura').offsetWidth;$('mascote-figura').classList.add('brincando');}
+  mascoteMensagem('Feito! O Juntos recebeu seu carinho 💗');
+ }catch(e){if(versao===mascoteVersao)mascoteMensagem('Não foi possível: '+e.message);}
+ finally{if(versao===mascoteVersao){mascoteOcupado=false;mascoteBotoes(!!mascoteDados);}}
+}
+document.querySelectorAll('[data-mascote-acao]').forEach(b=>b.addEventListener('click',()=>mascoteExecutar(b.dataset.mascoteAcao)));
+
 </script><script src="https://www.youtube.com/iframe_api" async></script></body></html>
+Exibindo index_com_mascote_juntos.html…Anterior
