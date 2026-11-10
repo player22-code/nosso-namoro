@@ -1627,9 +1627,11 @@ $('compat-compartilhar').onclick=async()=>{
       }
     };
 
-    timeout = setTimeout(function () {
-      caixa.classList.remove("ativa");
-    }, tipo === "ligacao" ? 15000 : 7000);
+    
+timeout = setTimeout(function () {
+  caixa.classList.remove("ativa");
+}, 2000);
+
   }
 
   function conectar() {
