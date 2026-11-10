@@ -208,6 +208,14 @@ body.tema-escuro .cartao-mensagem h2::after{background:linear-gradient(90deg,#d7
 /* Evita que o botão ⚙️ (fixo no canto) cubra o "Sair da conta" em telas estreitas. */
 @media(max-width:840px){#barra-conta{padding-right:74px}}
 
+/* Templates de memória: 4 opções com prévia (Hello Kitty, Kuromi, My Melody, Cinnamoroll) */
+#memorias-temas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(min-width:560px){#memorias-temas{grid-template-columns:repeat(4,minmax(0,1fr))}}
+#memorias-temas .memorias-tema-opcao{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 8px;font-size:14px;margin:0}
+.memorias-tema-previa{display:block;width:100%;max-width:96px;aspect-ratio:9/16;object-fit:contain;border-radius:10px;background:#fff0f4;border:1px solid #f0d3df}
+.memorias-tema-opcao:has(input:checked){border-color:#bd3267!important;box-shadow:0 0 0 2px #bd326740}
+body.tema-escuro .memorias-tema-previa{background:#382747;border-color:#59436d}
+body.tema-escuro .memorias-tema-opcao:has(input:checked){border-color:#d7a8ff!important;box-shadow:0 0 0 2px #d7a8ff40}
 </style></head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -290,8 +298,10 @@ body.tema-escuro .cartao-mensagem h2::after{background:linear-gradient(90deg,#d7
  <p class="muted">Escolha uma foto da nossa galeria e crie uma lembrança para compartilhar.</p>
  <div id="memorias-fotos" aria-label="Escolha uma foto"></div>
  <div id="memorias-temas" role="group" aria-label="Tema da imagem">
-  <label><input type="radio" name="memorias-tema" value="claro" checked> ☀️ Hello Kitty</label>
-  <label><input type="radio" name="memorias-tema" value="escuro"> 🌙 Kuromi</label>
+  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="claro" checked> ☀️ Hello Kitty<img class="memorias-tema-previa" src="template_hello_kitty.png" alt="Prévia do template Hello Kitty" loading="lazy" onerror="if(!this.dataset.alt){this.dataset.alt='1';this.src='template_hello_kit.png'}"></label>
+  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="escuro"> 🌙 Kuromi<img class="memorias-tema-previa" src="template_kuromi.png" alt="Prévia do template Kuromi" loading="lazy"></label>
+  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="melody"> 🎀 My Melody<img class="memorias-tema-previa" src="mymelodytemplate.png" alt="Prévia do template My Melody" loading="lazy"></label>
+  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="cinnamoroll"> ☁️ Cinnamoroll<img class="memorias-tema-previa" src="cinnamorolltemplate.png" alt="Prévia do template Cinnamoroll" loading="lazy"></label>
  </div>
  <button id="memorias-gerar" class="primary" type="button">✨ Gerar minha memória</button>
  <p id="memorias-status" class="muted" role="status"></p>
@@ -749,19 +759,22 @@ $('chat-texto-enviar').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shi
   const bot=$('memorias-gerar');bot.disabled=true;falar('Gerando sua memória...');
   try{
    const foto=await carregarImagem(selecionada);
-   const arquivos=tema==='escuro'?['template_kuromi.png']:['template_hello_kitty.png','template_hello_kit.png'];
+   const arquivosPorTema={claro:['template_hello_kitty.png','template_hello_kit.png'],escuro:['template_kuromi.png'],melody:['mymelodytemplate.png'],cinnamoroll:['cinnamorolltemplate.png']};
+   const arquivos=arquivosPorTema[tema]||arquivosPorTema.claro;
+   const estilosPorTema={claro:{fundo:'#fff5f7',cor:'#77364e',destaque:'#bd3267'},escuro:{fundo:'#171321',cor:'#f4eaff',destaque:'#e0b5ff'},melody:{fundo:'#fff5f7',cor:'#77364e',destaque:'#bd3267'},cinnamoroll:{fundo:'#f2f8ff',cor:'#3d5878',destaque:'#2f7fd1'}};
+   const estilo=estilosPorTema[tema]||estilosPorTema.claro;
    let moldura=null;
    for(const arquivo of arquivos){try{moldura=await carregarImagem(arquivo);break;}catch(e){}}
    if(!moldura)throw new Error('Moldura não encontrada no GitHub. Confira o nome do PNG enviado.');
    const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;
    const ctx=canvas.getContext('2d');
-   ctx.fillStyle=tema==='escuro'?'#171321':'#fff5f7';ctx.fillRect(0,0,1080,1920);
+   ctx.fillStyle=estilo.fundo;ctx.fillRect(0,0,1080,1920);
    // Abertura transparente dos templates: região da fotografia.
    ctx.save();ctx.beginPath();ctx.roundRect(64,222,952,1082,38);ctx.clip();
    desenharCobrindo(ctx,foto,64,222,952,1082);ctx.restore();
    ctx.drawImage(moldura,0,0,1080,1920);
-   const cor=tema==='escuro'?'#f4eaff':'#77364e';
-   const destaque=tema==='escuro'?'#e0b5ff':'#bd3267';
+   const cor=estilo.cor;
+   const destaque=estilo.destaque;
    escreverCentral(ctx,nomes,1470,67,cor,920);
    escreverCentral(ctx,'estão juntos há',1570,42,cor,880,'normal');
    escreverCentral(ctx,duracao,1680,92,destaque,910);
