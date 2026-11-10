@@ -909,3 +909,72 @@ $('cinema-play').onclick=()=>cinemaSalvar({playing:true,position_seconds:cinemaP
 $('cinema-pausa').onclick=()=>cinemaSalvar({playing:false,position_seconds:cinemaPronto&&cinemaEstado?cinemaPlayer.getCurrentTime():cinemaTempoEsperado(cinemaEstado||{})});
 $('cinema-sincronizar').onclick=async()=>{await cinemaBuscar();if(cinemaEstado)cinemaAplicar(cinemaEstado,true)};
 </script><script src="https://www.youtube.com/iframe_api" async></script></body></html>
+
+<!-- Botão de notificações - Nossa História -->
+<style>
+  #botaoNotificacoes {
+    position: fixed;
+    right: 18px;
+    bottom: 160px;
+    z-index: 9999;
+    padding: 12px 17px;
+    border: 2px solid #ffc2df;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #ff77b7, #c4367c);
+    color: white;
+    font: 600 14px Arial, sans-serif;
+    box-shadow: 0 5px 18px #b52b7150;
+    cursor: pointer;
+  }
+</style>
+
+<button id="botaoNotificacoes" type="button">
+  🔔 Ativar notificações
+</button>
+
+<script>
+(function () {
+  const botao = document.getElementById("botaoNotificacoes");
+
+  function atualizarBotao() {
+    if (!("Notification" in window)) {
+      botao.textContent = "🔕 Indisponível";
+      botao.disabled = true;
+    } else if (Notification.permission === "granted") {
+      botao.textContent = "🔔 Notificações ativadas";
+    } else if (Notification.permission === "denied") {
+      botao.textContent = "🔕 Permissão bloqueada";
+    }
+  }
+
+  botao.addEventListener("click", async () => {
+    if (!("Notification" in window)) {
+      alert("Este navegador não suporta notificações.");
+      return;
+    }
+
+    if (Notification.permission === "denied") {
+      alert("Autorize as notificações nas configurações do navegador.");
+      return;
+    }
+
+    if (Notification.permission === "granted") {
+      alert("A permissão para notificações já está ativada! 💗");
+      return;
+    }
+
+    try {
+      const permissao = await Notification.requestPermission();
+      atualizarBotao();
+
+      if (permissao === "granted") {
+        alert("Permissão ativada! 💕 Agora falta configurar o recebimento das mensagens e ligações.");
+      }
+    } catch (erro) {
+      alert("Não foi possível solicitar a permissão neste navegador.");
+    }
+  });
+
+  atualizarBotao();
+})();
+</script>
