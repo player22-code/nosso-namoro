@@ -1425,4 +1425,104 @@ $('compat-compartilhar').onclick=async()=>{
  if(navigator.share){try{await navigator.share({text:texto,title:'Nossa História 💞'});return}catch(e){if(e.name==='AbortError')return}}
  try{await navigator.clipboard.writeText(texto);compatStatus('Resultado copiado! 💗')}catch(e){window.open('https://wa.me/?text='+encodeURIComponent(texto),'_blank','noopener')}
 };
-</script><script src="https://www.youtube.com/iframe_api" async></script></body></html>
+</script><script src="https://www.youtube.com/iframe_api" async></script>
+<!-- BLOQUEIO DE JOGOS EM ANDAMENTO -->
+<script>
+(function () {
+  let verificando = false;
+
+  async function verificarJogosPendentes() {
+    if (verificando) return;
+    if (typeof historiaAtual === "undefined" ||
+        !historiaAtual?.historia_id ||
+        typeof rpc !== "function") return;
+
+    verificando = true;
+
+    try {
+      const historiaId = historiaAtual.historia_id;
+
+      const [quizzes, testes] = await Promise.all([
+        rpc("quiz_amor_listar_v2", {
+          p_story_id: historiaId
+        }),
+        rpc("compat_listar", {
+          p_story_id: historiaId
+        })
+      ]);
+
+      if (historiaAtual?.historia_id !== historiaId) return;
+
+      const quizPendente = (quizzes || []).some(
+        q => !q.concluido
+      );
+
+      const testePendente = (testes || []).some(
+        t => Number(t.respostas_recebidas) < 2
+      );
+
+      configurarBotao(
+        "quiz-criar",
+        quizPendente,
+        "⏳ Já existe um Quiz do Amor em andamento. Aguarde seu amor responder!"
+      );
+
+      configurarBotao(
+        "compat-criar",
+        testePendente,
+        "⏳ Já existe um Teste de Compatibilidade em andamento. Os dois precisam responder!"
+      );
+
+    } catch (erro) {
+      console.warn("Erro ao verificar jogos:", erro);
+    } finally {
+      verificando = false;
+    }
+  }
+
+  function configurarBotao(id, bloqueado, mensagem) {
+    const botao = document.getElementById(id);
+    if (!botao) return;
+
+    botao.disabled = bloqueado;
+    botao.style.opacity = bloqueado ? "0.5" : "1";
+    botao.style.cursor = bloqueado ? "not-allowed" : "pointer";
+
+    let aviso = document.getElementById(id + "-aviso");
+
+    if (!aviso) {
+      aviso = document.createElement("p");
+      aviso.id = id + "-aviso";
+      aviso.style.cssText = `
+        background: #fff0d6;
+        color: #89521b;
+        padding: 12px;
+        border-radius: 15px;
+        text-align: center;
+        font-weight: bold;
+        margin: 12px 0;
+      `;
+      botao.insertAdjacentElement("afterend", aviso);
+    }
+
+    aviso.textContent = bloqueado ? mensagem : "";
+    aviso.hidden = !bloqueado;
+  }
+
+  // Atualiza ao abrir o site.
+  window.addEventListener("load", () => {
+    setTimeout(verificarJogosPendentes, 1500);
+  });
+
+  // Atualiza ao voltar para a página.
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) verificarJogosPendentes();
+  });
+
+  // Atualiza periodicamente para reconhecer
+  // quando o parceiro termina um jogo.
+  setInterval(verificarJogosPendentes, 5000);
+
+})();
+</script>
+</body></html>
