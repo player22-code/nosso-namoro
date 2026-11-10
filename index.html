@@ -243,6 +243,24 @@ body.tema-escuro #mascote-juntos{background:linear-gradient(160deg,#2e223c,#3c28
 body.tema-escuro #mascote-cenario{background:radial-gradient(circle,#4b345e,#31203e)}
 body.tema-escuro #mascote-balao-mensagem,body.tema-escuro .mascote-medidor{background:#3a2b4b;color:#f5d9ec;border-color:#59436d}
 @media(prefers-reduced-motion:reduce){#mascote-figura{animation:none!important}}
+
+/* Moedinhas do Juntos */
+#mascote-moedas{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:13px 0;padding:12px;border-radius:17px;background:#fff4d9;color:#81581b}
+#mascote-saldo{font-size:21px;font-weight:800;font-variant-numeric:tabular-nums}
+#mascote-premios-abrir{border:0;background:#f6b848;color:#633d0a;border-radius:20px;padding:10px 14px;font-weight:bold}
+#mascote-premios[hidden]{display:none!important}
+#mascote-premios{position:fixed;inset:0;z-index:2600;background:#241522b9;display:flex;align-items:center;justify-content:center;padding:15px}
+#mascote-premios-caixa{position:relative;width:min(450px,100%);max-height:90dvh;overflow:auto;padding:23px 16px;border-radius:24px;background:#fff8fc;color:#51343d;box-shadow:0 10px 35px #0004}
+#mascote-premios-fechar{position:absolute;right:13px;top:12px;border:0;border-radius:50%;background:#ffe5f1;color:#b12b67;width:36px;height:36px;font-size:22px}
+#mascote-dias{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:17px 0}
+.mascote-dia{background:#ffe8f2;border-radius:12px;padding:10px 1px;font-size:10px;display:grid;gap:6px;justify-items:center}
+.mascote-dia.concluido{background:#dbf3df}.mascote-dia.atual{outline:2px solid #c53d7d}
+.mascote-dia strong{font-size:18px}
+#mascote-coletar{width:100%;padding:13px;border:0;border-radius:17px;background:#c43d7b;color:#fff;font-weight:800}
+#mascote-premios-aviso{font-size:12px;line-height:1.6;color:#8d6474}
+body.tema-escuro #mascote-moedas{background:#5c452d;color:#ffe9b9}
+body.tema-escuro #mascote-premios-caixa{background:#2c2039;color:#f7e6f5}
+body.tema-escuro .mascote-dia{background:#493453}body.tema-escuro .mascote-dia.concluido{background:#2c644b}
 </style></head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -310,6 +328,7 @@ body.tema-escuro #mascote-balao-mensagem,body.tema-escuro .mascote-medidor{backg
 <section id="mascote-juntos" aria-labelledby="mascote-titulo">
  <h2 id="mascote-titulo">🐰 Nosso mascote: <span id="mascote-nome-titulo">Juntos</span> 💕</h2>
  <p class="muted">Um coelhinho para vocês cuidarem juntos, em tempo real!</p>
+ <div id="mascote-moedas"><span id="mascote-saldo" aria-live="polite">🪙 --</span><button type="button" id="mascote-premios-abrir">🎁 Recompensas</button></div>
  <div id="mascote-cenario"><span id="mascote-figura" role="img" aria-label="Coelhinho Juntos">🐰</span><span id="mascote-balao-mensagem" aria-live="polite">Carregando nosso coelhinho... 💗</span></div>
  <div id="mascote-estatisticas">
   <div class="mascote-medidor"><div class="mascote-medidor-topo"><span>🥕 Fome</span><b id="val-fome">--</b></div><div class="mascote-trilho"><div class="mascote-preenchimento" id="barra-fome"></div></div></div>
@@ -319,7 +338,7 @@ body.tema-escuro #mascote-balao-mensagem,body.tema-escuro .mascote-medidor{backg
  </div>
  <p>⭐ Nível <strong id="mascote-nivel">1</strong> · <span id="mascote-xp">0 XP</span></p>
  <div id="mascote-xp-trilho"><div id="mascote-xp-barra"></div></div>
- <div id="mascote-acoes"><button type="button" data-mascote-acao="alimentar" disabled>🥕 Alimentar</button><button type="button" data-mascote-acao="brincar" disabled>🎾 Brincar</button><button type="button" data-mascote-acao="carinho" disabled>💖 Dar carinho</button><button type="button" id="btn-mascote-dormir" data-mascote-acao="dormir" disabled>😴 Dormir</button></div>
+ <div id="mascote-acoes"><button type="button" data-mascote-acao="alimentar" disabled>🥕 Alimentar · 5 🪙</button><button type="button" data-mascote-acao="brincar" disabled>🎾 Brincar · 4 🪙</button><button type="button" data-mascote-acao="carinho" disabled>💖 Dar carinho · 2 🪙</button><button type="button" data-mascote-acao="banho" disabled>🛁 Dar banho · 3 🪙</button><button type="button" id="btn-mascote-dormir" data-mascote-acao="dormir" disabled>😴 Dormir</button></div>
  <p id="mascote-status" role="status">Aguardando conexão...</p>
 </section>
 <section id="nosso-cineminha" aria-label="Nosso Cineminha">
@@ -386,6 +405,18 @@ body.tema-escuro #mascote-balao-mensagem,body.tema-escuro .mascote-medidor{backg
 </div>
 <section id="secao-historias"><h2>Minhas histórias ❤️</h2><div id="lista-historias">Carregando...</div><div id="sem-historias" hidden><p class="subtitulo">Sua história começa com uma conexão aceita. ❤️</p></div></section>
 </div><footer>Feito com amor, especialmente para você. ❤️</footer></main>
+
+<div id="mascote-premios" hidden role="dialog" aria-modal="true" aria-labelledby="mascote-premios-titulo">
+ <div id="mascote-premios-caixa">
+  <button id="mascote-premios-fechar" type="button" aria-label="Fechar recompensas">×</button>
+  <h2 id="mascote-premios-titulo">🎁 Presente diário do Juntos</h2>
+  <p>🪙 <strong>20 moedas</strong> a cada 24 horas para o casal inteiro.</p>
+  <p id="mascote-proxima">Verificando sua recompensa...</p>
+  <div id="mascote-dias" aria-label="Progresso de sete dias"></div>
+  <button id="mascote-coletar" type="button" disabled>🎁 Coletar 20 moedas</button>
+  <p id="mascote-premios-aviso">Os dois compartilham a mesma recompensa. Dias não resgatados não acumulam. As moedas já coletadas continuam no saldo.</p>
+ </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 const SUPABASE_URL='https://xttqhfaapgimaxfendzr.supabase.co';
@@ -1076,11 +1107,11 @@ function atualizarInterfaceMascote(){
   const valor=mascoteLimitar(d[chave]);$(valorId).textContent=valor+'%';$(barraId).style.width=valor+'%';
  }
  const xp=Math.max(0,Number(d.experiencia)||0),nivel=Math.floor(xp/100)+1;
- $('mascote-nivel').textContent=nivel;$('mascote-xp').textContent=xp+' XP';$('mascote-xp-barra').style.width=(xp%100)+'%';
+ $('mascote-saldo').textContent='🪙 '+Math.max(0,Number(d.moedas)||0);mascoteAtualizarPremios();$('mascote-nivel').textContent=nivel;$('mascote-xp').textContent=xp+' XP';$('mascote-xp-barra').style.width=(xp%100)+'%';
  const figura=$('mascote-figura');figura.classList.toggle('dormindo',dormindo);
  figura.textContent=dormindo?'🐰💤':d.felicidade<30?'🥺🐰':d.fome>70?'🐰🥕':'🐰';
  $('mascote-balao-mensagem').textContent=dormindo?'Zzz... Que soninho bom! 😴':d.fome>70?'Estou com muita fome! 🥕':d.sono>70?'Estou com soninho... 🥱':d.felicidade<30?'Quero um carinho! 🥺':'Amo estar com vocês! 💕';
- $('btn-mascote-dormir').textContent=dormindo?'☀️ Acordar':'😴 Dormir';
+ $('btn-mascote-dormir').textContent=dormindo?'☀️ Acordar · grátis':'😴 Dormir · grátis';
 }
 function mascoteDesligar(){
  ++mascoteVersao;
@@ -1125,11 +1156,54 @@ async function mascoteExecutar(acao){
   if(versao!==mascoteVersao||mascoteHistoriaId!==id)return;
   mascoteDados=data;atualizarInterfaceMascote();
   if(acao==='brincar'||acao==='carinho'){$('mascote-figura').classList.remove('brincando');void $('mascote-figura').offsetWidth;$('mascote-figura').classList.add('brincando');}
-  mascoteMensagem('Feito! O Juntos recebeu seu carinho 💗');
+  mascoteMensagem(acao==='dormir'?'Tudo certo! 😴':'Prontinho! O Juntos está feliz 💗');
  }catch(e){if(versao===mascoteVersao)mascoteMensagem('Não foi possível: '+e.message);}
  finally{if(versao===mascoteVersao){mascoteOcupado=false;mascoteBotoes(!!mascoteDados);}}
 }
 document.querySelectorAll('[data-mascote-acao]').forEach(b=>b.addEventListener('click',()=>mascoteExecutar(b.dataset.mascoteAcao)));
 
+/* Recompensa diária: saldo e horários sempre validados pelo Supabase. */
+let mascoteRelogio=null;
+function mascoteAtualizarPremios(){
+ const d=mascoteDados;if(!d)return;
+ const ultimo=d.ultima_coleta_em?new Date(d.ultima_coleta_em).getTime():null;
+ const proximo=ultimo===null?0:ultimo+24*60*60*1000;
+ const pode=!ultimo||Date.now()>=proximo;
+ const contagem=Math.max(0,Number(d.dias_seguidos)||0);
+ const diaAtual=contagem===0?1:((contagem%7)+1);
+ const area=$('mascote-dias');area.replaceChildren();
+ for(let i=1;i<=7;i++){
+  const concluido=contagem>0 && (contagem%7===0 || i<=contagem%7);
+  const cel=document.createElement('div');cel.className='mascote-dia'+(concluido?' concluido':'')+(i===diaAtual?' atual':'');
+  const rotulo=document.createElement('span');rotulo.textContent='Dia '+i;
+  const icone=document.createElement('strong');icone.textContent=concluido?'✅':i===diaAtual?'🎁':'🔒';
+  const premio=document.createElement('span');premio.textContent='+20';
+  cel.append(rotulo,icone,premio);area.append(cel);
+ }
+ $('mascote-coletar').disabled=!pode||mascoteOcupado;
+ $('mascote-proxima').textContent=pode?'🎉 Presente disponível! Entre e colete suas 20 moedas.':
+  '⏳ Próxima coleta em '+mascoteFormatarTempo(proximo-Date.now());
+}
+function mascoteFormatarTempo(ms){const t=Math.max(0,Math.ceil(ms/1000));return String(Math.floor(t/3600)).padStart(2,'0')+':'+String(Math.floor(t%3600/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');}
+$('mascote-premios-abrir').addEventListener('click',()=>{$('mascote-premios').hidden=false;mascoteAtualizarPremios();});
+$('mascote-premios-fechar').addEventListener('click',()=>{$('mascote-premios').hidden=true;});
+$('mascote-premios').addEventListener('click',e=>{if(e.target===$('mascote-premios'))$('mascote-premios').hidden=true;});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('mascote-premios').hidden=true;});
+$('mascote-coletar').addEventListener('click',async()=>{
+ if(!mascoteHistoriaId||mascoteOcupado)return;
+ const id=mascoteHistoriaId,versao=mascoteVersao;
+ mascoteOcupado=true;mascoteBotoes(false);$('mascote-coletar').disabled=true;
+ try{
+  const {data,error}=await db.rpc('mascote_casal_coletar',{p_story_id:id});
+  if(error)throw error;
+  if(versao!==mascoteVersao||mascoteHistoriaId!==id)return;
+  mascoteDados=data;atualizarInterfaceMascote();mascoteMensagem('🎁 Vocês ganharam 20 moedinhas!');
+ }catch(e){mascoteMensagem('Recompensa: '+e.message);alert(e.message||'Não foi possível coletar.');}
+ finally{if(versao===mascoteVersao){mascoteOcupado=false;mascoteBotoes(!!mascoteDados);mascoteAtualizarPremios();}}
+});
+mascoteRelogio=setInterval(()=>{if(mascoteDados&&!document.hidden)mascoteAtualizarPremios();},1000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&mascoteHistoriaId)mascoteBuscar(mascoteHistoriaId,mascoteVersao).catch(console.warn);});
+
+
 </script><script src="https://www.youtube.com/iframe_api" async></script></body></html>
-Exibindo index_com_mascote_juntos.html…Anterior
+Exibindo index_nossa_historia_mascote_moedas.html…
