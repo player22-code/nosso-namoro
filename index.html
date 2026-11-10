@@ -422,6 +422,14 @@ body.tema-escuro #mascote-cenario.nh-noite{background-image:url("imagens/quarto_
 #mascote-cenario.nh-noite #mascote-balao-mensagem{background:rgba(49,33,72,.9)!important;color:#fff!important}
 @media(max-width:650px){#mascote-cenario{min-height:315px!important}#mascote-figura{min-height:195px!important}}
 
+
+/* AJUSTE DE POSICAO DO MASCOTE — alinhado ao tapete (2026-11) */
+#mascote-cenario{position:relative!important;min-height:350px!important;aspect-ratio:1/1!important;padding:0!important;overflow:hidden!important}
+#mascote-figura{position:absolute!important;left:50%!important;bottom:7%!important;top:auto!important;right:auto!important;transform:translateX(-50%)!important;margin:0!important;width:min(57%,215px)!important;min-width:0!important;min-height:0!important;height:auto!important;z-index:2!important;display:flex!important;align-items:flex-end!important;justify-content:center!important;filter:drop-shadow(0 6px 5px #492b4930)}
+#mascote-figura img{display:block!important;width:100%!important;max-width:100%!important;height:auto!important;max-height:215px!important;object-fit:contain!important}
+#mascote-balao-mensagem{position:absolute!important;left:5%!important;right:5%!important;top:4%!important;bottom:auto!important;width:auto!important;max-width:none!important;margin:0!important;z-index:3!important;text-align:center!important}
+@media(max-width:650px){#mascote-cenario{min-height:315px!important;aspect-ratio:1/1!important}#mascote-figura{bottom:7%!important;width:57%!important}}
+
 </style></head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
