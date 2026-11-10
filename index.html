@@ -300,8 +300,8 @@ body.tema-escuro .memorias-tema-opcao:has(input:checked){border-color:#d7a8ff!im
  <div id="memorias-temas" role="group" aria-label="Tema da imagem">
   <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="claro" checked> ☀️ Hello Kitty<img class="memorias-tema-previa" src="template_hello_kitty.png" alt="Prévia do template Hello Kitty" loading="lazy" onerror="if(!this.dataset.alt){this.dataset.alt='1';this.src='template_hello_kit.png'}"></label>
   <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="escuro"> 🌙 Kuromi<img class="memorias-tema-previa" src="template_kuromi.png" alt="Prévia do template Kuromi" loading="lazy"></label>
-  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="melody"> 🎀 My Melody<img class="memorias-tema-previa" src="mymelodytemplate.png" alt="Prévia do template My Melody" loading="lazy"></label>
-  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="cinnamoroll"> ☁️ Cinnamoroll<img class="memorias-tema-previa" src="cinnamorolltemplate.png" alt="Prévia do template Cinnamoroll" loading="lazy"></label>
+  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="melody"> 🎀 My Melody<img class="memorias-tema-previa" src="mymelodytemplate.png" alt="Prévia do template My Melody" loading="lazy" onerror="if(!this.dataset.r){this.dataset.r='1';this.src=this.getAttribute('src')+'?v='+Date.now()}"></label>
+  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="cinnamoroll"> ☁️ Cinnamoroll<img class="memorias-tema-previa" src="cinnamorolltemplate.png" alt="Prévia do template Cinnamoroll" loading="lazy" onerror="if(!this.dataset.r){this.dataset.r='1';this.src=this.getAttribute('src')+'?v='+Date.now()}"></label>
  </div>
  <button id="memorias-gerar" class="primary" type="button">✨ Gerar minha memória</button>
  <p id="memorias-status" class="muted" role="status"></p>
@@ -764,8 +764,12 @@ $('chat-texto-enviar').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shi
    const estilosPorTema={claro:{fundo:'#fff5f7',cor:'#77364e',destaque:'#bd3267'},escuro:{fundo:'#171321',cor:'#f4eaff',destaque:'#e0b5ff'},melody:{fundo:'#fff5f7',cor:'#77364e',destaque:'#bd3267'},cinnamoroll:{fundo:'#f2f8ff',cor:'#3d5878',destaque:'#2f7fd1'}};
    const estilo=estilosPorTema[tema]||estilosPorTema.claro;
    let moldura=null;
-   for(const arquivo of arquivos){try{moldura=await carregarImagem(arquivo);break;}catch(e){}}
-   if(!moldura)throw new Error('Moldura não encontrada no GitHub. Confira o nome do PNG enviado.');
+   for(const arquivo of arquivos){
+    try{moldura=await carregarImagem(arquivo);break;}catch(e){}
+    // Nova tentativa com parâmetro de versão: contorna um "não encontrado" guardado em cache pelo navegador ou pelo GitHub Pages.
+    try{moldura=await carregarImagem(arquivo+'?v='+Date.now());break;}catch(e){}
+   }
+   if(!moldura)throw new Error('Moldura não encontrada no GitHub: '+arquivos.join(' ou ')+'. Confira o nome do PNG enviado e aguarde alguns minutos após o envio, para o GitHub Pages publicar.');
    const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;
    const ctx=canvas.getContext('2d');
    ctx.fillStyle=estilo.fundo;ctx.fillRect(0,0,1080,1920);
