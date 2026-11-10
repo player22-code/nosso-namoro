@@ -410,6 +410,18 @@ body.tema-escuro #mascote-juntos,body.tema-escuro #quiz-amor{background:linear-g
 body.tema-escuro .quiz-opcoes label:has(input:checked){background:#60416c}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}button,.aba-btn{transition:none!important}}
 
+
+/* Cenário dinâmico: mesmas posições de objetos de dia e de noite */
+#mascote-cenario{background-image:url("imagens/quarto_acordado.png")!important;background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important;min-height:350px!important;overflow:hidden;border:1px solid #e6c1d3!important;isolation:isolate}
+#mascote-cenario.nh-noite{background-image:url("imagens/quarto_dormindo.png")!important;border-color:#8f6da9!important}
+body.tema-escuro #mascote-cenario:not(.nh-noite){background-image:url("imagens/quarto_acordado.png")!important}
+body.tema-escuro #mascote-cenario.nh-noite{background-image:url("imagens/quarto_dormindo.png")!important}
+#mascote-figura{position:relative;z-index:2;min-height:225px!important;display:flex!important;align-items:flex-end!important;justify-content:center!important;filter:drop-shadow(0 8px 6px #492b4933)}
+#mascote-figura img{max-height:215px;object-fit:contain}
+#mascote-balao-mensagem{position:relative;z-index:3;background:rgba(255,255,255,.94)!important;box-shadow:0 3px 14px #532f5322}
+#mascote-cenario.nh-noite #mascote-balao-mensagem{background:rgba(49,33,72,.9)!important;color:#fff!important}
+@media(max-width:650px){#mascote-cenario{min-height:315px!important}#mascote-figura{min-height:195px!important}}
+
 </style></head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -1315,6 +1327,7 @@ function atualizarInterfaceMascote(){
  const xp=Math.max(0,Number(d.experiencia)||0),nivel=Math.floor(xp/100)+1;
  $('mascote-saldo').textContent='🪙 '+Math.max(0,Number(d.moedas)||0);mascoteAtualizarPremios();$('mascote-nivel').textContent=nivel;$('mascote-xp').textContent=xp+' XP';$('mascote-xp-barra').style.width=(xp%100)+'%';
  const figura=$('mascote-figura');figura.classList.toggle('dormindo',dormindo);
+ const cenarioMascote=$('mascote-cenario');if(cenarioMascote)cenarioMascote.classList.toggle('nh-noite',dormindo);
  const problemasMascote=[];
  if(d.fome>50)problemasMascote.push('🥕 Estou com fome! Me alimente! 🥺');
  if(d.sono>50)problemasMascote.push('🌙 Estou com soninho! Preciso dormir! 😴');
