@@ -153,6 +153,16 @@ body.tema-escuro .faixa-musica.ativa{background:#714580}
 #chat-status{font-size:11px;padding:0 12px 5px;color:#986c79;background:#fff}
 body.tema-escuro #janela-chat{background:#251d33;color:#f4eaff;border-color:#694c7c}body.tema-escuro #chat-cabecalho{background:#49335e}body.tema-escuro #chat-mensagens{background:#21182d}body.tema-escuro .chat-balao{background:#382747;color:#f4eaff}body.tema-escuro .chat-linha.minha .chat-balao{background:#60416c}body.tema-escuro #chat-rodape,body.tema-escuro #chat-status{background:#251d33}body.tema-escuro #chat-config{border-color:#694c7c}
 @media(max-width:430px){#abrir-chat{left:10px;bottom:18px;padding:13px}#janela-chat{left:8px;bottom:76px;width:calc(100vw - 16px)}}
+
+/* Nosso Cineminha — vídeo sincronizado entre os dois integrantes */
+#cinema-video{width:100%;aspect-ratio:16/9;background:#1b1522;border-radius:15px;overflow:hidden;margin:14px 0}
+#cinema-video iframe{width:100%;height:100%;border:0}
+#cinema-controles{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+#cinema-controles button{min-width:95px}
+#cinema-link{margin:8px 0}
+#cinema-status{font-size:13px;line-height:1.5;min-height:20px;color:#986c79}
+#cinema-sincronia{font-size:12px;color:#986c79}
+body.tema-escuro #cinema-status,body.tema-escuro #cinema-sincronia{color:#d0b9e0}
 </style></head>
 <body><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -222,6 +232,18 @@ body.tema-escuro #janela-chat{background:#251d33;color:#f4eaff;border-color:#694
   </div>
  </section>
 
+
+<section id="nosso-cineminha" aria-label="Nosso Cineminha">
+ <h2>🍿 Nosso Cineminha 💕</h2>
+ <p class="muted">Cole um link do YouTube para vocês assistirem juntos. Os dois podem escolher, pausar e avançar o vídeo.</p>
+ <label for="cinema-link">Link do vídeo do YouTube</label>
+ <input id="cinema-link" type="url" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off">
+ <div class="actions"><button id="cinema-carregar" class="primary" type="button">💗 Assistir juntos</button></div>
+ <div id="cinema-video" aria-label="Reprodutor do YouTube"></div>
+ <div id="cinema-controles"><button id="cinema-play" class="primary" type="button">▶ Reproduzir</button><button id="cinema-pausa" class="secondary" type="button">⏸ Pausar</button><button id="cinema-sincronizar" class="secondary" type="button">↻ Sincronizar</button></div>
+ <p id="cinema-status" role="status">Aguardando o primeiro vídeo... 💕</p>
+ <p id="cinema-sincronia">A sincronização depende da conexão dos dois aparelhos e pode ter pequena diferença de segundos. O YouTube pode bloquear vídeos incorporados.</p>
+</section>
 <section id="compartilhar-memorias">
  <h2>Compartilhar Memórias 💌</h2>
  <p class="muted">Escolha uma foto da nossa galeria e crie uma lembrança para compartilhar.</p>
@@ -271,8 +293,8 @@ $('janela-configuracoes').addEventListener('click',evento=>{if(evento.target===$
 document.addEventListener('keydown',evento=>{if(evento.key==='Escape'&&!$('janela-configuracoes').hidden&&historias.length>0)fecharConfiguracoes();});
 async function carregarPerfil(){perfil=await rpc('criar_meu_perfil');$('nome-usuario').value=perfil.username;$('codigo-conexao').textContent=perfil.connection_code;}
 async function carregarPedidos(){const pedidos=await rpc('minhas_solicitacoes');const area=$('solicitacoes');limpar(area);if(!pedidos?.length){area.append(elemento('p','Nenhuma solicitação pendente.','muted'));return;}for(const p of pedidos){const item=elemento('div',undefined,'item');item.append(elemento('div',`${p.nome_usuario} — ${p.tipo==='recebida'?'recebida':'enviada'}`));const a=elemento('div',undefined,'actions');const acao=(titulo,fn)=>{const b=elemento('button',titulo,'secondary');b.onclick=async()=>{b.disabled=true;const haviaVinculo=historias.length>0;try{await fn();await carregarPedidos();await carregarHistorias();if(!haviaVinculo&&historias.length>0)$('janela-configuracoes').hidden=true}catch(e){erro(e)}finally{b.disabled=false}};a.append(b)};if(p.tipo==='recebida'){acao('Aceitar',()=>rpc('aceitar_conexao',{pedido_id:p.pedido_id}));acao('Recusar',()=>rpc('responder_solicitacao',{pedido_id:p.pedido_id,nova_situacao:'rejected'}));}else{acao('Cancelar',()=>rpc('responder_solicitacao',{pedido_id:p.pedido_id,nova_situacao:'cancelled'}));}item.append(a);area.append(item);}}
-async function carregarHistorias(){historias=await rpc('minhas_historias')||[];const area=$('lista-historias');limpar(area);$('sem-historias').hidden=historias.length>0;if(!historias.length){historiaAtual=null;chatDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;$('historia-painel').hidden=true;$('titulo-site').textContent='Nossa História';return;}for(const h of historias){const b=elemento('button',`❤️ ${h.meu_nome} + ${h.parceiro_nome}`,'secondary');b.style.margin='5px';b.onclick=()=>selecionarHistoria(h.historia_id);area.append(b);}const id=historias.some(h=>h.historia_id===historiaAtual?.historia_id)?historiaAtual.historia_id:historias[0].historia_id;await selecionarHistoria(id);}
-async function selecionarHistoria(id){historiaAtual=historias.find(h=>h.historia_id===id)||null;$('historia-painel').hidden=!historiaAtual;if(!historiaAtual)return;atualizarTitulo();await carregarFotos();await chatConectarHistoria();}
+async function carregarHistorias(){historias=await rpc('minhas_historias')||[];const area=$('lista-historias');limpar(area);$('sem-historias').hidden=historias.length>0;if(!historias.length){historiaAtual=null;chatDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;$('historia-painel').hidden=true;$('titulo-site').textContent='Nossa História';return;}for(const h of historias){const b=elemento('button',`❤️ ${h.meu_nome} + ${h.parceiro_nome}`,'secondary');b.style.margin='5px';b.onclick=()=>selecionarHistoria(h.historia_id);area.append(b);}const id=historias.some(h=>h.historia_id===historiaAtual?.historia_id)?historiaAtual.historia_id:historias[0].historia_id;await selecionarHistoria(id);}
+async function selecionarHistoria(id){historiaAtual=historias.find(h=>h.historia_id===id)||null;$('historia-painel').hidden=!historiaAtual;if(!historiaAtual)return;atualizarTitulo();await carregarFotos();await chatConectarHistoria();await cinemaConectarHistoria();}
 async function carregarFotos(){fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];const area=$('galeria');limpar(area);if(!historiaAtual)return;const id=historiaAtual.historia_id;const {data,error}=await db.from('story_photos').select('id,file_path,uploaded_by,created_at').eq('story_id',id).order('created_at',{ascending:true});if(error){area.append(elemento('p','Não foi possível carregar as fotos: '+error.message,'muted'));return;}if(!data.length){area.append(elemento('p','Nosso mural está esperando novas lembranças. ❤️','muted'));return;}for(const f of data){const {data:blob,error:e}=await db.storage.from('fotos-privadas').download(f.file_path);if(e){area.append(elemento('p','Não foi possível abrir uma foto.','muted'));continue;}const url=URL.createObjectURL(blob);fotosUrls.push(url);const item=elemento('div',undefined,'item-foto');const img=elemento('img');img.src=url;img.alt='Uma lembrança nossa';img.className='foto';img.loading='lazy';item.append(img);const b=elemento('button','Excluir foto','botao-excluir');b.onclick=()=>excluirFoto(f);item.append(b);area.append(item);}}
 async function excluirFoto(f){if(!historiaAtual||!confirm('Excluir esta foto definitivamente?'))return;const {error:e}=await db.storage.from('fotos-privadas').remove([f.file_path]);if(e){erro(e);return;}const {error}=await db.from('story_photos').delete().eq('id',f.id);if(error){erro(error);return;}await carregarFotos();}
 function abrirAvisoLimite(quantidade){
@@ -536,7 +558,7 @@ for(const [id,plano] of [['comprar-essencial','essencial'],['comprar-memorias','
 const redirectTo=location.origin+location.pathname;
 botao('login-google',async()=>{if(!db)return;const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo}});if(error)throw error;});
 botao('sair-conta',async()=>{const {error}=await db.auth.signOut();if(error)throw error;await mostrarSessao(null);});
-let sessaoId=0;async function mostrarSessao(u){const token=++sessaoId;usuario=u;$('login-painel').hidden=!!u;$('conteudo-privado').style.display=u?'block':'none';$('barra-conta').style.display=u?'flex':'none';musicaBotao.style.display=u?'flex':'none';$('botao-configuracoes').style.display=u?'flex':'none';if(!u){$('janela-configuracoes').hidden=true;historiaAtual=null;historias=[];perfil=null;chatDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;musica.pause();fecharNuvem();fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];return;}$('janela-configuracoes').hidden=false;$('dados-conta').textContent=u.email||'Conectado';aviso('');try{await carregarPerfil();if(token!==sessaoId)return;await carregarPedidos();if(token!==sessaoId)return;await carregarHistorias();if(historias.length>0)$('janela-configuracoes').hidden=true}catch(e){if(token===sessaoId)erro(e)}}
+let sessaoId=0;async function mostrarSessao(u){const token=++sessaoId;usuario=u;$('login-painel').hidden=!!u;$('conteudo-privado').style.display=u?'block':'none';$('barra-conta').style.display=u?'flex':'none';musicaBotao.style.display=u?'flex':'none';$('botao-configuracoes').style.display=u?'flex':'none';if(!u){$('janela-configuracoes').hidden=true;historiaAtual=null;historias=[];perfil=null;chatDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;musica.pause();fecharNuvem();fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];return;}$('janela-configuracoes').hidden=false;$('dados-conta').textContent=u.email||'Conectado';aviso('');try{await carregarPerfil();if(token!==sessaoId)return;await carregarPedidos();if(token!==sessaoId)return;await carregarHistorias();if(historias.length>0)$('janela-configuracoes').hidden=true}catch(e){if(token===sessaoId)erro(e)}}
 async function iniciar(){ $('login-painel').hidden=false;if(!db){$('mensagem-login').textContent='Falha ao carregar o login. Atualize a página.';return;}const {data}=await db.auth.getSession();await mostrarSessao(data?.session?.user||null);db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT')mostrarSessao(session?.user||null)});}
 iniciar();
 
@@ -552,7 +574,7 @@ function chatDesenharAvatar(){const area=$('chat-personagens');area.replaceChild
 function chatRenderMensagem(m){if($('chat-mensagens').querySelector('[data-chat-id="'+m.id+'"]'))return;const area=$('chat-mensagens');const pertoFim=area.scrollHeight-area.scrollTop-area.clientHeight<95;const linha=document.createElement('div');linha.className='chat-linha '+(m.sender_id===usuario?.id?'minha':'outra');linha.dataset.chatId=m.id;const foto=document.createElement('img');foto.className='chat-foto';foto.src=encodeURI(chatAvatarUsuario(m.sender_id));foto.alt='Personagem de '+chatNomeUsuario(m.sender_id);const balao=document.createElement('div');balao.className='chat-balao';const nome=document.createElement('div');nome.className='chat-nome';nome.textContent=chatNomeUsuario(m.sender_id);const texto=document.createElement('div');texto.className='chat-texto';texto.textContent=m.content;const hora=document.createElement('div');hora.className='chat-hora';hora.textContent=new Date(m.created_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});balao.append(nome,texto,hora);linha.append(foto,balao);area.append(linha);if(pertoFim)area.scrollTop=area.scrollHeight;}
 async function chatCarregarPerfis(id){const {data,error}=await db.from('chat_profiles').select('user_id,display_name,avatar').eq('story_id',id);if(error)throw error;chatPerfis=Object.fromEntries((data||[]).map(p=>[p.user_id,p]));const meu=chatPerfis[usuario.id];chatAvatar=CHAT_AVATARES.includes(meu?.avatar)?meu.avatar:'Cinnamoroll.png';$('chat-apelido').value=meu?.display_name||perfil?.username||'';chatDesenharAvatar();}
 async function chatCarregarMensagens(id){const {data,error}=await db.from('chat_messages').select('id,story_id,sender_id,content,created_at').eq('story_id',id).order('created_at',{ascending:false}).limit(200);if(error)throw error;const area=$('chat-mensagens');area.replaceChildren();(data||[]).reverse().forEach(chatRenderMensagem);area.scrollTop=area.scrollHeight;}
-async function chatConectarHistoria(){const id=historiaAtual?.historia_id;if(!id){chatDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;return;}$('abrir-chat').hidden=false;if(chatHistoriaId===id)return;chatDesligar();chatHistoriaId=id;chatStatus('Carregando conversa...');try{await chatCarregarPerfis(id);await chatCarregarMensagens(id);if(chatHistoriaId!==id)return;chatCanal=db.channel('conversa-'+id).on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages',filter:'story_id=eq.'+id},async payload=>{if(chatHistoriaId!==id)return;const m=payload.new;if(!chatPerfis[m.sender_id]){try{await chatCarregarPerfis(id)}catch(e){}}chatRenderMensagem(m)}).on('postgres_changes',{event:'*',schema:'public',table:'chat_profiles',filter:'story_id=eq.'+id},async()=>{if(chatHistoriaId!==id)return;try{await chatCarregarPerfis(id);await chatCarregarMensagens(id)}catch(e){}}).subscribe(status=>{if(chatHistoriaId===id)chatStatus(status==='SUBSCRIBED'?'Conectado em tempo real 💗':status==='CHANNEL_ERROR'?'Conexão em tempo real indisponível. Reabra o chat.':'Conectando...')});}catch(e){chatStatus('Não foi possível carregar o chat: '+e.message);}}
+async function chatConectarHistoria(){const id=historiaAtual?.historia_id;if(!id){chatDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;return;}$('abrir-chat').hidden=false;if(chatHistoriaId===id)return;chatDesligar();chatHistoriaId=id;chatStatus('Carregando conversa...');try{await chatCarregarPerfis(id);await chatCarregarMensagens(id);if(chatHistoriaId!==id)return;chatCanal=db.channel('conversa-'+id).on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages',filter:'story_id=eq.'+id},async payload=>{if(chatHistoriaId!==id)return;const m=payload.new;if(!chatPerfis[m.sender_id]){try{await chatCarregarPerfis(id)}catch(e){}}chatRenderMensagem(m)}).on('postgres_changes',{event:'*',schema:'public',table:'chat_profiles',filter:'story_id=eq.'+id},async()=>{if(chatHistoriaId!==id)return;try{await chatCarregarPerfis(id);await chatCarregarMensagens(id)}catch(e){}}).subscribe(status=>{if(chatHistoriaId===id)chatStatus(status==='SUBSCRIBED'?'Conectado em tempo real 💗':status==='CHANNEL_ERROR'?'Conexão em tempo real indisponível. Reabra o chat.':'Conectando...')});}catch(e){chatStatus('Não foi possível carregar o chat: '+e.message);}}
 $('abrir-chat').onclick=async()=>{const abrir=$('janela-chat').hidden;$('janela-chat').hidden=!abrir;$('abrir-chat').setAttribute('aria-expanded',String(abrir));if(abrir){await chatConectarHistoria();$('chat-texto-enviar').focus();}};
 $('chat-fechar').onclick=()=>{$('janela-chat').hidden=true;$('abrir-chat').setAttribute('aria-expanded','false')};
 $('chat-salvar-perfil').onclick=async()=>{if(!chatHistoriaId||!usuario)return;const b=$('chat-salvar-perfil');const nome=$('chat-apelido').value.trim();if(!nome){chatStatus('Digite seu nome.');return;}b.disabled=true;try{const {error}=await db.from('chat_profiles').upsert({story_id:chatHistoriaId,user_id:usuario.id,display_name:nome,avatar:chatAvatar},{onConflict:'story_id,user_id'});if(error)throw error;await chatCarregarPerfis(chatHistoriaId);await chatCarregarMensagens(chatHistoriaId);chatStatus('Perfil salvo! 💗')}catch(e){chatStatus('Erro ao salvar perfil: '+e.message)}finally{b.disabled=false}};
@@ -680,4 +702,103 @@ $('chat-texto-enviar').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shi
  document.querySelectorAll('input[name="memorias-tema"]').forEach(r=>r.addEventListener('change',()=>{resultado.hidden=true;}));
  atualizarEscolha();
 })();
-</script></body></html>
+
+/* Nosso Cineminha: estado persistente e sincronização entre parceiros pelo Supabase. */
+let cinemaHistoriaId=null,cinemaCanal=null,cinemaEstado=null,cinemaPlayer=null,cinemaPronto=false;
+let cinemaAplicando=false,cinemaUltimaAcao=0,cinemaPoll=null,cinemaHeartbeat=null,cinemaVersao=0;
+const cinemaAviso=t=>{$('cinema-status').textContent=t};
+function cinemaIdYoutube(link){
+ try{
+  const u=new URL(link.trim());const h=u.hostname.toLowerCase();let id='';
+  if(h==='youtu.be'||h==='www.youtu.be')id=u.pathname.split('/')[1]||'';
+  else if(['youtube.com','www.youtube.com','m.youtube.com','music.youtube.com','youtube-nocookie.com','www.youtube-nocookie.com'].includes(h)){
+   if(u.pathname==='/watch')id=u.searchParams.get('v')||'';
+   else if(/^\/(shorts|live|embed)\//.test(u.pathname))id=u.pathname.split('/')[2]||'';
+  }
+  return /^[a-zA-Z0-9_-]{11}$/.test(id)?id:null;
+ }catch{return null;}
+}
+function cinemaTempoEsperado(e){return Math.max(0,Number(e.position_seconds||0)+(e.playing?Math.max(0,(Date.now()-Date.parse(e.updated_at))/1000):0));}
+function cinemaDesligar(){
+ cinemaVersao++;cinemaHistoriaId=null;cinemaEstado=null;
+ if(cinemaCanal&&db)db.removeChannel(cinemaCanal);cinemaCanal=null;
+ clearInterval(cinemaPoll);clearInterval(cinemaHeartbeat);cinemaPoll=null;cinemaHeartbeat=null;
+ if(cinemaPlayer&&cinemaPronto){cinemaAplicando=true;try{cinemaPlayer.stopVideo()}catch{}setTimeout(()=>cinemaAplicando=false,300)}
+ cinemaAviso('Escolha uma história para assistir juntos.');
+}
+function cinemaCriarPlayer(){
+ if(!window.YT?.Player)return;
+ if(cinemaPlayer)return;
+ cinemaPlayer=new YT.Player('cinema-video',{
+  width:'100%',height:'100%',videoId:'',playerVars:{playsinline:1,rel:0,origin:location.origin},
+  events:{onReady:()=>{cinemaPronto=true;if(cinemaEstado)cinemaAplicar(cinemaEstado,true)},
+   onStateChange:e=>{
+    if(cinemaAplicando||!cinemaHistoriaId||!cinemaEstado)return;
+    if(Date.now()-cinemaUltimaAcao<1600)return;
+    if(e.data===YT.PlayerState.PLAYING||e.data===YT.PlayerState.PAUSED){
+     const pos=cinemaPlayer.getCurrentTime();const previsto=cinemaTempoEsperado(cinemaEstado);
+     if(Math.abs(pos-previsto)>3||((e.data===YT.PlayerState.PLAYING)!==cinemaEstado.playing)){
+      cinemaSalvar({playing:e.data===YT.PlayerState.PLAYING,position_seconds:pos});
+     }
+    }
+   },onError:()=>cinemaAviso('O YouTube não permitiu reproduzir este vídeo. Experimente outro link.')}
+ });
+}
+window.onYouTubeIframeAPIReady=cinemaCriarPlayer;
+function cinemaAplicar(e,forcar=false){
+ if(!e||!cinemaPronto||!cinemaPlayer)return;
+ const id=e.video_id,atual=cinemaPlayer.getVideoData?.()?.video_id;
+ const pos=cinemaTempoEsperado(e);const troca=id!==atual;
+ const divergencia=Math.abs((cinemaPlayer.getCurrentTime?.()||0)-pos);
+ if(!forcar&&!troca&&divergencia<2.5&&((cinemaPlayer.getPlayerState()===YT.PlayerState.PLAYING)===e.playing))return;
+ cinemaAplicando=true;cinemaUltimaAcao=Date.now();
+ try{
+  if(troca){if(e.playing)cinemaPlayer.loadVideoById({videoId:id,startSeconds:pos});else cinemaPlayer.cueVideoById({videoId:id,startSeconds:pos});}
+  else {if(divergencia>2.5||forcar)cinemaPlayer.seekTo(pos,true);if(e.playing)cinemaPlayer.playVideo();else cinemaPlayer.pauseVideo();}
+ }catch(err){cinemaAviso('Erro ao sincronizar: '+err.message)}
+ setTimeout(()=>{cinemaAplicando=false},1700);
+}
+async function cinemaBuscar(id=cinemaHistoriaId){
+ if(!id)return;
+ const {data,error}=await db.from('cinema_casal').select('story_id,video_id,playing,position_seconds,updated_at,updated_by').eq('story_id',id).maybeSingle();
+ if(error){if(cinemaHistoriaId===id)cinemaAviso('Erro ao carregar o Cineminha: '+error.message);return;}
+ if(cinemaHistoriaId!==id)return;
+ if(data){const mudou=!cinemaEstado||data.updated_at!==cinemaEstado.updated_at||data.video_id!==cinemaEstado.video_id;
+  cinemaEstado=data;$('cinema-link').value='https://www.youtube.com/watch?v='+data.video_id;
+  if(mudou)cinemaAplicar(data);
+  cinemaAviso(data.playing?'💕 Assistindo juntos — vídeo em reprodução.':'🍿 Vídeo pronto ou pausado para os dois.');
+ }else{cinemaEstado=null;cinemaAviso('Cole um link e clique em Assistir juntos 💗');}
+}
+async function cinemaSalvar(campos){
+ const id=cinemaHistoriaId;if(!id||!usuario)return;
+ const atual=cinemaEstado||{video_id:null,playing:false,position_seconds:0};
+ const novo={story_id:id,video_id:campos.video_id||atual.video_id,playing:campos.playing??atual.playing,position_seconds:campos.position_seconds??cinemaTempoEsperado(atual),updated_by:usuario.id,updated_at:new Date().toISOString()};
+ if(!novo.video_id){cinemaAviso('Escolha primeiro um vídeo do YouTube.');return;}
+ const {error}=await db.from('cinema_casal').upsert(novo,{onConflict:'story_id'});
+ if(error){cinemaAviso('Erro ao sincronizar: '+error.message);return;}
+ if(cinemaHistoriaId!==id)return;
+ cinemaEstado=novo;cinemaAplicar(novo,true);
+ cinemaAviso('💗 Sincronizado! O vídeo será atualizado para o casal.');
+}
+async function cinemaConectarHistoria(){
+ const id=historiaAtual?.historia_id;
+ if(!id){cinemaDesligar();return;}
+ if(cinemaHistoriaId===id)return;
+ cinemaDesligar();cinemaHistoriaId=id;const versao=cinemaVersao;
+ await cinemaBuscar(id);
+ if(cinemaVersao!==versao||cinemaHistoriaId!==id)return;
+ cinemaCanal=db.channel('cinema-'+id).on('postgres_changes',{event:'*',schema:'public',table:'cinema_casal',filter:'story_id=eq.'+id},()=>cinemaBuscar(id)).subscribe();
+ cinemaPoll=setInterval(()=>{if(cinemaHistoriaId===id)cinemaBuscar(id)},4000);
+ // Ajuste periódico do vídeo sem gravar no banco nem criar disputa entre aparelhos.
+ cinemaHeartbeat=setInterval(()=>{if(cinemaHistoriaId===id&&cinemaEstado)cinemaAplicar(cinemaEstado)},2500);
+}
+$('cinema-carregar').onclick=async()=>{
+ const id=cinemaIdYoutube($('cinema-link').value);
+ if(!id){cinemaAviso('Cole um link válido do YouTube (vídeo, Shorts ou youtu.be).');return;}
+ const b=$('cinema-carregar');b.disabled=true;
+ try{await cinemaSalvar({video_id:id,playing:true,position_seconds:0})}finally{b.disabled=false}
+};
+$('cinema-play').onclick=()=>cinemaSalvar({playing:true,position_seconds:cinemaPronto&&cinemaEstado?cinemaPlayer.getCurrentTime():cinemaTempoEsperado(cinemaEstado||{})});
+$('cinema-pausa').onclick=()=>cinemaSalvar({playing:false,position_seconds:cinemaPronto&&cinemaEstado?cinemaPlayer.getCurrentTime():cinemaTempoEsperado(cinemaEstado||{})});
+$('cinema-sincronizar').onclick=async()=>{await cinemaBuscar();if(cinemaEstado)cinemaAplicar(cinemaEstado,true)};
+</script><script src="https://www.youtube.com/iframe_api" async></script></body></html>
