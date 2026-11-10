@@ -289,6 +289,127 @@ body.tema-escuro .quiz-pergunta strong{color:#e9b1d4}
 .aviso-moedas-jogo strong{color:#a34562}
 body.tema-escuro .aviso-moedas-jogo{background:linear-gradient(120deg,#4a392a,#4b2c49);border-color:#b78c4b;color:#ffdfab}
 body.tema-escuro .aviso-moedas-jogo strong{color:#ffd3e9}
+
+/* ===== NOSSA HISTÓRIA — INTERFACE REFINADA 2026 ===== */
+/* Somente apresentação: mantém IDs, scripts, Supabase e ações originais. */
+:root{--nh-bg:#fbf7f9;--nh-card:#ffffff;--nh-ink:#402b37;--nh-muted:#866b7b;--nh-brand:#b52e67;--nh-brand2:#d95d91;--nh-line:#f0e2e9;--nh-soft:#fff0f6;--nh-shadow:0 8px 30px rgba(99,38,72,.065)}
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+body{background:var(--nh-bg);color:var(--nh-ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+body:not(.tema-escuro){background:radial-gradient(ellipse 800px 360px at 50% -120px,#ffe4f0 0%,transparent 85%),var(--nh-bg)}
+main{max-width:1040px;padding:0 clamp(12px,3vw,28px) 100px}
+header{padding:30px 18px 16px}
+header h1{font-size:clamp(29px,4vw,44px);letter-spacing:-1.4px;line-height:1.15;margin:12px 0 5px}
+header .subtitulo{margin:7px auto 0;font-size:14px;max-width:480px}
+#personagem-com-recado .coracao{width:92px;height:92px}
+#recado-personagem{box-shadow:var(--nh-shadow)}
+#barra-conta{max-width:1040px;border-radius:14px}
+section{background:var(--nh-card);border:1px solid var(--nh-line);border-radius:24px;box-shadow:var(--nh-shadow);padding:clamp(19px,3vw,30px);margin:18px 0;text-align:left}
+section h2{font-family:Georgia,serif;font-size:clamp(23px,3vw,29px);line-height:1.2;letter-spacing:-.5px;margin:0 0 12px;color:#a63d69}
+section h3{line-height:1.3}
+section>.muted,section>.subtitulo{margin-top:6px}
+#aba-inicio>section:first-child,#aba-mensagem>section:first-child{background:linear-gradient(145deg,#fff,#fff3f8);border-color:#f3dbe6}
+#abas-nav{position:sticky;top:0;z-index:900;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:8px 0 20px;padding:10px;background:rgba(251,247,249,.94);border:1px solid #f4e5ed;border-radius:22px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.aba-btn{min-height:70px;border-radius:15px;border:1px solid transparent;box-shadow:none;background:transparent;color:#7b6271;font-size:11px;letter-spacing:.15px;gap:5px;padding:9px 4px;transition:background .18s,color .18s,transform .18s}
+.aba-btn .aba-icone{font-size:23px}
+.aba-btn:hover{background:#fff0f6;transform:none}
+.aba-btn.ativa{background:linear-gradient(135deg,#c63b75,#a92a62);color:#fff;box-shadow:0 6px 15px #b52e6733}
+.aba-btn:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #eaa4c4;outline-offset:2px}
+button{transition:filter .16s,transform .16s,box-shadow .16s}
+button:not(:disabled):active{transform:scale(.98)}
+.primary,#adicionar-foto,#login-google{background:linear-gradient(135deg,#c53c77,#a92c62);color:#fff;border-radius:14px;min-height:44px;padding:12px 20px;font-weight:700;box-shadow:0 4px 12px #b52e6725}
+.secondary{background:#fff0f6;color:#a52d62;border:1px solid #f6d8e6;border-radius:14px;min-height:42px;padding:10px 16px;font-weight:650}
+.actions{gap:10px;margin:16px 0}
+input,select,textarea{border:1px solid #e9d7e1;border-radius:13px;padding:13px 14px;min-height:44px;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{border-color:#c75387;box-shadow:0 0 0 3px #d9568c18;outline:0}
+label{font-weight:600;color:inherit}
+.muted,.subtitulo{color:var(--nh-muted)}
+.item,.quiz-item,.quiz-pergunta{border:1px solid var(--nh-line);border-radius:17px;background:#fff;padding:16px}
+#contador{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0}
+.tempo{border:1px solid #f7e2eb;background:#fff3f8;border-radius:16px;padding:17px 6px}
+.numero{font-size:clamp(23px,4vw,32px);letter-spacing:-.7px}
+.legenda{font-size:12px}
+#mascote-juntos{background:linear-gradient(155deg,#fff,#fff0f7);border-color:#f2dce8}
+#mascote-cenario{background:radial-gradient(circle at 50% 20%,#fff 0,#ffeaf3 78%);border:1px solid #f7dfeb;box-shadow:inset 0 2px 20px #f5d5e444}
+#mascote-medidor-topo{font-weight:600}
+.mascote-medidor{border-radius:16px;background:#fff;border-color:#f1dfe8;padding:13px}
+.mascote-trilho{height:10px}
+#mascote-acoes{gap:10px}
+#mascote-acoes button{border-radius:14px;min-height:46px;background:linear-gradient(135deg,#d6518e,#b83470)}
+#mascote-moedas{border:1px solid #f5dfac}
+#quiz-amor{background:linear-gradient(155deg,#fff,#fff4fa)}
+#quiz-amor h2,#aba-jogos h2{text-align:left}
+.quiz-opcoes label{border:1px solid #f4e0e9;padding:12px;border-radius:12px}
+.quiz-opcoes label:has(input:checked){border-color:#ca4b82;background:#ffe9f3}
+.aviso-moedas-jogo{max-width:none;border:1px solid #f0d79b;border-radius:14px;box-shadow:none;padding:12px 15px;text-align:left}
+#galeria{grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:16px}
+#galeria .item-foto{border:1px solid var(--nh-line);border-radius:18px;overflow:hidden;padding:10px;margin:0;background:#fff}
+#galeria .foto{margin:0;max-height:360px;aspect-ratio:4/5;object-fit:cover}
+#galeria .botao-excluir{margin-top:10px}
+#memorias-temas .memorias-tema-opcao{border-radius:15px;transition:transform .15s,border-color .15s}
+#planos-casal .cartao-plano{border-radius:18px;box-shadow:0 3px 12px #713b4b0a}
+#planos-casal .cartao-plano button{min-height:43px}
+#abrir-chat{border-radius:17px;box-shadow:0 7px 22px #a92c6240;min-height:52px}
+#janela-chat{border-radius:23px;border:1px solid #f2c6dc;box-shadow:0 18px 60px #28132140}
+#chat-cabecalho{padding:14px 16px}
+#chat-mensagens{scroll-behavior:smooth}
+.chat-balao{border-radius:16px;padding:10px 12px}
+#chat-texto-enviar{border-radius:15px}
+#botao-configuracoes,#botao-tema,#botao-musica{box-shadow:0 5px 18px #47203526}
+#janela-configuracoes,#mascote-premios{backdrop-filter:blur(5px)}
+#conteudo-configuracoes,#mascote-premios-caixa{border-radius:24px}
+#nh-notificacao{box-shadow:0 14px 40px #3b193130!important}
+#nh-notificacao.ativa{animation:nh-entrada .25s ease-out}
+@media(min-width:900px){
+  #aba-inicio{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+  #aba-inicio>section{margin:0}
+  #aba-inicio>#nosso-cineminha{grid-column:1/-1}
+  #aba-galeria{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px;align-items:start}
+  #aba-galeria>section{margin:0}
+  #aba-galeria>#planos-casal{grid-column:1/-1}
+  #aba-jogos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+  #aba-jogos>section{margin:0}
+  #aba-jogos>section:only-child{grid-column:1/-1}
+}
+@media(max-width:650px){
+  main{padding:0 12px 110px}
+  header{padding:22px 12px 10px}
+  #personagem-com-recado .coracao{width:80px;height:80px}
+  #abas-nav{position:fixed;top:auto;bottom:0;left:0;right:0;margin:0;padding:8px max(7px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom));border-radius:18px 18px 0 0;gap:3px;border-left:0;border-right:0;border-bottom:0;box-shadow:0 -7px 30px #53213d18;z-index:950}
+  #abas-nav.fixa{padding-right:max(7px,env(safe-area-inset-right));box-shadow:0 -7px 30px #53213d18}
+  .aba-btn{min-height:56px;font-size:10px;padding:7px 1px;border-radius:12px;gap:3px}
+  .aba-btn .aba-icone{font-size:21px}
+  section{padding:20px 15px;border-radius:21px;margin:13px 0}
+  #botao-tema{bottom:151px;right:12px;width:43px;height:43px}
+  #botao-musica{bottom:83px;right:12px;width:50px;height:50px}
+  #abrir-chat{bottom:85px;left:12px;padding:12px 14px;font-size:13px}
+  #janela-chat{left:8px;bottom:76px;width:calc(100vw - 16px);height:calc(100dvh - 96px);max-height:760px}
+  #janela-musicas{bottom:148px}
+  #status-musica{bottom:140px}
+  #contador{gap:7px}
+  .tempo{padding:13px 3px}
+  #mascote-estatisticas{gap:8px}
+  #mascote-acoes{gap:8px}
+  #mascote-acoes button{font-size:12px;padding:11px 6px}
+  #quiz-amor h2,#aba-jogos h2{text-align:center}
+}
+@media(max-width:370px){
+  .aba-btn{font-size:9px}
+  .aba-btn .aba-icone{font-size:19px}
+  #mascote-estatisticas{grid-template-columns:1fr 1fr}
+  .mascote-medidor{padding:9px}
+}
+body.tema-escuro{--nh-bg:#171321;--nh-card:#251d33;--nh-ink:#f1e9f7;--nh-muted:#b9a9ce;--nh-line:#493657;--nh-soft:#382747;background:#171321;color:#eee7f7}
+body.tema-escuro section{background:#251d33;border-color:#493657}
+body.tema-escuro #aba-inicio>section:first-child,body.tema-escuro #aba-mensagem>section:first-child{background:linear-gradient(145deg,#251d33,#33243f)}
+body.tema-escuro #abas-nav{background:rgba(23,19,33,.96);border-color:#493657}
+body.tema-escuro .aba-btn{background:transparent;color:#c7b8d4}
+body.tema-escuro .aba-btn.ativa{background:linear-gradient(135deg,#9d62d5,#713bb1);color:#fff}
+body.tema-escuro .tempo,body.tema-escuro .mascote-medidor,body.tema-escuro .quiz-pergunta,body.tema-escuro .quiz-item,body.tema-escuro #galeria .item-foto{background:#30253e;border-color:#59436d}
+body.tema-escuro .secondary{background:#382747;color:#e5c9ff;border-color:#59436d}
+body.tema-escuro #mascote-juntos,body.tema-escuro #quiz-amor{background:linear-gradient(145deg,#2e223c,#3c284a)}
+body.tema-escuro .quiz-opcoes label:has(input:checked){background:#60416c}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}button,.aba-btn{transition:none!important}}
+
 </style></head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
