@@ -172,8 +172,44 @@ body.tema-escuro #cinema-status,body.tema-escuro #cinema-sincronia{color:#d0b9e0
 #voz-botoes{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:12px}#voz-botoes button{border:0;border-radius:20px;padding:12px 16px;background:#fff;color:#a82b5a;font-size:14px;box-shadow:0 2px 9px #0001;cursor:pointer}#voz-botoes #voz-encerrar{background:#d22e64;color:#fff}#voz-atender{background:#268b66!important;color:white!important}#voz-botoes button[hidden]{display:none!important}
 body.tema-escuro #voz-tela{background:linear-gradient(155deg,#33223f,#1d1529)}body.tema-escuro #voz-nome,body.tema-escuro #voz-tempo{color:#ffb7d6}body.tema-escuro #voz-status{color:#ead3df}
 
+
+/* ===== Navegação por abas (apenas organização visual) ===== */
+#abas-nav{position:sticky;top:0;z-index:900;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:0 -4px;padding:10px 4px 9px;background:#fff5f7}
+#abas-nav.fixa{box-shadow:0 8px 14px -12px #713b4b66}
+.aba-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;border:1px solid #f2dce4;background:#fff;color:#986c79;border-radius:16px;padding:9px 2px 8px;font:inherit;font-size:11px;font-weight:700;letter-spacing:.3px;box-shadow:0 3px 10px #713b4b12;transition:background .2s,color .2s,transform .2s,box-shadow .2s}
+.aba-btn .aba-icone{font-size:21px;line-height:1}
+.aba-btn .aba-rotulo{max-width:100%;overflow:hidden;text-overflow:clip;white-space:nowrap}
+.aba-btn:hover{transform:translateY(-1px)}
+.aba-btn:focus-visible{outline:3px solid #f5a9ca;outline-offset:2px}
+.aba-btn.ativa{background:linear-gradient(135deg,#d6457b,#bd3267);border-color:transparent;color:#fff;box-shadow:0 6px 16px #bd326760}
+.aba-painel[hidden]{display:none!important}
+.aba-painel{animation:aba-entrar .28s ease both}
+@keyframes aba-entrar{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.aba-painel{animation:none}.aba-btn{transition:none}}
+/* O botão ⚙️ fica fixo no canto superior direito: reserva espaço quando a barra gruda no topo. */
+@media(max-width:840px){#abas-nav.fixa{padding-right:70px}}
+@media(max-width:420px){#abas-nav.fixa{padding-right:62px}#abas-nav{gap:5px}.aba-btn{font-size:10px;letter-spacing:.1px}.aba-btn .aba-icone{font-size:19px}}
+/* "Minhas histórias": aparece na aba Conexão (ou quando ainda não existe nenhuma história). */
+#secao-historias{display:none}
+#historia-painel[hidden] ~ #secao-historias,body[data-aba="conexao"] #secao-historias{display:block}
+/* Mensagem especial */
+.cartao-mensagem{background:linear-gradient(145deg,#fff,#fff0f6);border:1px solid #f6d3e1}
+.cartao-mensagem .mensagem{text-align:center;font-family:Georgia,serif;font-size:18px;font-style:italic;color:#7d3558}
+.cartao-mensagem h2::after{content:" ";display:block;width:54px;height:3px;margin:10px auto 0;border-radius:3px;background:linear-gradient(90deg,#f5a9ca,#bd3267)}
+/* Tema escuro nas abas */
+body.tema-escuro #abas-nav{background:#171321}
+body.tema-escuro #abas-nav.fixa{box-shadow:0 8px 14px -12px #000a}
+body.tema-escuro .aba-btn{background:#251d33;border-color:#493657;color:#b9a9ce;box-shadow:0 3px 10px #0004}
+body.tema-escuro .aba-btn.ativa{background:linear-gradient(135deg,#a864e8,#7a3fc0);border-color:transparent;color:#fff;box-shadow:0 6px 16px #7a3fc070}
+body.tema-escuro .aba-btn:focus-visible{outline-color:#d7a8ff}
+body.tema-escuro .cartao-mensagem{background:linear-gradient(145deg,#2a2038,#33243f);border-color:#493657}
+body.tema-escuro .cartao-mensagem .mensagem{color:#ead8f7}
+body.tema-escuro .cartao-mensagem h2::after{background:linear-gradient(90deg,#d7a8ff,#9b5de5)}
+/* Evita que o botão ⚙️ (fixo no canto) cubra o "Sair da conta" em telas estreitas. */
+@media(max-width:840px){#barra-conta{padding-right:74px}}
+
 </style></head>
-<body><audio id="musica" preload="none"></audio>
+<body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
 <button id="botao-configuracoes" type="button" aria-label="Abrir configurações" title="Configurações">⚙️</button>
 <button id="botao-musica" type="button" aria-label="Abrir nuvem de músicas" aria-expanded="false" aria-controls="janela-musicas">🎵</button>
@@ -210,13 +246,17 @@ body.tema-escuro #voz-tela{background:linear-gradient(155deg,#33223f,#1d1529)}bo
 <button id="fechar-configuracoes" type="button" aria-label="Fechar configurações" title="Fechar">×</button>
 <h2 id="titulo-configuracoes">Configurações ⚙️</h2>
 <p class="muted">Altere seu nome, consulte seu código e gerencie a conexão do casal.</p>
-<section><h2>Meu perfil 💗</h2><div class="stack"><div><label for="nome-usuario">Seu nome</label><input id="nome-usuario" maxlength="40" placeholder="Como deseja ser chamado(a)?"></div><button id="salvar-nome" class="primary" type="button">Salvar nome</button><div><p class="muted">Seu código pessoal de conexão:</p><p id="codigo-conexao">Carregando...</p><button id="copiar-codigo" class="secondary" type="button">Copiar código</button></div></div></section>
-<section><h2>Conectar com alguém 💌</h2><label for="codigo-outra-pessoa">Código da outra pessoa</label><input id="codigo-outra-pessoa" placeholder="Cole o código aqui"><div class="actions"><button id="enviar-pedido" class="primary" type="button">Enviar solicitação</button></div><h3>Solicitações pendentes</h3><div id="solicitacoes">Carregando...</div></section>
+<section id="config-secao-perfil"><h2>Meu perfil 💗</h2><div class="stack"><div><label for="nome-usuario">Seu nome</label><input id="nome-usuario" maxlength="40" placeholder="Como deseja ser chamado(a)?"></div><button id="salvar-nome" class="primary" type="button">Salvar nome</button><div><p class="muted">Seu código pessoal de conexão:</p><p id="codigo-conexao">Carregando...</p><button id="copiar-codigo" class="secondary" type="button">Copiar código</button></div></div></section>
+<section id="config-secao-conectar"><h2>Conectar com alguém 💌</h2><label for="codigo-outra-pessoa">Código da outra pessoa</label><input id="codigo-outra-pessoa" placeholder="Cole o código aqui"><div class="actions"><button id="enviar-pedido" class="primary" type="button">Enviar solicitação</button></div><h3>Solicitações pendentes</h3><div id="solicitacoes">Carregando...</div></section>
 </div>
 </div>
-<section><h2>Minhas histórias ❤️</h2><div id="lista-historias">Carregando...</div><div id="sem-historias" hidden><p class="subtitulo">Sua história começa com uma conexão aceita. ❤️</p></div></section>
 <div id="historia-painel" hidden>
-<section><h2 id="titulo-historia">Nossa História</h2><p class="muted">Cada segundo com você é especial.</p><div id="contador"><div class="tempo"><span class="numero" id="anos">00</span><span class="legenda">Anos</span></div><div class="tempo"><span class="numero" id="meses">00</span><span class="legenda">Meses</span></div><div class="tempo"><span class="numero" id="dias">00</span><span class="legenda">Dias</span></div><div class="tempo"><span class="numero" id="horas">00</span><span class="legenda">Horas</span></div><div class="tempo"><span class="numero" id="minutos">00</span><span class="legenda">Minutos</span></div><div class="tempo"><span class="numero" id="segundos">00</span><span class="legenda">Segundos</span></div></div><p id="inicio-status">Aguardando a data de início ❤️</p><label for="data-inicio">Data e horário em que tudo começou</label><input id="data-inicio" type="datetime-local"><div class="actions"><button id="salvar-inicio" class="primary" type="button">Salvar data do casal</button></div></section>
+<nav id="abas-nav" role="tablist" aria-label="Seções do site">
+ <button id="aba-btn-inicio" class="aba-btn ativa" type="button" role="tab" aria-selected="true" aria-controls="aba-inicio" data-aba="inicio"><span class="aba-icone" aria-hidden="true">🏠</span><span class="aba-rotulo">INÍCIO</span></button>
+ <button id="aba-btn-galeria" class="aba-btn" type="button" role="tab" aria-selected="false" aria-controls="aba-galeria" data-aba="galeria" tabindex="-1"><span class="aba-icone" aria-hidden="true">📸</span><span class="aba-rotulo">GALERIA</span></button>
+ <button id="aba-btn-mensagem" class="aba-btn" type="button" role="tab" aria-selected="false" aria-controls="aba-mensagem" data-aba="mensagem" tabindex="-1"><span class="aba-icone" aria-hidden="true">💌</span><span class="aba-rotulo">MENSAGEM</span></button>
+ <button id="aba-btn-conexao" class="aba-btn" type="button" role="tab" aria-selected="false" aria-controls="aba-conexao" data-aba="conexao" tabindex="-1"><span class="aba-icone" aria-hidden="true">🔗</span><span class="aba-rotulo">CONEXÃO</span></button>
+</nav>
 <div id="modal-limite-fotos" hidden role="dialog" aria-modal="true" aria-labelledby="titulo-limite-fotos" style="position:fixed;inset:0;background:rgba(25,15,30,.72);z-index:9999;display:none;align-items:center;justify-content:center;padding:18px;">
  <div style="width:min(100%,430px);max-height:90vh;overflow:auto;background:#fff7fb;color:#503548;border-radius:20px;padding:25px;box-shadow:0 15px 45px #0005;text-align:center;">
   <h2 id="titulo-limite-fotos">💗 Seu espaço de memórias está cheio!</h2>
@@ -229,25 +269,8 @@ body.tema-escuro #voz-tela{background:linear-gradient(155deg,#33223f,#1d1529)}bo
   <button id="limite-fechar" class="secondary" type="button" style="margin-top:12px;">Agora não</button>
  </div>
 </div>
-<section><h2>Nossas lembranças 📸</h2><div id="galeria"><p class="subtitulo">Carregando...</p></div><button id="adicionar-foto" class="primary" type="button">＋ Adicionar foto</button><input id="arquivo-foto" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><p id="aviso-galeria" class="muted">Somente participantes desta história devem ter acesso às fotos privadas.</p></section>
-
- <section id="planos-casal" aria-label="Planos do casal">
-  <button id="abrir-planos" type="button" aria-expanded="false" aria-controls="conteudo-planos">💖✨ Planos do nosso amor ✨💖</button>
-  <div id="conteudo-planos" hidden>
-  <button id="fechar-planos" type="button" aria-label="Fechar planos" title="Fechar planos">×</button>
-  <h2 id="titulo-planos">Mais espaço para nosso amor 💕</h2>
-  <p class="muted">Os limites e as compras são compartilhados pelas duas pessoas do casal.</p>
-  <div class="grade-planos">
-   <div class="cartao-plano"><h3>Gratuito 🌷</h3><p>Até 3 fotos por casal.</p><p class="preco-plano">Grátis</p><button class="secondary" type="button" disabled>Plano inicial</button></div>
-   <div class="cartao-plano"><h3>Amor Essencial 💗</h3><p>Até 20 fotos por casal.</p><p class="preco-plano">R$ 8,90</p><p class="muted">Pagamento único</p><button id="comprar-essencial" class="primary" type="button" disabled>Compra em preparação</button></div>
-   <div class="cartao-plano"><h3>Mais Memórias 📸</h3><p>Até 50 fotos por casal.</p><p class="preco-plano">R$ 19,90</p><p class="muted">Pagamento único</p><button id="comprar-memorias" class="primary" type="button" disabled>Compra em preparação</button></div>
-   <div class="cartao-plano"><h3>Amor Sem Limites ♾️</h3><p>Fotos ilimitadas, sujeitas a regras razoáveis de armazenamento.</p><p class="preco-plano">R$ 19,90/mês</p><p class="muted">Assinatura mensal recorrente</p><button class="primary" type="button" disabled>Assinatura em preparação</button></div>
-  </div>
-  <p id="status-pagamentos" class="muted" role="status">Ao clicar em comprar, você será encaminhado à InfinitePay. Antes de publicar esta versão, confirme que a compra ativa o plano automaticamente.</p>
-  </div>
- </section>
-
-
+<div class="aba-painel" id="aba-inicio" role="tabpanel" aria-labelledby="aba-btn-inicio">
+<section><h2 id="titulo-historia">Nossa História</h2><p class="muted">Cada segundo com você é especial.</p><div id="contador"><div class="tempo"><span class="numero" id="anos">00</span><span class="legenda">Anos</span></div><div class="tempo"><span class="numero" id="meses">00</span><span class="legenda">Meses</span></div><div class="tempo"><span class="numero" id="dias">00</span><span class="legenda">Dias</span></div><div class="tempo"><span class="numero" id="horas">00</span><span class="legenda">Horas</span></div><div class="tempo"><span class="numero" id="minutos">00</span><span class="legenda">Minutos</span></div><div class="tempo"><span class="numero" id="segundos">00</span><span class="legenda">Segundos</span></div></div><p id="inicio-status">Aguardando a data de início ❤️</p><label for="data-inicio">Data e horário em que tudo começou</label><input id="data-inicio" type="datetime-local"><div class="actions"><button id="salvar-inicio" class="primary" type="button">Salvar data do casal</button></div></section>
 <section id="nosso-cineminha" aria-label="Nosso Cineminha">
  <h2>🍿 Nosso Cineminha 💕</h2>
  <p class="muted">Cole um link do YouTube para vocês assistirem juntos. Os dois podem escolher, pausar e avançar o vídeo.</p>
@@ -259,6 +282,9 @@ body.tema-escuro #voz-tela{background:linear-gradient(155deg,#33223f,#1d1529)}bo
  <p id="cinema-status" role="status">Aguardando o primeiro vídeo... 💕</p>
  <p id="cinema-sincronia">A sincronização depende da conexão dos dois aparelhos e pode ter pequena diferença de segundos. O YouTube pode bloquear vídeos incorporados.</p>
 </section>
+</div>
+<div class="aba-painel" id="aba-galeria" role="tabpanel" aria-labelledby="aba-btn-galeria" hidden>
+<section><h2>Nossas lembranças 📸</h2><div id="galeria"><p class="subtitulo">Carregando...</p></div><button id="adicionar-foto" class="primary" type="button">＋ Adicionar foto</button><input id="arquivo-foto" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><p id="aviso-galeria" class="muted">Somente participantes desta história devem ter acesso às fotos privadas.</p></section>
 <section id="compartilhar-memorias">
  <h2>Compartilhar Memórias 💌</h2>
  <p class="muted">Escolha uma foto da nossa galeria e crie uma lembrança para compartilhar.</p>
@@ -280,8 +306,32 @@ body.tema-escuro #voz-tela{background:linear-gradient(155deg,#33223f,#1d1529)}bo
   <p class="muted">No Instagram Stories, adicione o endereço usando a figurinha “Link”. A imagem, por si só, não contém um link clicável.</p>
  </div>
 </section>
-<section><h2>Uma mensagem para você 💌</h2><p class="mensagem">Quero continuar criando lembranças, compartilhando sorrisos e vivendo momentos ao seu lado. ❤️</p></section>
+ <section id="planos-casal" aria-label="Planos do casal">
+  <button id="abrir-planos" type="button" aria-expanded="false" aria-controls="conteudo-planos">💖✨ Planos do nosso amor ✨💖</button>
+  <div id="conteudo-planos" hidden>
+  <button id="fechar-planos" type="button" aria-label="Fechar planos" title="Fechar planos">×</button>
+  <h2 id="titulo-planos">Mais espaço para nosso amor 💕</h2>
+  <p class="muted">Os limites e as compras são compartilhados pelas duas pessoas do casal.</p>
+  <div class="grade-planos">
+   <div class="cartao-plano"><h3>Gratuito 🌷</h3><p>Até 3 fotos por casal.</p><p class="preco-plano">Grátis</p><button class="secondary" type="button" disabled>Plano inicial</button></div>
+   <div class="cartao-plano"><h3>Amor Essencial 💗</h3><p>Até 20 fotos por casal.</p><p class="preco-plano">R$ 8,90</p><p class="muted">Pagamento único</p><button id="comprar-essencial" class="primary" type="button" disabled>Compra em preparação</button></div>
+   <div class="cartao-plano"><h3>Mais Memórias 📸</h3><p>Até 50 fotos por casal.</p><p class="preco-plano">R$ 19,90</p><p class="muted">Pagamento único</p><button id="comprar-memorias" class="primary" type="button" disabled>Compra em preparação</button></div>
+   <div class="cartao-plano"><h3>Amor Sem Limites ♾️</h3><p>Fotos ilimitadas, sujeitas a regras razoáveis de armazenamento.</p><p class="preco-plano">R$ 19,90/mês</p><p class="muted">Assinatura mensal recorrente</p><button class="primary" type="button" disabled>Assinatura em preparação</button></div>
+  </div>
+  <p id="status-pagamentos" class="muted" role="status">Ao clicar em comprar, você será encaminhado à InfinitePay. Antes de publicar esta versão, confirme que a compra ativa o plano automaticamente.</p>
+  </div>
+ </section>
+</div>
+<div class="aba-painel" id="aba-mensagem" role="tabpanel" aria-labelledby="aba-btn-mensagem" hidden>
+<section class="cartao-mensagem"><h2>Uma mensagem para você 💌</h2><p class="mensagem">Quero continuar criando lembranças, compartilhando sorrisos e vivendo momentos ao seu lado. ❤️</p></section>
+<section id="mensagem-chat"><h2>Conversar agora 💬</h2><p class="muted">Abra o chat do casal para trocar mensagens em tempo real ou ligar para o seu amor.</p><div class="actions"><button id="aba-abrir-chat" class="primary" type="button">💬 Abrir / fechar Nosso Chat</button></div></section>
+</div>
+<div class="aba-painel" id="aba-conexao" role="tabpanel" aria-labelledby="aba-btn-conexao" hidden>
+<section id="conexao-atalhos"><h2>Código e convites 💌</h2><p class="muted">Seu código pessoal, o envio de convites e as respostas às solicitações ficam na janela de Configurações. Abra direto pelo atalho:</p><div class="actions"><button id="aba-abrir-perfil" class="primary" type="button">💗 Meu código e perfil</button><button id="aba-abrir-conectar" class="primary" type="button">💌 Convites e solicitações</button></div></section>
 <section><h2>Conexão</h2><p class="muted">Ao desfazer a conexão, as duas pessoas perderão o acesso à história. As fotos não serão apagadas automaticamente.</p><button id="desfazer-conexao" class="secondary" type="button">Desfazer conexão</button></section>
+</div>
+</div>
+<section id="secao-historias"><h2>Minhas histórias ❤️</h2><div id="lista-historias">Carregando...</div><div id="sem-historias" hidden><p class="subtitulo">Sua história começa com uma conexão aceita. ❤️</p></div></section>
 </div><footer>Feito com amor, especialmente para você. ❤️</footer></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
@@ -908,7 +958,48 @@ $('cinema-carregar').onclick=async()=>{
 $('cinema-play').onclick=()=>cinemaSalvar({playing:true,position_seconds:cinemaPronto&&cinemaEstado?cinemaPlayer.getCurrentTime():cinemaTempoEsperado(cinemaEstado||{})});
 $('cinema-pausa').onclick=()=>cinemaSalvar({playing:false,position_seconds:cinemaPronto&&cinemaEstado?cinemaPlayer.getCurrentTime():cinemaTempoEsperado(cinemaEstado||{})});
 $('cinema-sincronizar').onclick=async()=>{await cinemaBuscar();if(cinemaEstado)cinemaAplicar(cinemaEstado,true)};
+
+/* Navegação por abas — só reorganiza a interface; nenhuma função anterior foi alterada. */
+(function(){
+ const ABAS=['inicio','galeria','mensagem','conexao'];
+ const nav=$('abas-nav'),painel=$('historia-painel');
+ function mostrarAba(nome,opcoes){
+  opcoes=opcoes||{};
+  if(!ABAS.includes(nome))nome='inicio';
+  ABAS.forEach(a=>{
+   const ativa=a===nome,b=$('aba-btn-'+a);
+   b.classList.toggle('ativa',ativa);
+   b.setAttribute('aria-selected',String(ativa));
+   b.tabIndex=ativa?0:-1;
+   $('aba-'+a).hidden=!ativa;
+  });
+  document.body.dataset.aba=nome;
+  try{sessionStorage.setItem('aba-ativa',nome)}catch(e){}
+  if(opcoes.rolar){const topo=painel.getBoundingClientRect().top+window.scrollY;if(window.scrollY>topo)window.scrollTo(0,topo);}
+  if(opcoes.foco)$('aba-btn-'+nome).focus();
+  atualizarBarraFixa();
+ }
+ function atualizarBarraFixa(){nav.classList.toggle('fixa',!painel.hidden&&nav.getBoundingClientRect().top<=0.5);}
+ ABAS.forEach((a,i)=>{
+  const b=$('aba-btn-'+a);
+  b.addEventListener('click',()=>mostrarAba(a,{rolar:true}));
+  b.addEventListener('keydown',e=>{
+   let j=null;
+   if(e.key==='ArrowRight')j=(i+1)%ABAS.length;
+   else if(e.key==='ArrowLeft')j=(i+ABAS.length-1)%ABAS.length;
+   else if(e.key==='Home')j=0;
+   else if(e.key==='End')j=ABAS.length-1;
+   if(j!==null){e.preventDefault();mostrarAba(ABAS[j],{foco:true,rolar:true});}
+  });
+ });
+ window.addEventListener('scroll',atualizarBarraFixa,{passive:true});
+ window.addEventListener('resize',atualizarBarraFixa);
+ /* Atalhos que usam funções e elementos já existentes. */
+ $('aba-abrir-chat').addEventListener('click',()=>{$('abrir-chat').click()});
+ $('aba-abrir-perfil').addEventListener('click',()=>{abrirConfiguracoes();$('config-secao-perfil').scrollIntoView({block:'start'})});
+ $('aba-abrir-conectar').addEventListener('click',()=>{abrirConfiguracoes();$('config-secao-conectar').scrollIntoView({block:'start'})});
+ let salva='inicio';try{salva=sessionStorage.getItem('aba-ativa')||'inicio'}catch(e){}
+ mostrarAba(salva);
+})();
+
 </script><script src="https://www.youtube.com/iframe_api" async></script></body></html>
-
-
-    
