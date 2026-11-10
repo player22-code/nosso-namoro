@@ -1525,4 +1525,198 @@ $('compat-compartilhar').onclick=async()=>{
 
 })();
 </script>
+
+<!-- NOTIFICAÇÕES DE MENSAGENS E LIGAÇÕES -->
+<style>
+#nh-notificacao {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(92%, 430px);
+  z-index: 999999;
+  background: #fff;
+  color: #54334b;
+  border: 1px solid #f4c9dc;
+  border-radius: 20px;
+  padding: 15px;
+  box-shadow: 0 8px 28px #0003;
+  display: none;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+}
+#nh-notificacao.ativa {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  animation: nh-entrada .3s ease-out;
+}
+#nh-notificacao-icone {
+  font-size: 30px;
+}
+#nh-notificacao-texto {
+  flex: 1;
+  min-width: 0;
+}
+#nh-notificacao-titulo {
+  font-weight: bold;
+  font-size: 15px;
+}
+#nh-notificacao-conteudo {
+  margin-top: 5px;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+  max-height: 70px;
+  overflow: hidden;
+}
+@keyframes nh-entrada {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -25px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+</style>
+
+<div id="nh-notificacao" role="status">
+  <div id="nh-notificacao-icone">💌</div>
+  <div id="nh-notificacao-texto">
+    <div id="nh-notificacao-titulo"></div>
+    <div id="nh-notificacao-conteudo"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  let canal = null;
+  let historiaConectada = null;
+  let timeout = null;
+  let ultimaLigacao = null;
+
+  const caixa = document.getElementById("nh-notificacao");
+  const icone = document.getElementById("nh-notificacao-icone");
+  const titulo = document.getElementById("nh-notificacao-titulo");
+  const conteudo = document.getElementById("nh-notificacao-conteudo");
+
+  function mostrar(tipo, nome, texto, acao) {
+    clearTimeout(timeout);
+
+    icone.textContent = tipo === "ligacao" ? "📞" : "💌";
+
+    titulo.textContent = tipo === "ligacao"
+      ? nome + " está ligando..."
+      : "Nova mensagem de " + nome;
+
+    conteudo.textContent = texto;
+
+    caixa.classList.add("ativa");
+
+    caixa.onclick = function () {
+      caixa.classList.remove("ativa");
+
+      if (acao === "chat") {
+        document.getElementById("abrir-chat")?.click();
+      }
+
+      if (acao === "ligacao") {
+        const tela = document.getElementById("voz-tela");
+        if (tela) tela.hidden = false;
+      }
+    };
+
+    timeout = setTimeout(function () {
+      caixa.classList.remove("ativa");
+    }, tipo === "ligacao" ? 15000 : 7000);
+  }
+
+  function conectar() {
+    if (
+      typeof db === "undefined" ||
+      !db ||
+      typeof usuario === "undefined" ||
+      !usuario ||
+      typeof historiaAtual === "undefined"
+    ) return;
+
+    const id = historiaAtual?.historia_id;
+    if (!id) {
+      if (canal) db.removeChannel(canal);
+      canal = null;
+      historiaConectada = null;
+      ultimaLigacao = null;
+      return;
+    }
+
+    if (historiaConectada === id) return;
+
+    if (canal) db.removeChannel(canal);
+
+    historiaConectada = id;
+    ultimaLigacao = null;
+
+    canal = db.channel("avisos-site-" + id)
+
+      .on("postgres_changes", {
+        event: "INSERT",
+        schema: "public",
+        table: "chat_messages",
+        filter: "story_id=eq." + id
+      }, function (evento) {
+        const mensagem = evento.new;
+
+        if (
+          historiaConectada !== id ||
+          !usuario ||
+          mensagem.sender_id === usuario.id
+        ) return;
+
+        const nome =
+          typeof chatNomeUsuario === "function"
+            ? chatNomeUsuario(mensagem.sender_id)
+            : "Seu amor";
+
+        mostrar(
+          "mensagem",
+          nome,
+          mensagem.content || "Nova mensagem recebida",
+          "chat"
+        );
+      })
+
+      .on("postgres_changes", {
+        event: "INSERT",
+        schema: "public",
+        table: "voz_chamadas",
+        filter: "story_id=eq." + id
+      }, function (evento) {
+        const chamada = evento.new;
+
+        if (
+          historiaConectada !== id ||
+          !usuario ||
+          chamada.caller_id === usuario.id ||
+          chamada.status !== "tocando" ||
+          chamada.id === ultimaLigacao
+        ) return;
+
+        ultimaLigacao = chamada.id;
+
+        mostrar(
+          "ligacao",
+          "Seu amor",
+          "📞 Ligação de voz recebida. Toque para atender.",
+          "ligacao"
+        );
+      })
+
+      .subscribe();
+  }
+
+  setInterval(conectar, 2000);
+  conectar();
+})();
+</script>
 </body></html>
