@@ -529,6 +529,179 @@ body.cassino-aberto{overflow:hidden!important}
 #cassino-amor .cassino-nota{max-width:640px;margin:9px auto!important;font-size:11px}
 @media(max-height:730px){#cassino-amor .cassino-mascote{height:130px!important;transform:scale(1.5)!important}#cassino-amor .cassino-conteudo{padding-top:48px}#cassino-amor .cassino-cena{padding-top:3px}#cassino-amor .cassino-painel{margin:5px auto!important}}
 </style>
+<style id="nh-oito-layouts-reais">
+
+/* ============================================================
+   NOSSA HISTÓRIA · OITO INTERFACES REAIS (não apenas cores)
+   Estilos isolados: nenhum ID, handler, dado ou RPC foi removido.
+   ============================================================ */
+body[data-visual]{
+ --nh-bt-radius:20px;--nh-bt-shadow:0 7px 0 #9b376730;
+ --nh-bt-border:2px solid var(--nh-border);--nh-card-shadow:0 10px 25px #3a15221a;
+ --nh-nav-gap:8px;
+}
+body[data-visual] #abas-nav{gap:var(--nh-nav-gap)!important;transition:background .25s,box-shadow .25s,border-radius .25s}
+body[data-visual] .aba-btn{min-width:0;transition:transform .18s,box-shadow .18s,background .18s!important;position:relative!important;}
+body[data-visual] .aba-btn:active{transform:translateY(2px)!important}
+body[data-visual] .aba-btn .aba-icone{transition:transform .18s}
+body[data-visual] .aba-btn:hover .aba-icone{transform:translateY(-2px) scale(1.09)}
+/* Estilização de botões reais do aplicativo e controles de ação. */
+body[data-visual] :is(button.primary,button.secondary,#login-google,#sair-conta,#adicionar-foto,#modo-seletor button,#mascote-acoes button,#mascote-premios-abrir,#abrir-planos,#aba-abrir-chat,#abrir-chat,#cinema-controles button,#chat-enviar,#cassino-abrir,#chat-salvar-perfil,#salvar-nome,#recarregar-personagem){
+ border-radius:var(--nh-bt-radius)!important;
+ border:var(--nh-bt-border)!important;
+ box-shadow:var(--nh-bt-shadow)!important;
+ font-family:var(--nh-font)!important;
+ font-weight:750;
+ letter-spacing:.02em;
+ transition:transform .16s ease,box-shadow .16s ease,filter .16s ease!important;
+}
+body[data-visual] :is(button.primary,button.secondary,#login-google,#sair-conta,#adicionar-foto,#modo-seletor button,#mascote-acoes button,#mascote-premios-abrir,#abrir-planos,#aba-abrir-chat,#abrir-chat,#cinema-controles button,#chat-enviar,#cassino-abrir,#chat-salvar-perfil,#salvar-nome,#recarregar-personagem):not(:disabled):active{
+ transform:translateY(3px)!important;box-shadow:0 1px 1px #0002!important;
+}
+body[data-visual] .aba-painel>section{box-shadow:var(--nh-card-shadow)!important;transition:border-radius .2s,box-shadow .2s}
+body[data-visual] #conteudo-configuracoes{border:2px solid var(--nh-border)!important}
+body[data-visual] #config-aparencia .nh-temas-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+body[data-visual] #config-aparencia .nh-tema-card{min-height:156px;border:2px solid var(--nh-border)!important;border-radius:17px!important;display:flex;flex-direction:column;justify-content:flex-start;gap:5px;padding:12px 6px!important;font-size:12px;text-align:center}
+body[data-visual] #config-aparencia .nh-tema-card[aria-pressed="true"]{outline:3px solid var(--nh-accent)!important;outline-offset:2px}
+#config-aparencia .nh-mini-preview{display:block;width:min(100%,132px);margin:6px auto 0;border:1px solid #aaaaaa55;padding:7px 6px;border-radius:var(--prev-card);background:var(--prev-bg);box-shadow:var(--prev-shadow);height:49px}
+#config-aparencia .nh-mini-menu{display:flex;justify-content:center;gap:4px}
+#config-aparencia .nh-mini-menu i{font-style:normal;display:grid;place-items:center;width:25px;height:18px;background:var(--prev-tab);border-radius:var(--prev-btn);color:var(--prev-fg);font-size:12px}
+#config-aparencia .nh-mini-action{display:block;margin:4px auto 0;width:62px;border-radius:var(--prev-btn);background:var(--prev-accent);color:#fff;font-size:9px;line-height:12px;font-weight:800}
+#config-aparencia .nh-estilo-legenda{color:#786778;font-size:10px;opacity:.85}
+#config-aparencia [data-escolher-visual="kawaii"]{--prev-bg:#fff1f8;--prev-tab:#ffc6df;--prev-accent:#eb68a5;--prev-fg:#bd356e;--prev-btn:18px;--prev-card:20px;--prev-shadow:0 4px 0 #ffc6df}
+#config-aparencia [data-escolher-visual="luxo"]{--prev-bg:#27131b;--prev-tab:#62423e;--prev-accent:#c79c54;--prev-fg:#ffdb92;--prev-btn:2px;--prev-card:3px;--prev-shadow:0 3px 0 #ad8c53}
+#config-aparencia [data-escolher-visual="lilas"]{--prev-bg:linear-gradient(120deg,#ece1ff,#d9dbfc);--prev-tab:#ffffffbb;--prev-accent:#9773e2;--prev-fg:#7046b5;--prev-btn:14px;--prev-card:18px;--prev-shadow:0 4px 12px #a17cd250}
+#config-aparencia [data-escolher-visual="coelho"]{--prev-bg:#fff2d9;--prev-tab:#f7b6ac;--prev-accent:#eb8c9c;--prev-fg:#934b57;--prev-btn:10px;--prev-card:25px;--prev-shadow:0 5px 0 #ce9b81}
+#config-aparencia [data-escolher-visual="diario"]{--prev-bg:#fdf6df;--prev-tab:#e1ccb3;--prev-accent:#b77a75;--prev-fg:#724b3b;--prev-btn:2px;--prev-card:2px;--prev-shadow:3px 3px 0 #c8b6a6}
+#config-aparencia [data-escolher-visual="minimal"]{--prev-bg:#f9fafb;--prev-tab:#e8eaed;--prev-accent:#475569;--prev-fg:#334155;--prev-btn:3px;--prev-card:3px;--prev-shadow:none}
+#config-aparencia [data-escolher-visual="pixel"]{--prev-bg:#ffdfef;--prev-tab:#f3a9d5;--prev-accent:#a02e86;--prev-fg:#45223a;--prev-btn:0px;--prev-card:0px;--prev-shadow:4px 4px 0 #812857}
+#config-aparencia [data-escolher-visual="estrelas"]{--prev-bg:#161d39;--prev-tab:#393d7d;--prev-accent:#8369fa;--prev-fg:#e9d7ff;--prev-btn:8px;--prev-card:14px;--prev-shadow:0 2px 10px #7565ff}
+@media(min-width:540px){body[data-visual] #config-aparencia .nh-temas-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:430px){body[data-visual] #config-aparencia .nh-tema-card{min-height:150px;font-size:11px}}
+
+/* 1 · KAWAII: botões marshmallow, abas em bolhas com ícones ampliados. */
+body[data-visual="kawaii"]{--nh-bt-radius:999px;--nh-bt-shadow:0 5px 0 #efb7cf,0 9px 16px #d5487d15;--nh-bt-border:2px solid #ffbbd7;--nh-card-shadow:0 9px 0 #f8dbe7,0 18px 25px #ac426417;--nh-nav-gap:9px}
+body[data-visual="kawaii"] #abas-nav{padding:10px 9px!important;border:2px solid #f6c8dd!important;border-radius:34px!important;box-shadow:0 6px 0 #f5c8de!important}
+body[data-visual="kawaii"] .aba-btn{border-radius:24px!important;padding:8px 3px!important;border:2px solid #f7d5e5!important;box-shadow:0 4px 0 #f5d4e3!important}
+body[data-visual="kawaii"] .aba-btn .aba-icone{background:#fff8fc;border-radius:50%;width:39px;height:39px;display:grid;place-items:center;box-shadow:inset 0 -3px #f8dbea;font-size:24px!important}
+body[data-visual="kawaii"] .aba-btn.ativa{background:#f9bbd5!important;color:#7d2a52!important;border-color:#e88dbb!important}
+body[data-visual="kawaii"] section{border:2px solid #fbe0ec!important}
+body[data-visual="kawaii"] #mascote-acoes button{background:linear-gradient(#ff97c9,#e95a9b)!important;color:#fff!important}
+body[data-visual="kawaii"] button.primary{background:linear-gradient(#fb8ec1,#d84f8c)!important}
+
+/* 2 · LUXO: barra de navegação editorial, botões com borda dourada retangular. */
+body[data-visual="luxo"]{--nh-bt-radius:5px;--nh-bt-shadow:inset 0 0 0 1px #f9d99a55,0 8px 16px #0005;--nh-bt-border:1px solid #c79b50;--nh-card-shadow:0 14px 32px #0006;--nh-nav-gap:0px}
+body[data-visual="luxo"] header{border-bottom:1px solid #957040;max-width:960px;margin:0 auto 14px}
+body[data-visual="luxo"] #abas-nav{border-radius:0!important;border:0!important;border-block:2px solid #b38a4b!important;padding:7px 10px!important;box-shadow:none!important;backdrop-filter:none!important}
+body[data-visual="luxo"] .aba-btn{border-radius:0!important;background:transparent!important;box-shadow:none!important;border:0!important;border-right:1px solid #aa855f55!important;min-height:64px!important;letter-spacing:1px;font-family:Georgia,serif!important}
+body[data-visual="luxo"] .aba-btn:last-child{border-right:0!important}
+body[data-visual="luxo"] .aba-btn.ativa{background:linear-gradient(180deg,#6e513c,#3e292c)!important;color:#ffe1a0!important;border-bottom:3px solid #dfbd70!important}
+body[data-visual="luxo"] .aba-btn .aba-icone{font-size:19px!important;filter:sepia(.8)}
+body[data-visual="luxo"] .aba-painel>section{border:1px solid #b28c56!important;border-top:4px double #d8b574!important}
+body[data-visual="luxo"] button.primary,body[data-visual="luxo"] #mascote-acoes button{background:linear-gradient(120deg,#9e712f,#edc980,#956a31)!important;color:#321e15!important;text-shadow:0 1px #fff8;letter-spacing:1px}
+body[data-visual="luxo"] .secondary{color:#ffe3b6!important;background:#472f31!important}
+body[data-visual="luxo"] .tempo{border-left:3px solid #b68a43!important}
+
+/* 3 · LILÁS: navegação flutuante, glassmorphism, botões pílula de vidro. */
+body[data-visual="lilas"]{--nh-bt-radius:19px;--nh-bt-shadow:0 9px 19px #805bd42b;--nh-bt-border:1px solid #ffffffb8;--nh-card-shadow:0 16px 40px #9070d530;--nh-nav-gap:7px;background:radial-gradient(circle at 10% 20%,#e6d6ff,transparent 55%),radial-gradient(circle at 95% 70%,#e0ecff,transparent 50%),#f6f0ff!important}
+body[data-visual="lilas"] #abas-nav{border:1px solid #ffffffcf!important;background:#ffffff7c!important;border-radius:25px!important;box-shadow:0 15px 35px #7052a52c!important;backdrop-filter:blur(19px)!important;padding:10px!important}
+body[data-visual="lilas"] .aba-btn{background:#ffffff82!important;border:1px solid #fff!important;border-radius:15px!important;box-shadow:0 4px 15px #9c81c82a!important}
+body[data-visual="lilas"] .aba-btn.ativa{background:linear-gradient(135deg,#9e7ee5,#7d5bd7)!important;color:white!important;transform:translateY(-3px);box-shadow:0 8px 17px #694db54c!important}
+body[data-visual="lilas"] .aba-painel>section{background:#ffffffd0!important;border:1px solid #fff!important;backdrop-filter:blur(14px)!important}
+body[data-visual="lilas"] button.primary,body[data-visual="lilas"] #mascote-acoes button{background:linear-gradient(110deg,#b08ef0,#8c69d0)!important;color:#fff!important}
+body[data-visual="lilas"] :is(input,select,textarea){border-radius:15px!important;box-shadow:0 5px 18px #805bd416!important}
+
+/* 4 · COELHO: cartões 3D e controles como brinquedos de videogame. */
+body[data-visual="coelho"]{--nh-bt-radius:16px;--nh-bt-shadow:0 7px 0 #bb7f72,0 10px 10px #8b59512c;--nh-bt-border:3px solid #f7bcb0;--nh-card-shadow:0 10px 0 #f2d3bf,0 15px 18px #b78a7525;--nh-nav-gap:8px}
+body[data-visual="coelho"] #abas-nav{border-radius:34px!important;border:3px solid #f2ccb2!important;background:#ffe5d7!important;padding:12px 9px!important;box-shadow:inset 0 4px #fff8,0 7px 0 #edbea6!important}
+body[data-visual="coelho"] .aba-btn{background:linear-gradient(#fffef8,#fcd6cd)!important;color:#86505e!important;border:3px solid #f6bbac!important;border-radius:22px 22px 30px 30px!important;box-shadow:0 6px 0 #cc948c!important}
+body[data-visual="coelho"] .aba-btn.ativa{background:linear-gradient(#ffc7c9,#ee93a4)!important;color:#72384d!important;transform:translateY(3px);box-shadow:0 2px 0 #ba7783!important}
+body[data-visual="coelho"] .aba-btn .aba-icone{font-size:29px!important;filter:drop-shadow(0 2px #fff7)}
+body[data-visual="coelho"] .aba-painel>section{border:3px solid #f2d1be!important;border-radius:34px!important}
+body[data-visual="coelho"] #mascote-acoes button{background:linear-gradient(#ffc5d0,#f18eaa)!important;color:#74354b!important;border-radius:20px!important;min-height:57px!important}
+body[data-visual="coelho"] #mascote-estatisticas{gap:14px}
+body[data-visual="coelho"] #mascote-estatisticas .mascote-medidor{border:2px dashed #e0a9a6!important;border-radius:24px!important}
+body[data-visual="coelho"] button.primary{background:linear-gradient(#ffc0d5,#e983a8)!important;color:#76334b!important}
+
+/* 5 · DIÁRIO: caderno, fitas de papel, abas de marcador, carimbos. */
+body[data-visual="diario"]{--nh-bt-radius:3px;--nh-bt-shadow:3px 4px 0 #b99c8660;--nh-bt-border:1px solid #ab907b;--nh-card-shadow:4px 7px 0 #d5bda4;--nh-nav-gap:5px;background:repeating-linear-gradient(0deg,#faf2e6 0 31px,#e6d9c6 32px),#faf2e6!important}
+body[data-visual="diario"] #abas-nav{border-radius:5px!important;background:#eee0c9!important;border:0!important;border-bottom:4px solid #be9d86!important;box-shadow:3px 5px 0 #baa38d!important;padding:9px 8px 5px!important}
+body[data-visual="diario"] .aba-btn{border-radius:6px 6px 0 0!important;border:1px solid #bda187!important;background:#fdf4df!important;box-shadow:2px 3px 0 #baa38d!important;transform:rotate(-1deg);font-family:Georgia,serif!important;min-height:66px!important}
+body[data-visual="diario"] .aba-btn:nth-child(even){transform:rotate(1deg)}
+body[data-visual="diario"] .aba-btn.ativa{background:#e5b0ab!important;color:#6b413c!important;border-bottom:4px solid #b87870!important}
+body[data-visual="diario"] .aba-btn .aba-icone{font-size:23px!important}
+body[data-visual="diario"] .aba-painel>section{border:1px solid #ccba9c!important;border-left:8px solid #ddcbb4!important;border-radius:5px!important;position:relative}
+body[data-visual="diario"] .aba-painel>section::before{content:"";position:absolute;top:-10px;left:44%;height:19px;width:76px;background:#e3b5b3aa;transform:rotate(-4deg);pointer-events:none}
+body[data-visual="diario"] button.primary,body[data-visual="diario"] #mascote-acoes button{background:#b97871!important;color:white!important;border-style:dashed!important;text-transform:none}
+body[data-visual="diario"] input,body[data-visual="diario"] textarea{border-radius:2px!important;border-bottom:2px solid #b89e89!important}
+
+/* 6 · MINIMAL: menu LATERAL no desktop, botões retangulares e cartões limpos. */
+body[data-visual="minimal"]{--nh-bt-radius:7px;--nh-bt-shadow:none;--nh-bt-border:1px solid #d5dce4;--nh-card-shadow:0 2px 9px #1420340c;--nh-nav-gap:3px}
+body[data-visual="minimal"] header h1{font-family:system-ui,Arial,sans-serif!important;font-weight:600!important;letter-spacing:-2px!important}
+body[data-visual="minimal"] #abas-nav{border-radius:9px!important;border:1px solid #e0e4e8!important;box-shadow:none!important;background:#fff!important;padding:7px!important}
+body[data-visual="minimal"] .aba-btn{background:transparent!important;border:0!important;border-radius:5px!important;box-shadow:none!important;min-height:55px!important;color:#586272!important}
+body[data-visual="minimal"] .aba-btn.ativa{background:#e8edf1!important;color:#253449!important;border-left:3px solid #5f7388!important}
+body[data-visual="minimal"] .aba-painel>section{border:1px solid #e3e8ed!important;border-radius:10px!important}
+body[data-visual="minimal"] button.primary,body[data-visual="minimal"] #mascote-acoes button{background:#425467!important;color:white!important}
+body[data-visual="minimal"] button.secondary{background:transparent!important;color:#405267!important}
+body[data-visual="minimal"] .aba-rotulo{letter-spacing:.01em}
+@media(min-width:1000px){
+ body[data-visual="minimal"] #abas-nav{position:fixed!important;left:16px!important;top:110px!important;bottom:auto!important;right:auto!important;z-index:890!important;display:flex!important;flex-direction:column!important;width:194px!important;padding:8px!important;gap:6px!important;max-height:calc(100dvh - 130px);overflow:auto}
+ body[data-visual="minimal"] #abas-nav .aba-btn{width:100%;min-height:53px!important;display:flex!important;flex-direction:row!important;justify-content:flex-start!important;gap:13px!important;padding:9px 12px!important;font-size:12px!important}
+ body[data-visual="minimal"] #abas-nav .aba-icone{font-size:20px!important}
+ body[data-visual="minimal"] #conteudo-privado{max-width:none!important;margin-left:225px!important;margin-right:15px!important}
+ body[data-visual="minimal"] header{margin-left:225px!important}
+}
+
+/* 7 · PIXEL: bordas em degraus, tipografia monoespaçada, botões 8-bit. */
+body[data-visual="pixel"]{--nh-bt-radius:0px;--nh-bt-shadow:5px 5px 0 #68294e;--nh-bt-border:3px solid #6d3a60;--nh-card-shadow:7px 7px 0 #9b537d;--nh-nav-gap:5px;background-color:#ffeff7!important;background-image:linear-gradient(#dba9c234 1px,transparent 1px),linear-gradient(90deg,#dba9c234 1px,transparent 1px)!important;background-size:22px 22px!important}
+body[data-visual="pixel"] #abas-nav{border-radius:0!important;border:4px solid #6d3a60!important;box-shadow:6px 6px 0 #ab6491!important;background:#ffe3f1!important;padding:7px!important}
+body[data-visual="pixel"] .aba-btn{border-radius:0!important;border:3px solid #7d3c64!important;box-shadow:3px 3px 0 #67334f!important;background:#ffd4e8!important;min-height:66px!important;font:800 10px/1.2 monospace!important}
+body[data-visual="pixel"] .aba-btn.ativa{background:#ae3b7e!important;color:white!important;transform:translate(2px,2px);box-shadow:1px 1px 0 #67334f!important}
+body[data-visual="pixel"] .aba-btn .aba-icone{font-size:23px!important;image-rendering:pixelated}
+body[data-visual="pixel"] .aba-painel>section{border:4px solid #8c4870!important;border-radius:0!important}
+body[data-visual="pixel"] :is(button,input,select,textarea){border-radius:0!important;font-family:monospace!important}
+body[data-visual="pixel"] button.primary,body[data-visual="pixel"] #mascote-acoes button{background:#a83d7a!important;color:#fff!important;text-transform:uppercase}
+body[data-visual="pixel"] .mascote-trilho,body[data-visual="pixel"] .mascote-preenchimento{border-radius:0!important}
+
+/* 8 · ESTRELAS: HUD espacial, luz neon, botões luminosos. */
+body[data-visual="estrelas"]{--nh-bt-radius:13px;--nh-bt-shadow:0 0 0 1px #9a89ff55,0 0 22px #9075fd45;--nh-bt-border:1px solid #b19afa;--nh-card-shadow:0 0 0 1px #6e67b777,0 16px 34px #0009;--nh-nav-gap:7px}
+body[data-visual="estrelas"] #abas-nav{border:1px solid #7e80d3!important;border-radius:18px!important;background:#121d40e6!important;padding:10px!important;box-shadow:0 0 25px #927cfc4a!important;backdrop-filter:blur(12px)!important}
+body[data-visual="estrelas"] .aba-btn{background:linear-gradient(160deg,#283763,#20274a)!important;border:1px solid #747ed1!important;border-radius:13px!important;box-shadow:inset 0 1px #fff2,0 0 12px #6b65d828!important;color:#e8eaff!important;min-height:66px!important}
+body[data-visual="estrelas"] .aba-btn.ativa{background:linear-gradient(145deg,#7c58d5,#4f5ec9)!important;box-shadow:0 0 18px #9489ff9b!important;color:#fff!important}
+body[data-visual="estrelas"] .aba-icone{filter:drop-shadow(0 0 4px #bdb5ff)}
+body[data-visual="estrelas"] .aba-painel>section{border:1px solid #7376ba!important;background:linear-gradient(165deg,#232d50,#17213f)!important}
+body[data-visual="estrelas"] button.primary,body[data-visual="estrelas"] #mascote-acoes button{background:linear-gradient(110deg,#885bdb,#536bcf)!important;color:white!important}
+body[data-visual="estrelas"] button.secondary{background:#29345b!important;color:#e8eaff!important}
+body[data-visual="estrelas"] .numero{color:#d4c0ff!important;text-shadow:0 0 9px #b9a0ff}
+
+/* Formatos também nos botões dos dois cassinos, sem alterar giros/valores. */
+body[data-visual] #cassino-amor :is(.cassino-girar,.cassino-controles button),
+body[data-visual] #girininho-modal :is(.gi-spin,#girininho-mute){
+ border-radius:var(--nh-bt-radius)!important;
+ box-shadow:var(--nh-bt-shadow)!important;
+}
+body[data-visual="pixel"] :is(#cassino-amor .cassino-girar,#girininho-modal .gi-spin){text-transform:uppercase!important;letter-spacing:1px!important}
+/* Preserva o comportamento responsivo de cada menu em celulares. */
+@media(max-width:650px){
+ body[data-visual] #abas-nav{position:fixed!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:auto!important;z-index:950!important;margin:0!important;padding:9px 6px calc(9px + env(safe-area-inset-bottom))!important;}
+ body[data-visual] #abas-nav .aba-btn{min-height:56px!important;font-size:10px!important;flex-direction:column!important}
+ body[data-visual] #abas-nav .aba-icone{font-size:20px!important}
+ body[data-visual="kawaii"] #abas-nav{border-radius:25px 25px 0 0!important;padding:7px 5px calc(11px + env(safe-area-inset-bottom))!important}
+ body[data-visual="kawaii"] #abas-nav .aba-icone{width:32px;height:32px;font-size:19px!important}
+ body[data-visual="luxo"] #abas-nav{border-radius:0!important;border-top:2px solid #d4ad64!important;border-bottom:0!important}
+ body[data-visual="coelho"] #abas-nav{border-radius:23px 23px 0 0!important;border-bottom:0!important}
+ body[data-visual="diario"] #abas-nav{border-radius:0!important;border-top:3px solid #bca48b!important}
+ body[data-visual="minimal"] #abas-nav{border-radius:0!important;border-top:1px solid #e2e8ef!important}
+ body[data-visual="pixel"] #abas-nav{border-radius:0!important;border-width:3px 0 0!important}
+ body[data-visual="estrelas"] #abas-nav{border-radius:20px 20px 0 0!important;border-bottom:0!important}
+ body[data-visual="pixel"] #abas-nav .aba-btn{font-size:9px!important;padding:5px 1px!important}
+ body[data-visual="coelho"] #abas-nav .aba-btn{font-size:9px!important;padding:4px 1px!important}
+ body[data-visual="luxo"] #abas-nav .aba-btn{font-size:9px!important;letter-spacing:0}
+}
+@media(prefers-reduced-motion:reduce){body[data-visual] .aba-btn,body[data-visual] button{transition:none!important}}
+
+</style>
 </head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -576,7 +749,7 @@ body.cassino-aberto{overflow:hidden!important}
 <button id="fechar-configuracoes" type="button" aria-label="Fechar configurações" title="Fechar">×</button>
 <h2 id="titulo-configuracoes">Configurações ⚙️</h2>
 <p class="muted">Altere seu nome, consulte seu código e gerencie a conexão do casal.</p>
-<section id="config-aparencia"><h2>🎨 Aparência do Site</h2><p class="nh-tema-descricao">Escolha seu estilo. A mudança vale só neste navegador, sem alterar as configurações de outras pessoas.</p><div class="nh-temas-grid" role="group" aria-label="Escolha o tema visual"><button class="nh-tema-card" type="button" data-escolher-visual="kawaii" aria-pressed="false"><span class="nh-tema-icone">🎀</span><span>Kawaii Rosa</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button><button class="nh-tema-card" type="button" data-escolher-visual="luxo" aria-pressed="false"><span class="nh-tema-icone">✨</span><span>Romance Luxuoso</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button><button class="nh-tema-card" type="button" data-escolher-visual="lilas" aria-pressed="false"><span class="nh-tema-icone">💜</span><span>Sonho Lilás</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button><button class="nh-tema-card" type="button" data-escolher-visual="coelho" aria-pressed="false"><span class="nh-tema-icone">🐰</span><span>Mundo do Coelhinho</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button><button class="nh-tema-card" type="button" data-escolher-visual="diario" aria-pressed="false"><span class="nh-tema-icone">📸</span><span>Diário de Memórias</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button><button class="nh-tema-card" type="button" data-escolher-visual="minimal" aria-pressed="false"><span class="nh-tema-icone">🤍</span><span>Moderno Minimalista</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button><button class="nh-tema-card" type="button" data-escolher-visual="pixel" aria-pressed="false"><span class="nh-tema-icone">🎮</span><span>Pixel Love</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button><button class="nh-tema-card" type="button" data-escolher-visual="estrelas" aria-pressed="false"><span class="nh-tema-icone">🌙</span><span>Céu Estrelado</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button></div><p id="nh-tema-atual" role="status" class="muted"></p></section>
+<section id="config-aparencia"><h2>🎨 Aparência do Site</h2><p class="nh-tema-descricao">Escolha seu estilo. A mudança vale só neste navegador, sem alterar as configurações de outras pessoas.</p><div class="nh-temas-grid" role="group" aria-label="Escolha o tema visual"><button class="nh-tema-card" type="button" data-escolher-visual="kawaii" aria-pressed="false"><span class="nh-tema-icone">🎀</span><span>Kawaii Rosa</span><span class="nh-mini-preview" aria-hidden="true"><span class="nh-mini-menu"><i>💗</i><i>🧸</i><i>💕</i></span><span class="nh-mini-action">Entrar</span></span><span class="nh-estilo-legenda">🎀 Fofo e arredondado</span></button><button class="nh-tema-card" type="button" data-escolher-visual="luxo" aria-pressed="false"><span class="nh-tema-icone">✨</span><span>Romance Luxuoso</span><span class="nh-mini-preview" aria-hidden="true"><span class="nh-mini-menu"><i>◆</i><i>✦</i><i>◆</i></span><span class="nh-mini-action">Entrar</span></span><span class="nh-estilo-legenda">✦ Menu de joias</span></button><button class="nh-tema-card" type="button" data-escolher-visual="lilas" aria-pressed="false"><span class="nh-tema-icone">💜</span><span>Sonho Lilás</span><span class="nh-mini-preview" aria-hidden="true"><span class="nh-mini-menu"><i>☁</i><i>◌</i><i>✧</i></span><span class="nh-mini-action">Entrar</span></span><span class="nh-estilo-legenda">☁️ Cartões de vidro</span></button><button class="nh-tema-card" type="button" data-escolher-visual="coelho" aria-pressed="false"><span class="nh-tema-icone">🐰</span><span>Mundo do Coelhinho</span><span class="nh-mini-preview" aria-hidden="true"><span class="nh-mini-menu"><i>🐾</i><i>🥕</i><i>🎾</i></span><span class="nh-mini-action">Entrar</span></span><span class="nh-estilo-legenda">🐰 Botões de brinquedo</span></button><button class="nh-tema-card" type="button" data-escolher-visual="diario" aria-pressed="false"><span class="nh-tema-icone">📸</span><span>Diário de Memórias</span><span class="nh-mini-preview" aria-hidden="true"><span class="nh-mini-menu"><i>✎</i><i>♡</i><i>✉</i></span><span class="nh-mini-action">Entrar</span></span><span class="nh-estilo-legenda">📖 Abas de papel</span></button><button class="nh-tema-card" type="button" data-escolher-visual="minimal" aria-pressed="false"><span class="nh-tema-icone">🤍</span><span>Moderno Minimalista</span><span class="nh-mini-preview" aria-hidden="true"><span class="nh-mini-menu"><i>☰</i><i>▢</i><i>◯</i></span><span class="nh-mini-action">Entrar</span></span><span class="nh-estilo-legenda">☷ Menu lateral</span></button><button class="nh-tema-card" type="button" data-escolher-visual="pixel" aria-pressed="false"><span class="nh-tema-icone">🎮</span><span>Pixel Love</span><span class="nh-mini-preview" aria-hidden="true"><span class="nh-mini-menu"><i>▣</i><i>♥</i><i>★</i></span><span class="nh-mini-action">Entrar</span></span><span class="nh-estilo-legenda">👾 Estilo 8 bits</span></button><button class="nh-tema-card" type="button" data-escolher-visual="estrelas" aria-pressed="false"><span class="nh-tema-icone">🌙</span><span>Céu Estrelado</span><span class="nh-mini-preview" aria-hidden="true"><span class="nh-mini-menu"><i>✧</i><i>◈</i><i>✦</i></span><span class="nh-mini-action">Entrar</span></span><span class="nh-estilo-legenda">🌙 Menu espacial</span></button></div><p id="nh-tema-atual" role="status" class="muted"></p></section>
 <section id="config-secao-perfil"><h2>Meu perfil 💗</h2><div class="stack"><div><label for="nome-usuario">Seu nome</label><input id="nome-usuario" maxlength="40" placeholder="Como deseja ser chamado(a)?"></div><button id="salvar-nome" class="primary" type="button">Salvar nome</button><div><p class="muted">Seu código pessoal de conexão:</p><p id="codigo-conexao">Carregando...</p><button id="copiar-codigo" class="secondary" type="button">Copiar código</button></div></div></section>
 <section id="config-secao-conectar"><h2>Conectar com alguém 💌</h2><label for="codigo-outra-pessoa">Código da outra pessoa</label><input id="codigo-outra-pessoa" placeholder="Cole o código aqui"><div class="actions"><button id="enviar-pedido" class="primary" type="button">Enviar solicitação</button></div><h3>Solicitações pendentes</h3><div id="solicitacoes">Carregando...</div></section>
 </div>
