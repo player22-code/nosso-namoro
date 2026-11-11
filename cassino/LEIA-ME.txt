@@ -1,0 +1,23 @@
+NOSSA HISTÓRIA — ASSETS DO CAÇA-NÍQUEL
+========================================
+Este pacote contém PNGs individuais e GIFs REALMENTE ANIMADOS.
+
+Pastas:
+personagem/ : 6 PNGs do coelhinho branco de óculos dourados e corrente
+animacoes/  : 6 GIFs animados do coelhinho
+maquina/    : máquina, cenário, painéis, botões e barra superior
+simbolos/   : 10 símbolos das roletas
+efeitos/    : 5 GIFs de moedas, corações, brilhos e giro
+
+OBSERVAÇÕES IMPORTANTES
+- Os elementos foram recortados da prancha visual gerada anteriormente.
+- A transparência dos PNGs foi reconstruída automaticamente e pode precisar de
+  pequenos retoques nas bordas. Alguns fundos internos brancos foram preservados.
+- Os GIFs são animações simples montadas com os desenhos estáticos da prancha,
+  e NÃO são animações desenhadas quadro a quadro por uma IA.
+- Os GIFs possuem transparência de 1 bit (limitação do formato GIF).
+- Este ZIP contém somente recursos visuais, NÃO contém HTML nem SQL.
+- A lógica de saldo, sorteio, regras de vitória e sincronização com Supabase
+  precisa ser implementada separadamente.
+- Para não incentivar apostas de valor econômico, use apenas moedas virtuais
+  gratuitas e sem conversão em dinheiro ou prêmios.
