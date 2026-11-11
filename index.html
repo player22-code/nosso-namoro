@@ -671,7 +671,7 @@ body.cassino-aberto{overflow:hidden!important}
   <p id="mascote-proxima">Verificando sua recompensa...</p>
   <div id="mascote-dias" aria-label="Progresso de sete dias"></div>
   <button id="mascote-coletar" type="button" disabled>🎁 Coletar 20 moedas</button>
-  <p id="mascote-premios-aviso">Os dois compartilham a mesma recompensa. Dias não resgatados não acumulam. As moedas já coletadas continuam no saldo.</p>
+  <p id="mascote-premios-aviso">Cada pessoa coleta sua recompensa separadamente. Dias não resgatados não acumulam.</p>
  </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -1392,7 +1392,7 @@ function atualizarInterfaceMascote(){
   const valor=mascoteLimitar(d[chave]);$(valorId).textContent=Math.round(valor)+'%';$(barraId).style.width=valor+'%';
  }
  const xp=Math.max(0,Number(d.experiencia)||0),nivel=Math.floor(xp/100)+1;
- $('mascote-saldo').textContent='🪙 '+Math.max(0,Number(d.moedas)||0);mascoteAtualizarPremios();$('mascote-nivel').textContent=nivel;$('mascote-xp').textContent=xp+' XP';$('mascote-xp-barra').style.width=(xp%100)+'%';
+ $('mascote-saldo').textContent='🪙 '+(window.nhSaldoIndividual??'--');mascoteAtualizarPremios();$('mascote-nivel').textContent=nivel;$('mascote-xp').textContent=xp+' XP';$('mascote-xp-barra').style.width=(xp%100)+'%';
  const figura=$('mascote-figura');figura.classList.toggle('dormindo',dormindo);
  const cenarioMascote=$('mascote-cenario');if(cenarioMascote)cenarioMascote.classList.toggle('nh-noite',dormindo);
  const problemasMascote=[];
@@ -1423,7 +1423,7 @@ async function mascoteBuscar(id,versao){
  if(error)throw error;
  if(versao!==mascoteVersao||mascoteHistoriaId!==id)return;
  mascoteDados=data;
- if(data){atualizarInterfaceMascote();mascoteBotoes(!mascoteOcupado);mascoteMensagem('Conectado ao mascote do casal 💗');}
+ if(data){await nhAtualizarSaldo();await nhAtualizarColeta();atualizarInterfaceMascote();mascoteBotoes(!mascoteOcupado);mascoteMensagem('Conectado ao mascote do casal 💗');}
  else {mascoteBotoes(false);mascoteMensagem('Mascote ainda não criado. Execute o SQL de instalação.');}
 }
 async function mascoteConectarHistoria(){
@@ -1453,7 +1453,7 @@ async function mascoteExecutar(acao){
   const {data,error}=await db.rpc('mascote_casal_acao',{p_story_id:id,p_acao:acao});
   if(error)throw error;
   if(versao!==mascoteVersao||mascoteHistoriaId!==id)return;
-  mascoteDados=data;atualizarInterfaceMascote();
+  mascoteDados=data;await nhAtualizarSaldo();atualizarInterfaceMascote();
   mascoteGif(acao==='dormir'?(data.estado==='dormindo'?'dormir':'parado'):acao,acao!=='dormir');
   mascoteMensagem(acao==='dormir'?'Tudo certo! 😴':'Prontinho! O Juntos está feliz 💗');
  }catch(e){if(versao===mascoteVersao)mascoteMensagem('Não foi possível: '+e.message);}
@@ -1465,10 +1465,11 @@ document.querySelectorAll('[data-mascote-acao]').forEach(b=>b.addEventListener('
 let mascoteRelogio=null;
 function mascoteAtualizarPremios(){
  const d=mascoteDados;if(!d)return;
- const ultimo=d.ultima_coleta_em?new Date(d.ultima_coleta_em).getTime():null;
+ const coleta=window.nhColetaIndividual||{};
+ const ultimo=coleta.ultima_coleta_em?new Date(coleta.ultima_coleta_em).getTime():null;
  const proximo=ultimo===null?0:ultimo+24*60*60*1000;
  const pode=!ultimo||Date.now()>=proximo;
- const contagem=Math.max(0,Number(d.dias_seguidos)||0);
+ const contagem=Math.max(0,Number(coleta.dias_seguidos)||0);
  const diaAtual=contagem===0?1:((contagem%7)+1);
  const area=$('mascote-dias');area.replaceChildren();
  for(let i=1;i<=7;i++){
@@ -1496,7 +1497,7 @@ $('mascote-coletar').addEventListener('click',async()=>{
   const {data,error}=await db.rpc('mascote_casal_coletar',{p_story_id:id});
   if(error)throw error;
   if(versao!==mascoteVersao||mascoteHistoriaId!==id)return;
-  mascoteDados=data;atualizarInterfaceMascote();mascoteMensagem('🎁 Vocês ganharam 20 moedinhas!');
+  mascoteDados=data;await nhAtualizarSaldo();await nhAtualizarColeta();atualizarInterfaceMascote();mascoteMensagem('🎁 Você ganhou 20 moedinhas!');
  }catch(e){mascoteMensagem('Recompensa: '+e.message);alert(e.message||'Não foi possível coletar.');}
  finally{if(versao===mascoteVersao){mascoteOcupado=false;mascoteBotoes(!!mascoteDados);mascoteAtualizarPremios();}}
 });
@@ -1955,7 +1956,7 @@ timeout = setTimeout(function () {
       <button type="button" id="cassino-atualizar">↻ Atualizar saldo</button>
     </div>
   </div>
-  <p class="cassino-nota">Três linhas horizontais premiam 3, 4 ou 5 símbolos iguais da esquerda para a direita. Prêmios: 3×, 7× ou 15× a aposta por linha. Apenas moedas gratuitas e recreativas: sem dinheiro, saques ou prêmios reais. Compartilhe o saldo com o mascote Juntos.</p>
+  <p class="cassino-nota">Três linhas horizontais premiam 3, 4 ou 5 símbolos iguais da esquerda para a direita. Prêmios: 3×, 7× ou 15× a aposta por linha. Apenas moedas gratuitas e recreativas: sem dinheiro, saques ou prêmios reais. Seu saldo é individual e vale também para cuidar do coelhinho.</p>
 </div>
 </section>
 <script id="cassino-script">
@@ -2034,16 +2035,14 @@ timeout = setTimeout(function () {
    temporizador=setTimeout(()=>{img.hidden=true},1800);
  }
  function saldoAtual(){
-   const n=Number(typeof mascoteDados!=='undefined' && mascoteDados?.moedas);
-   if(Number.isFinite(n) && n>=0){$c('cassino-saldo').textContent='🪙 Saldo: '+n;return;}
+   const n=Number(window.nhSaldoIndividual);
+   if(window.nhSaldoIndividual!==null && Number.isFinite(n) && n>=0){$c('cassino-saldo').textContent='🪙 Saldo: '+n;return;}
    $c('cassino-saldo').textContent='🪙 Saldo: --';
  }
  async function atualizarSaldo(){
    if(!historiaAtual?.historia_id){mensagem('Conecte seu casal para jogar.');return}
    try{
-     const {data,error}=await db.from('mascote_casal').select('*').eq('story_id',historiaAtual.historia_id).single();
-     if(error)throw error;
-     mascoteDados=data;
+     await nhAtualizarSaldo();
      if(typeof atualizarInterfaceMascote==='function')atualizarInterfaceMascote();
      saldoAtual();
    }catch(e){mensagem('Não foi possível atualizar o saldo: '+e.message)}
@@ -2066,8 +2065,8 @@ timeout = setTimeout(function () {
      await new Promise(r=>setTimeout(r,1350));
      if(historiaAtual?.historia_id!==historiaId)return;
      mostrarGrade(data.simbolos);tocar('parar');
-     $c('cassino-saldo').textContent='🪙 Saldo: '+data.saldo;
-     $c('cassino-limite').textContent='Restam '+data.giros_restantes+' giros para o casal nas próximas 24 horas (limite móvel).';
+     window.nhSaldoIndividual=Number(data.saldo);$c('cassino-saldo').textContent='🪙 Saldo: '+data.saldo;
+     $c('cassino-limite').textContent='Restam '+data.giros_restantes+' giros para você nas próximas 24 horas (limite móvel).';
      if(data.premio>0){
        const grande=data.premio>=aposta*7;
        gifMascote(grande?'grande_vitoria':'vitoria');
@@ -2110,5 +2109,26 @@ timeout = setTimeout(function () {
  obs.observe(document.getElementById('aba-jogos'),{attributes:true,attributeFilter:['hidden']});
  setInterval(()=>{if(!root.hidden && !ocupado)saldoAtual()},3000);
 })();
+</script>
+
+<script id="nh-carteiras-individuais">
+window.nhSaldoIndividual=null;
+window.nhColetaIndividual=null;
+async function nhAtualizarSaldo(){
+ if(!db||!usuario)return;
+ const {data,error}=await db.rpc('nh_meu_saldo');
+ if(error)throw error;
+ window.nhSaldoIndividual=Number(data);
+ const el=document.getElementById('mascote-saldo');
+ if(el)el.textContent='🪙 '+window.nhSaldoIndividual;
+ const cassino=document.getElementById('cassino-saldo');
+ if(cassino)cassino.textContent='🪙 Saldo: '+window.nhSaldoIndividual;
+}
+async function nhAtualizarColeta(){
+ if(!db||!usuario||!historiaAtual?.historia_id)return;
+ const {data,error}=await db.rpc('nh_minha_coleta',{p_story_id:historiaAtual.historia_id});
+ if(error)throw error;
+ window.nhColetaIndividual=data||{};
+}
 </script>
 </body></html>
