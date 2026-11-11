@@ -1363,9 +1363,22 @@ function mascoteGif(acao,temporaria=false){
  const figura=$('mascote-figura');if(!figura)return;
  if(mascoteAnimacaoTimer){clearTimeout(mascoteAnimacaoTimer);mascoteAnimacaoTimer=null;}
  const img=figura.querySelector('img')||document.createElement('img');
- img.alt='Coelhinho Juntos';
+ img.alt=''; // Não exibir texto gigante caso o GIF não seja encontrado.
  const arquivo=mascoteGifs[acao]||mascoteGifs.parado;
- img.src=arquivo+(temporaria?'?replay='+Date.now():'');
+ const caminhos=[arquivo,'imagens/'+arquivo,'cassino/animacoes/'+arquivo];
+ let tentativa=0;
+ img.onerror=()=>{
+  tentativa++;
+  if(tentativa<caminhos.length){
+   img.src=caminhos[tentativa]+(temporaria?'?replay='+Date.now():'');
+  }else{
+   img.onerror=null;
+   img.style.display='none';
+   console.warn('GIF do mascote não encontrado:',arquivo,'— confira o nome e a pasta no GitHub');
+  }
+ };
+ img.onload=()=>{img.style.display='block';};
+ img.src=caminhos[0]+(temporaria?'?replay='+Date.now():'');
  figura.replaceChildren(img);
  mascoteAnimacaoAtiva=temporaria;
  if(temporaria){
@@ -1404,7 +1417,7 @@ function atualizarInterfaceMascote(){
  if(!mascoteAnimacaoAtiva){
   const img=figura.querySelector('img');
   const alvo=mascoteGifs[estadoGif];
-  if(!img||!img.getAttribute('src')?.startsWith(alvo))mascoteGif(estadoGif);
+  if(!img||!img.getAttribute('src')?.split('?')[0].endsWith('/'+alvo)&&!img.getAttribute('src')?.split('?')[0].endsWith(alvo))mascoteGif(estadoGif);
  }
  $('mascote-balao-mensagem').textContent=problemasMascote.length
   ? problemasMascote[Math.floor(Date.now()/4000)%problemasMascote.length]
