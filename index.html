@@ -1355,7 +1355,12 @@ $('cinema-sincronizar').onclick=async()=>{await cinemaBuscar();if(cinemaEstado)c
 /* Juntos: usa o cliente Supabase existente e RPC transacional no banco. */
 let mascoteDados=null,mascoteCanal=null,mascoteHistoriaId=null,mascoteVersao=0,mascoteOcupado=false;
 const mascoteLimitar=v=>Math.max(0,Math.min(100,Number(v)||0));
-function mascoteBotoes(habilitar){document.querySelectorAll('[data-mascote-acao]').forEach(b=>b.disabled=!habilitar);}
+function mascoteBotoes(habilitar){
+ const dormindo=mascoteDados?.estado==='dormindo';
+ document.querySelectorAll('[data-mascote-acao]').forEach(b=>{
+  b.disabled=!habilitar||(dormindo&&b.dataset.mascoteAcao!=='dormir');
+ });
+}
 function mascoteMensagem(t){$('mascote-status').textContent=t||'';}
 const mascoteGifs={triste:'triste.gif',parado:'coelho.gif',alimentar:'comendo.gif',dormir:'sono.gif',banho:'banho.gif',carinho:'carinho.gif',brincar:'brincadeira.gif'};
 let mascoteAnimacaoTimer=null,mascoteAnimacaoAtiva=false;
@@ -1413,16 +1418,17 @@ function atualizarInterfaceMascote(){
  if(d.sono>50)problemasMascote.push('🌙 Estou com soninho! Preciso dormir! 😴');
  if(d.energia<50)problemasMascote.push('⚡ Estou sem energia! Preciso descansar! 🥺');
  if(d.felicidade<50)problemasMascote.push('💗 Estou tristinho! Me dê carinho! 💕');
- const estadoGif=problemasMascote.length?'triste':dormindo?'dormir':'parado';
+ const estadoGif=dormindo?'dormir':problemasMascote.length?'triste':'parado';
  if(!mascoteAnimacaoAtiva){
   const img=figura.querySelector('img');
   const alvo=mascoteGifs[estadoGif];
   if(!img||!img.getAttribute('src')?.split('?')[0].endsWith('/'+alvo)&&!img.getAttribute('src')?.split('?')[0].endsWith(alvo))mascoteGif(estadoGif);
  }
- $('mascote-balao-mensagem').textContent=problemasMascote.length
+ $('mascote-balao-mensagem').textContent=dormindo?'Zzz... Que soninho bom! 😴':problemasMascote.length
   ? problemasMascote[Math.floor(Date.now()/4000)%problemasMascote.length]
-  : dormindo?'Zzz... Que soninho bom! 😴':'Amo estar com vocês! 💕';
+  : 'Amo estar com vocês! 💕';
  $('btn-mascote-dormir').textContent=dormindo?'☀️ Acordar · grátis':'😴 Dormir · grátis';
+ mascoteBotoes(!mascoteOcupado);
 }
 function mascoteDesligar(){
  ++mascoteVersao;
@@ -1460,6 +1466,7 @@ async function mascoteConectarHistoria(){
 }
 async function mascoteExecutar(acao){
  if(mascoteOcupado||!mascoteDados||!historiaAtual||mascoteHistoriaId!==historiaAtual.historia_id)return;
+ if(mascoteDados.estado==='dormindo'&&acao!=='dormir'){mascoteMensagem('O coelhinho está dormindo. Acorde antes de cuidar dele. 😴');return;}
  const id=mascoteHistoriaId,versao=mascoteVersao;
  mascoteOcupado=true;mascoteBotoes(false);mascoteMensagem('Cuidando do Juntos... 💕');
  try{
@@ -1467,7 +1474,10 @@ async function mascoteExecutar(acao){
   if(error)throw error;
   if(versao!==mascoteVersao||mascoteHistoriaId!==id)return;
   mascoteDados=data;await nhAtualizarSaldo();atualizarInterfaceMascote();
-  mascoteGif(acao==='dormir'?(data.estado==='dormindo'?'dormir':'parado'):acao,acao!=='dormir');
+  if(acao==='dormir'){
+   // Ao dormir, GIF persistente; ao acordar, recalcular status antes de escolher GIF.
+   mascoteGif(data.estado==='dormindo'?'dormir':(mascoteNecessidadesAtuais(data).fome>50||mascoteNecessidadesAtuais(data).sono>50||mascoteNecessidadesAtuais(data).energia<50||mascoteNecessidadesAtuais(data).felicidade<50?'triste':'parado'));
+  }else{mascoteGif(acao,true);}
   mascoteMensagem(acao==='dormir'?'Tudo certo! 😴':'Prontinho! O Juntos está feliz 💗');
  }catch(e){if(versao===mascoteVersao)mascoteMensagem('Não foi possível: '+e.message);}
  finally{if(versao===mascoteVersao){mascoteOcupado=false;mascoteBotoes(!!mascoteDados);}}
