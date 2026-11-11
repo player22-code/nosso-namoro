@@ -1923,6 +1923,41 @@ timeout = setTimeout(function () {
 })();
 </script>
 
+
+<section id="cassino-amor" class="cassino-modal" aria-labelledby="cassino-titulo" role="dialog" aria-modal="true" hidden>
+<button type="button" id="cassino-fechar" class="cassino-fechar" aria-label="Fechar cassino">×</button>
+<div class="cassino-conteudo">
+  <h2 id="cassino-titulo">🐰 Cassino do Amor</h2>
+  <p>Gire as roletas com as moedas virtuais do coelhinho! 💗</p>
+  <div class="cassino-cena">
+    <img id="cassino-mascote" class="cassino-mascote" src="cassino/animacoes/coelho_idle.gif" alt="Coelhinho branco com óculos dourados">
+    <div class="cassino-area-efeito">
+      <div class="cassino-tela">
+        <div class="cassino-grade" id="cassino-grade" aria-label="Roletas com três linhas e cinco colunas"></div>
+      </div>
+      <img id="cassino-efeito" class="cassino-efeito" alt="" hidden>
+    </div>
+    <div class="cassino-painel">
+      <span id="cassino-saldo" class="cassino-saldo">🪙 Saldo: --</span>
+      <label for="cassino-aposta">Aposta:</label>
+      <select id="cassino-aposta" aria-label="Quantidade de moedas para apostar">
+        <option value="1">1 moeda</option>
+        <option value="2">2 moedas</option>
+        <option value="3">3 moedas</option>
+      </select>
+      <button type="button" class="cassino-girar" id="cassino-girar">🎰 GIRAR</button>
+    </div>
+    <p class="cassino-resultado" id="cassino-resultado" role="status" aria-live="polite">Pronto para jogar? 💕</p>
+    <p id="cassino-limite" style="font-size:13px">Até 50 giros por casal a cada 24 horas.</p>
+    <div class="cassino-controles">
+      <button type="button" id="cassino-som">🔊 Som ligado</button>
+      <button type="button" id="cassino-musica">🎵 Música desligada</button>
+      <button type="button" id="cassino-atualizar">↻ Atualizar saldo</button>
+    </div>
+  </div>
+  <p class="cassino-nota">Três linhas horizontais premiam 3, 4 ou 5 símbolos iguais da esquerda para a direita. Prêmios: 3×, 7× ou 15× a aposta por linha. Apenas moedas gratuitas e recreativas: sem dinheiro, saques ou prêmios reais. Compartilhe o saldo com o mascote Juntos.</p>
+</div>
+</section>
 <script id="cassino-script">
 (() => {
  'use strict';
@@ -2076,38 +2111,4 @@ timeout = setTimeout(function () {
  setInterval(()=>{if(!root.hidden && !ocupado)saldoAtual()},3000);
 })();
 </script>
-<section id="cassino-amor" class="cassino-modal" aria-labelledby="cassino-titulo" role="dialog" aria-modal="true" hidden>
-<button type="button" id="cassino-fechar" class="cassino-fechar" aria-label="Fechar cassino">×</button>
-<div class="cassino-conteudo">
-  <h2 id="cassino-titulo">🐰 Cassino do Amor</h2>
-  <p>Gire as roletas com as moedas virtuais do coelhinho! 💗</p>
-  <div class="cassino-cena">
-    <img id="cassino-mascote" class="cassino-mascote" src="cassino/animacoes/coelho_idle.gif" alt="Coelhinho branco com óculos dourados">
-    <div class="cassino-area-efeito">
-      <div class="cassino-tela">
-        <div class="cassino-grade" id="cassino-grade" aria-label="Roletas com três linhas e cinco colunas"></div>
-      </div>
-      <img id="cassino-efeito" class="cassino-efeito" alt="" hidden>
-    </div>
-    <div class="cassino-painel">
-      <span id="cassino-saldo" class="cassino-saldo">🪙 Saldo: --</span>
-      <label for="cassino-aposta">Aposta:</label>
-      <select id="cassino-aposta" aria-label="Quantidade de moedas para apostar">
-        <option value="1">1 moeda</option>
-        <option value="2">2 moedas</option>
-        <option value="3">3 moedas</option>
-      </select>
-      <button type="button" class="cassino-girar" id="cassino-girar">🎰 GIRAR</button>
-    </div>
-    <p class="cassino-resultado" id="cassino-resultado" role="status" aria-live="polite">Pronto para jogar? 💕</p>
-    <p id="cassino-limite" style="font-size:13px">Até 50 giros por casal a cada 24 horas.</p>
-    <div class="cassino-controles">
-      <button type="button" id="cassino-som">🔊 Som ligado</button>
-      <button type="button" id="cassino-musica">🎵 Música desligada</button>
-      <button type="button" id="cassino-atualizar">↻ Atualizar saldo</button>
-    </div>
-  </div>
-  <p class="cassino-nota">Três linhas horizontais premiam 3, 4 ou 5 símbolos iguais da esquerda para a direita. Prêmios: 3×, 7× ou 15× a aposta por linha. Apenas moedas gratuitas e recreativas: sem dinheiro, saques ou prêmios reais. Compartilhe o saldo com o mascote Juntos.</p>
-</div>
-</section>
 </body></html>
