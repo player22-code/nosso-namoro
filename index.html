@@ -431,6 +431,8 @@ body.tema-escuro #mascote-cenario.nh-noite{background-image:url("imagens/quarto_
 @media(max-width:650px){#mascote-cenario{min-height:315px!important;aspect-ratio:1/1!important}#mascote-figura{bottom:7%!important;width:57%!important}}
 
 
+#aba-btn-mensagem[hidden]{display:none!important}
+#abas-nav:has(#aba-btn-mensagem[hidden]){grid-template-columns:repeat(4,minmax(0,1fr))}
 /* Seletor de modo Solo/Casal */
 #modo-seletor{margin:14px auto 20px;padding:16px;border:2px solid #f3bfd7;border-radius:20px;background:#fff8fc;text-align:center}
 #modo-seletor .modo-botoes{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
@@ -526,7 +528,7 @@ body.cassino-aberto{overflow:hidden!important}
 </div>
 <div id="login-painel" hidden><h2>Bem-vindo ao Nossa História ❤️</h2><p class="subtitulo">Entre com sua conta Google para continuar.</p><button id="login-google" class="primary" type="button">Continuar com Google</button><p id="mensagem-login" role="status"></p></div>
 <div id="barra-conta"><span id="dados-conta"></span><button id="sair-conta" class="secondary" type="button">Sair da conta</button></div>
-<header><div id="personagem-com-recado"><img id="animacao-cabecalho" class="coracao" src="danca.png" alt="Animação do casal" role="button" tabindex="0" aria-label="Reproduzir animação de beijo"><div id="recado-personagem"><p>Não carregou direitinho? 💗</p><button id="recarregar-personagem" type="button" onclick="window.location.reload()" aria-label="Recarregar a página">↻ Atualizar</button></div></div><h1 id="titulo-site">Nossa História</h1><p class="subtitulo">Cada história merece um lugar especial.</p></header>
+<header><div id="personagem-com-recado"><img id="animacao-cabecalho" class="coracao" src="danca.png" alt="Animação do casal" role="button" tabindex="0" aria-label="Reproduzir animação de beijo"><div id="recado-personagem"><p>Não carregou direitinho? 💗</p><button id="recarregar-personagem" type="button" onclick="window.location.reload()" aria-label="Recarregar a página">↻ Atualizar</button></div></div><h1 id="titulo-site" title="">Nossa História</h1><p class="subtitulo">Cada história merece um lugar especial.</p></header>
 <main id="conteudo-privado"><p id="aviso-global" role="status"></p>
 <section id="modo-seletor" hidden aria-label="Escolher modo de uso">
  <h2>Como você quer usar o Nosso Namoro?</h2>
@@ -639,7 +641,7 @@ body.cassino-aberto{overflow:hidden!important}
  </section>
 </div>
 <div class="aba-painel" id="aba-mensagem" role="tabpanel" aria-labelledby="aba-btn-mensagem" hidden>
-<section class="cartao-mensagem"><h2>Uma mensagem para você 💌</h2><p class="mensagem">Quero continuar criando lembranças, compartilhando sorrisos e vivendo momentos ao seu lado. ❤️</p></section>
+<section class="cartao-mensagem"><h2>Uma mensagem para você 💌</h2><p class="mensagem" id="mensagem-romantica-dia">Carregando a mensagem de hoje... 💗</p><p class="muted" id="mensagem-romantica-aviso" style="text-align:center">💌 Todos os dias, uma nova mensagem carinhosa para vocês!</p></section>
 <section id="mensagem-chat"><h2>Conversar agora 💬</h2><p class="muted">Abra o chat do casal para trocar mensagens em tempo real ou ligar para o seu amor.</p><div class="actions"><button id="aba-abrir-chat" class="primary" type="button">💬 Abrir / fechar Nosso Chat</button></div></section>
 </div>
 
@@ -702,19 +704,51 @@ const db=window.supabase?.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);
 let usuario=null, perfil=null, historias=[], historiaAtual=null, fotosUrls=[];
 let modoAtual=null, soloStoryId=null, modoTrocando=false;
+let nhSoloMensagemRevelada=false;
 function aviso(t){$('aviso-global').textContent=t||''}
 function erro(e){aviso(e?.message||String(e));}
 async function rpc(nome,args={}){const {data,error}=await db.rpc(nome,args);if(error)throw error;return data;}
+// Mensagem do dia: mesma frase para os dois integrantes da mesma história e dia (horário de Brasília).
+let nhMensagemUltimaChave='';
+async function nhAtualizarMensagemDoDia(){
+ const alvo=$('mensagem-romantica-dia');if(!alvo||!historiaAtual?.historia_id)return;
+ if(modoAtual==='solo'){alvo.textContent='Você merece carinho, leveza e um dia cheio de coisas boas. 💗';return;}
+ const dataHoje=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ const chave=historiaAtual.historia_id+'|'+dataHoje;
+ if(chave===nhMensagemUltimaChave)return;
+ nhMensagemUltimaChave=chave;
+ try{
+  const {data,error}=await db.from('nh_mensagens_romanticas').select('id,texto').order('id',{ascending:true}).limit(500);
+  if(error)throw error;
+  if(!data?.length)throw new Error('Nenhuma mensagem cadastrada.');
+  // Escolha determinística: todos do mesmo casal veem a mesma frase durante o dia.
+  let h=2166136261;for(const c of chave){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}
+  const pos=(h>>>0)%data.length;
+  if(historiaAtual?.historia_id===chave.split('|')[0])alvo.textContent=data[pos].texto;
+ }catch(e){nhMensagemUltimaChave='';alvo.textContent='Hoje é mais um dia especial para cuidar do nosso amor. ❤️';console.warn('Mensagem do dia:',e.message);}
+}
+(function(){
+ const titulo=$('titulo-site');let cliques=0,ultimo=0;
+ titulo.addEventListener('click',()=>{
+  if(modoAtual!=='solo')return;
+  const agora=Date.now();cliques=(agora-ultimo>2500)?1:cliques+1;ultimo=agora;
+  if(cliques>=5){cliques=0;nhSoloMensagemRevelada=!nhSoloMensagemRevelada;atualizarInterfaceModo();
+   if(!nhSoloMensagemRevelada)$('aba-btn-inicio')?.click();
+   else $('aba-btn-mensagem')?.click();
+  }
+ });
+ setInterval(()=>{if(usuario&&historiaAtual&&modoAtual==='casal')nhAtualizarMensagemDoDia().catch(console.warn)},60000);
+})();
 function botao(id,fn){$(id).addEventListener('click',async()=>{const b=$(id);b.disabled=true;try{await fn()}catch(e){erro(e)}finally{b.disabled=false}})}
 function elemento(tag,text,classe){const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(classe)el.className=classe;return el;}
 function limpar(el){el.replaceChildren()}
 function adicionarMeses(data,n){const d=new Date(data),dia=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+n);d.setDate(Math.min(dia,new Date(d.getFullYear(),d.getMonth()+1,0).getDate()));return d;}
 function atualizarContador(){const campos=['anos','meses','dias','horas','minutos','segundos'];if(!historiaAtual?.data_inicio){campos.forEach(k=>$(k).textContent='00');return;}const inicio=new Date(historiaAtual.data_inicio),agora=new Date();if(isNaN(inicio)||inicio>agora){campos.forEach(k=>$(k).textContent='00');return;}let anos=agora.getFullYear()-inicio.getFullYear(),marco=adicionarMeses(inicio,anos*12);if(marco>agora){anos--;marco=adicionarMeses(inicio,anos*12);}let meses=0;while(adicionarMeses(marco,1)<=agora){marco=adicionarMeses(marco,1);meses++;}let r=agora-marco;const dias=Math.floor(r/86400000);r%=86400000;const horas=Math.floor(r/3600000);r%=3600000;const minutos=Math.floor(r/60000);const segundos=Math.floor((r%60000)/1000);[anos,meses,dias,horas,minutos,segundos].forEach((v,i)=>$(campos[i]).textContent=String(v).padStart(2,'0'));}
 setInterval(atualizarContador,1000);
-function atualizarTitulo(){if(!historiaAtual)return;const solo=modoAtual==='solo';const nome=solo?'Meu Espaço Solo':`História de ${historiaAtual.meu_nome} + ${historiaAtual.parceiro_nome}`;$('titulo-historia').textContent=nome;$('titulo-site').textContent=nome;const data=!solo&&historiaAtual.data_inicio?new Date(historiaAtual.data_inicio):null;$('inicio-status').textContent=solo?'Seu espaço individual 💗':data?'Desde '+data.toLocaleString('pt-BR')+' ❤️':'Aguardando a data de início ❤️';$('data-inicio').value=data?new Date(data.getTime()-data.getTimezoneOffset()*60000).toISOString().slice(0,16):'';const sec=$('contador')?.closest('section');if(sec)sec.hidden=solo;const cinema=$('nosso-cineminha');if(cinema)cinema.hidden=solo;const mascotTitle=$('mascote-nome-titulo');if(mascotTitle)mascotTitle.textContent=solo?'Meu coelhinho':'Juntos';const mascotHeading=$('mascote-titulo');if(mascotHeading)mascotHeading.innerHTML=solo?'🐰 Meu mascote: <span id="mascote-nome-titulo">Meu coelhinho</span> 💗':'🐰 Nosso mascote: <span id="mascote-nome-titulo">Juntos</span> 💕';const desc=$('mascote-juntos')?.querySelector('.muted');if(desc)desc.textContent=solo?'Um coelhinho só seu para cuidar e evoluir!':'Um coelhinho para vocês cuidarem juntos, em tempo real!';atualizarContador();}
-function atualizarInterfaceModo(){const painel=$('modo-seletor');if(!painel)return; painel.hidden=!usuario; $('modo-btn-solo').classList.toggle('ativo',modoAtual==='solo');$('modo-btn-casal').classList.toggle('ativo',modoAtual==='casal');$('secao-historias').hidden=modoAtual!=='casal';const casal=modoAtual==='casal';['aba-btn-galeria','aba-btn-mensagem','aba-btn-conexao'].forEach(id=>{const b=$(id);if(b)b.hidden=!casal;});['aba-galeria','aba-mensagem','aba-conexao'].forEach(id=>{const e=$(id);if(e&& !casal)e.hidden=true;});const chat=$('abrir-chat');if(chat&&!casal)chat.hidden=true;const quizzes=$('quiz-amor'),compat=$('compat-casal');if(quizzes)quizzes.hidden=!casal;if(compat)compat.hidden=!casal;const plans=$('planos-casal');if(plans)plans.hidden=!casal;const cinema=$('nosso-cineminha');if(cinema)cinema.hidden=!casal;}
-async function carregarModoUsuario(){const {data,error}=await db.from('nh_modos').select('modo,solo_story_id').eq('user_id',usuario.id).maybeSingle();if(error)throw error;modoAtual=data?.modo||null;soloStoryId=data?.solo_story_id||null;atualizarInterfaceModo();}
-async function selecionarModo(modo){if(modoTrocando||!usuario)return;modoTrocando=true;$('modo-btn-solo').disabled=$('modo-btn-casal').disabled=true;$('modo-status').textContent='Preparando seu espaço...';try{const resultado=await rpc('nh_escolher_modo',{p_modo:modo});modoAtual=resultado?.modo||modo;soloStoryId=resultado?.solo_story_id||soloStoryId;atualizarInterfaceModo();$('aba-btn-inicio')?.click();if(modo==='solo'){historias=historias||[];await selecionarHistoriaSolo(soloStoryId);}else{await carregarHistorias();if(!historias.length){historiaAtual=null;mascoteDesligar();chatDesligar();vozDesligar();cinemaDesligar();$('historia-painel').hidden=true;$('modo-status').textContent='Modo Casal selecionado. Conecte-se com alguém para abrir uma história compartilhada.';}else $('modo-status').textContent='Modo Casal ativo 💗';}}catch(e){$('modo-status').textContent='Não foi possível trocar de modo: '+(e?.message||e);throw e;}finally{modoTrocando=false;$('modo-btn-solo').disabled=$('modo-btn-casal').disabled=false;}}
+function atualizarTitulo(){if(!historiaAtual)return;const solo=modoAtual==='solo';const nome=solo?'Meu Espaço Solo':`História de ${historiaAtual.meu_nome} + ${historiaAtual.parceiro_nome}`;$('titulo-historia').textContent=nome;$('titulo-site').textContent=nome;const data=!solo&&historiaAtual.data_inicio?new Date(historiaAtual.data_inicio):null;$('inicio-status').textContent=solo?'Seu espaço individual 💗':data?'Desde '+data.toLocaleString('pt-BR')+' ❤️':'Aguardando a data de início ❤️';$('data-inicio').value=data?new Date(data.getTime()-data.getTimezoneOffset()*60000).toISOString().slice(0,16):'';const sec=$('contador')?.closest('section');if(sec)sec.hidden=solo;const cinema=$('nosso-cineminha');if(cinema)cinema.hidden=solo;const mascotTitle=$('mascote-nome-titulo');if(mascotTitle)mascotTitle.textContent=solo?'Meu coelhinho':'Juntos';const mascotHeading=$('mascote-titulo');if(mascotHeading)mascotHeading.innerHTML=solo?'🐰 Meu mascote: <span id="mascote-nome-titulo">Meu coelhinho</span> 💗':'🐰 Nosso mascote: <span id="mascote-nome-titulo">Juntos</span> 💕';const desc=$('mascote-juntos')?.querySelector('.muted');if(desc)desc.textContent=solo?'Um coelhinho só seu para cuidar e evoluir!':'Um coelhinho para vocês cuidarem juntos, em tempo real!';atualizarContador();nhMensagemUltimaChave='';nhAtualizarMensagemDoDia().catch(console.warn);}
+function atualizarInterfaceModo(){const painel=$('modo-seletor');if(!painel)return; painel.hidden=!usuario; $('modo-btn-solo').classList.toggle('ativo',modoAtual==='solo');$('modo-btn-casal').classList.toggle('ativo',modoAtual==='casal');$('secao-historias').hidden=modoAtual!=='casal';const casal=modoAtual==='casal';['aba-btn-galeria','aba-btn-conexao'].forEach(id=>{const b=$(id);if(b)b.hidden=!casal;});const mensagemTab=$('aba-btn-mensagem');if(mensagemTab)mensagemTab.hidden=!(casal||nhSoloMensagemRevelada);['aba-galeria','aba-conexao'].forEach(id=>{const e=$(id);if(e&&!casal)e.hidden=true;});if(!casal&&!nhSoloMensagemRevelada){const e=$('aba-mensagem');if(e)e.hidden=true;}const chat=$('abrir-chat');if(chat&&!casal)chat.hidden=true;const quizzes=$('quiz-amor'),compat=$('compat-casal');if(quizzes)quizzes.hidden=!casal;if(compat)compat.hidden=!casal;const plans=$('planos-casal');if(plans)plans.hidden=!casal;const cinema=$('nosso-cineminha');if(cinema)cinema.hidden=!casal;}
+async function carregarModoUsuario(){const {data,error}=await db.from('nh_modos').select('modo,solo_story_id').eq('user_id',usuario.id).maybeSingle();if(error)throw error;modoAtual=data?.modo||null;nhSoloMensagemRevelada=false;soloStoryId=data?.solo_story_id||null;atualizarInterfaceModo();}
+async function selecionarModo(modo){if(modoTrocando||!usuario)return;modoTrocando=true;$('modo-btn-solo').disabled=$('modo-btn-casal').disabled=true;$('modo-status').textContent='Preparando seu espaço...';try{const resultado=await rpc('nh_escolher_modo',{p_modo:modo});modoAtual=resultado?.modo||modo;nhSoloMensagemRevelada=false;soloStoryId=resultado?.solo_story_id||soloStoryId;atualizarInterfaceModo();$('aba-btn-inicio')?.click();if(modo==='solo'){historias=historias||[];await selecionarHistoriaSolo(soloStoryId);}else{await carregarHistorias();if(!historias.length){historiaAtual=null;mascoteDesligar();chatDesligar();vozDesligar();cinemaDesligar();$('historia-painel').hidden=true;$('modo-status').textContent='Modo Casal selecionado. Conecte-se com alguém para abrir uma história compartilhada.';}else $('modo-status').textContent='Modo Casal ativo 💗';}}catch(e){$('modo-status').textContent='Não foi possível trocar de modo: '+(e?.message||e);throw e;}finally{modoTrocando=false;$('modo-btn-solo').disabled=$('modo-btn-casal').disabled=false;}}
 async function selecionarHistoriaSolo(id){if(!id)throw new Error('O Supabase não retornou o ID da sua história Solo.');historiaAtual={historia_id:id,meu_nome:perfil?.username||'Você',parceiro_nome:'Solo',data_inicio:null,modo:'solo'};$('historia-painel').hidden=false;atualizarTitulo();mascoteDesligar();chatDesligar();vozDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;await mascoteConectarHistoria();$('modo-status').textContent='Modo Solo ativo. Seu mascote e suas moedas são individuais. 🌷';}
 $('modo-btn-solo').addEventListener('click',()=>selecionarModo('solo').catch(erro));
 $('modo-btn-casal').addEventListener('click',()=>selecionarModo('casal').catch(erro));
@@ -1340,7 +1374,7 @@ $('cinema-sincronizar').onclick=async()=>{await cinemaBuscar();if(cinemaEstado)c
  const nav=$('abas-nav'),painel=$('historia-painel');
  function mostrarAba(nome,opcoes){
   opcoes=opcoes||{};
-  if(!ABAS.includes(nome))nome='inicio';
+  if(!ABAS.includes(nome))nome='inicio';if(nome==='mensagem'&&modoAtual==='solo'&&!nhSoloMensagemRevelada)nome='inicio';if(modoAtual==='solo'&&['galeria','conexao'].includes(nome))nome='inicio';
   ABAS.forEach(a=>{
    const ativa=a===nome,b=$('aba-btn-'+a);
    b.classList.toggle('ativa',ativa);
@@ -1365,13 +1399,13 @@ $('cinema-sincronizar').onclick=async()=>{await cinemaBuscar();if(cinemaEstado)c
    else if(e.key==='ArrowLeft')j=(i+ABAS.length-1)%ABAS.length;
    else if(e.key==='Home')j=0;
    else if(e.key==='End')j=ABAS.length-1;
-   if(j!==null){e.preventDefault();mostrarAba(ABAS[j],{foco:true,rolar:true});}
+   if(j!==null){e.preventDefault();const destino=ABAS[j];if(!$('aba-btn-'+destino).hidden)mostrarAba(destino,{foco:true,rolar:true});}
   });
  });
  window.addEventListener('scroll',atualizarBarraFixa,{passive:true});
  window.addEventListener('resize',atualizarBarraFixa);
  /* Atalhos que usam funções e elementos já existentes. */
- $('aba-abrir-chat').addEventListener('click',()=>{$('abrir-chat').click()});
+ $('aba-abrir-chat').addEventListener('click',()=>{if(modoAtual==='casal')$('abrir-chat').click()});
  $('aba-abrir-perfil').addEventListener('click',()=>{abrirConfiguracoes();$('config-secao-perfil').scrollIntoView({block:'start'})});
  $('aba-abrir-conectar').addEventListener('click',()=>{abrirConfiguracoes();$('config-secao-conectar').scrollIntoView({block:'start'})});
  let salva='inicio';try{salva=sessionStorage.getItem('aba-ativa')||'inicio'}catch(e){}
@@ -1999,7 +2033,7 @@ timeout = setTimeout(function () {
       <button type="button" class="cassino-girar" id="cassino-girar">🎰 GIRAR</button>
     </div>
     <p class="cassino-resultado" id="cassino-resultado" role="status" aria-live="polite">Pronto para jogar? 💕</p>
-    <p id="cassino-limite" style="font-size:13px">Até 50 giros por casal a cada 24 horas.</p>
+    <p id="cassino-limite" style="font-size:13px">Sem limite diário de giros. Sujeito à disponibilidade de moedas.</p>
     <div class="cassino-controles">
       <button type="button" id="cassino-som">🔊 Som ligado</button>
       <button type="button" id="cassino-musica">🎵 Música desligada</button>
@@ -2116,7 +2150,7 @@ timeout = setTimeout(function () {
      if(historiaAtual?.historia_id!==historiaId)return;
      mostrarGrade(data.simbolos);tocar('parar');
      window.nhSaldoIndividual=Number(data.saldo);$c('cassino-saldo').textContent='🪙 Saldo: '+data.saldo;
-     $c('cassino-limite').textContent='Restam '+data.giros_restantes+' giros para você nas próximas 24 horas (limite móvel).';
+      $c('cassino-limite').textContent='Apostas sem limite diário de giros (após atualizar a função no Supabase).';
      if(data.premio>0){
        const grande=data.premio>=aposta*7;
        gifMascote(grande?'grande_vitoria':'vitoria');
@@ -2187,7 +2221,7 @@ async function nhAtualizarColeta(){
 </style>
 <section id="girininho-modal" hidden role="dialog" aria-modal="true" aria-labelledby="girininho-title">
 <button type="button" id="girininho-close" class="gi-close" aria-label="Fechar Girininho">×</button>
-<div class="gi-wrap"><h2 id="girininho-title">✨ GIRININHO 777 ✨</h2><img class="gi-hero" id="girininho-hero" src="cucoparado.gif" alt="Mascote Girininho"><div class="gi-board"><div id="girininho-grid" class="gi-grid" aria-label="Roletas 3 por 5"></div><div class="gi-actions"><span id="girininho-balance" class="gi-label">🪙 Saldo: --</span><label class="gi-label">Aposta <select id="girininho-bet"><option value="1">1 moeda</option><option value="2">2 moedas</option><option value="3">3 moedas</option></select></label><button type="button" class="gi-spin" id="girininho-spin">🎰 GIRAR</button><button type="button" id="girininho-mute">🔊 Som</button></div><div id="girininho-message" class="gi-msg" role="status" aria-live="polite">Cassino secreto desbloqueado!</div><div id="girininho-limit"></div></div><p class="gi-note">Somente moedas virtuais, sem valor real. Este cassino utiliza a mesma carteira, as mesmas probabilidades e o mesmo limite de giros do Cassino do Amor.</p></div>
+<div class="gi-wrap"><h2 id="girininho-title">✨ GIRININHO 777 ✨</h2><img class="gi-hero" id="girininho-hero" src="cucoparado.gif" alt="Mascote Girininho"><div class="gi-board"><div id="girininho-grid" class="gi-grid" aria-label="Roletas 3 por 5"></div><div class="gi-actions"><span id="girininho-balance" class="gi-label">🪙 Saldo: --</span><label class="gi-label">Aposta <select id="girininho-bet"><option value="1">1 moeda</option><option value="2">2 moedas</option><option value="3">3 moedas</option></select></label><button type="button" class="gi-spin" id="girininho-spin">🎰 GIRAR</button><button type="button" id="girininho-mute">🔊 Som</button></div><div id="girininho-message" class="gi-msg" role="status" aria-live="polite">Cassino secreto desbloqueado!</div><div id="girininho-limit"></div></div><p class="gi-note">Somente moedas virtuais, sem valor real. Este cassino utiliza a mesma carteira, as mesmas probabilidades do Cassino do Amor, sem limite diário de giros.</p></div>
 </section>
 <script id="girininho-secret-script">
 (()=>{'use strict';
@@ -2218,7 +2252,7 @@ async function spin(){if(busy||modal.hidden)return;if(!validStory()||!validDb())
 // Mesma função segura do cassino principal: nunca calcular saldo ou prêmio no navegador.
 const result=await db.rpc('cassino_girar',{p_story_id:storyId,p_aposta:bet});if(result.error)throw result.error;
 await new Promise(resolve=>setTimeout(resolve,1300));if(!validStory()||historiaAtual.historia_id!==storyId){message.textContent='A história mudou. Atualize seu saldo.';return;}
-paint(result.data.simbolos);window.nhSaldoIndividual=Number(result.data.saldo);setBalance(result.data.saldo);$('girininho-limit').textContent='Giros restantes nas próximas 24h: '+result.data.giros_restantes;play('stop');
+paint(result.data.simbolos);window.nhSaldoIndividual=Number(result.data.saldo);setBalance(result.data.saldo);$('girininho-limit').textContent='Sem limite diário de giros (após atualizar o Supabase).';play('stop');
 if(result.data.premio>0){const big=result.data.premio>=bet*7;pose('feliz');play(big?'big':'win');message.textContent='🎉 Você ganhou '+result.data.premio+' moedas!'}else{pose('triste');play('lose');message.textContent='Sem prêmio desta vez.'}
 }catch(e){pose('parado');message.textContent='Não foi possível girar: '+e.message;}finally{clearInterval(spinTimer);grid.classList.remove('gi-spinning');busy=false;$('girininho-spin').disabled=false;}}
 $('girininho-close').addEventListener('click',close);$('girininho-spin').addEventListener('click',spin);$('girininho-mute').addEventListener('click',()=>{sound=!sound;$('girininho-mute').textContent=sound?'🔊 Som':'🔇 Mudo'});
