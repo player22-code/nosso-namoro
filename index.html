@@ -443,6 +443,38 @@ body.tema-escuro #modo-seletor{background:#30253e;border-color:#76547f;color:#f4
 body.tema-escuro #modo-seletor button{background:#49335e;color:#f4eaff;border-color:#805e91}
 body.tema-escuro #modo-seletor button.ativo{background:#a65391;border-color:#a65391}
 
+
+/* === NOSSA HISTÓRIA: 8 INTERFACES SELECIONÁVEIS === */
+#config-aparencia .nh-temas-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0}
+#config-aparencia .nh-tema-card{display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;min-height:94px;padding:12px 8px;border:2px solid #dcc6d1;border-radius:16px;background:#fff;color:#4d3543;cursor:pointer;font:inherit;transition:transform .15s,border-color .15s}
+#config-aparencia .nh-tema-card:hover{transform:translateY(-2px)}
+#config-aparencia .nh-tema-card[aria-pressed="true"]{border-color:#c13f80;outline:2px solid #c13f8055;outline-offset:2px}
+#config-aparencia .nh-tema-card .nh-tema-icone{font-size:26px}
+#config-aparencia .nh-tema-card .nh-tema-amostra{width:70%;height:9px;border-radius:20px;border:1px solid #9993}
+#config-aparencia .nh-tema-descricao{font-size:13px;opacity:.8}
+body[data-visual]{background:var(--nh-bg)!important;color:var(--nh-text)!important;font-family:var(--nh-font)!important;transition:background .2s,color .2s}
+body[data-visual] section:not(#config-aparencia),body[data-visual] #login-painel,body[data-visual] #conteudo-configuracoes{background:var(--nh-card)!important;color:var(--nh-text)!important;border-radius:var(--nh-radius)!important;border-color:var(--nh-border)!important}
+body[data-visual] h1,body[data-visual] h2,body[data-visual] h3{color:var(--nh-accent)!important}
+body[data-visual] .tempo,body[data-visual] .secondary,body[data-visual] .aba-btn,body[data-visual] .item,body[data-visual] .cartao-mensagem{background:var(--nh-soft)!important;color:var(--nh-text)!important;border-color:var(--nh-border)!important;border-radius:var(--nh-radius)!important}
+body[data-visual] .aba-btn.ativa,body[data-visual] button.primary{background:var(--nh-accent)!important;color:#fff!important;border-color:transparent!important}
+body[data-visual] #abas-nav{background:var(--nh-bg)!important}
+body[data-visual] .numero,body[data-visual] .tag{color:var(--nh-accent)!important}
+body[data-visual] input,body[data-visual] select,body[data-visual] textarea{background:var(--nh-card)!important;color:var(--nh-text)!important;border-color:var(--nh-border)!important}
+body[data-visual] .muted,body[data-visual] .subtitulo,body[data-visual] .legenda{color:var(--nh-text)!important;opacity:.75}
+body[data-visual="luxo"] section{box-shadow:0 8px 25px #0004!important}
+body[data-visual="lilas"] section{box-shadow:0 8px 28px #9264cc24!important}
+body[data-visual="diario"] section{border:1px dashed var(--nh-border)!important;box-shadow:3px 5px 0 #b7797019!important}
+body[data-visual="pixel"] button,body[data-visual="pixel"] section{border-radius:2px!important;box-shadow:3px 3px 0 #442b4924!important}
+body[data-visual="estrelas"]{background-image:radial-gradient(circle at 15% 20%,#ffffff30 1px,transparent 2px),radial-gradient(circle at 75% 60%,#ffffff25 1px,transparent 2px)!important;background-size:90px 95px,130px 145px!important}
+@media(min-width:550px){#config-aparencia .nh-temas-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+body[data-visual="kawaii"]{--nh-bg:#fff5f7;--nh-text:#51343d;--nh-accent:#b34467;--nh-card:#ffffff;--nh-soft:#fff0f4;--nh-border:#e8cbd5;--nh-radius:22px;--nh-font:Arial, sans-serif}
+body[data-visual="luxo"]{--nh-bg:#24121c;--nh-text:#fff0d4;--nh-accent:#dfac52;--nh-card:#38202b;--nh-soft:#4d2b35;--nh-border:#9a7146;--nh-radius:14px;--nh-font:Georgia, serif}
+body[data-visual="lilas"]{--nh-bg:#f4edff;--nh-text:#49325e;--nh-accent:#9264cc;--nh-card:#ffffff;--nh-soft:#e9ddfb;--nh-border:#d7c3ed;--nh-radius:24px;--nh-font:Arial, sans-serif}
+body[data-visual="coelho"]{--nh-bg:#fff3eb;--nh-text:#684650;--nh-accent:#ed8b99;--nh-card:#fffefa;--nh-soft:#ffdfdf;--nh-border:#edc7b5;--nh-radius:30px;--nh-font:Arial, sans-serif}
+body[data-visual="diario"]{--nh-bg:#f8f0df;--nh-text:#554638;--nh-accent:#b77970;--nh-card:#fffaf0;--nh-soft:#eee0c8;--nh-border:#d7bea6;--nh-radius:8px;--nh-font:Georgia, serif}
+body[data-visual="minimal"]{--nh-bg:#f7f8fa;--nh-text:#262d35;--nh-accent:#566b81;--nh-card:#ffffff;--nh-soft:#ebeff3;--nh-border:#dce2e9;--nh-radius:12px;--nh-font:Arial, sans-serif}
+body[data-visual="pixel"]{--nh-bg:#f9e9f1;--nh-text:#442b49;--nh-accent:#bf4e87;--nh-card:#fff9fd;--nh-soft:#f5cbe1;--nh-border:#a44c7d;--nh-radius:2px;--nh-font:monospace}
+body[data-visual="estrelas"]{--nh-bg:#101629;--nh-text:#f3eaff;--nh-accent:#a18aff;--nh-card:#1e2743;--nh-soft:#303959;--nh-border:#536188;--nh-radius:20px;--nh-font:Arial, sans-serif}
 </style>
 <style id="cassino-estilos">
 #cassino-amor{grid-column:1/-1;background:linear-gradient(145deg,#fff3fa,#ffe8f4);border:1px solid #f3cfe0;border-radius:25px;padding:20px 14px;text-align:center;overflow:hidden}
@@ -544,6 +576,7 @@ body.cassino-aberto{overflow:hidden!important}
 <button id="fechar-configuracoes" type="button" aria-label="Fechar configurações" title="Fechar">×</button>
 <h2 id="titulo-configuracoes">Configurações ⚙️</h2>
 <p class="muted">Altere seu nome, consulte seu código e gerencie a conexão do casal.</p>
+<section id="config-aparencia"><h2>🎨 Aparência do Site</h2><p class="nh-tema-descricao">Escolha seu estilo. A mudança vale só neste navegador, sem alterar as configurações de outras pessoas.</p><div class="nh-temas-grid" role="group" aria-label="Escolha o tema visual"><button class="nh-tema-card" type="button" data-escolher-visual="kawaii" aria-pressed="false"><span class="nh-tema-icone">🎀</span><span>Kawaii Rosa</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button><button class="nh-tema-card" type="button" data-escolher-visual="luxo" aria-pressed="false"><span class="nh-tema-icone">✨</span><span>Romance Luxuoso</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button><button class="nh-tema-card" type="button" data-escolher-visual="lilas" aria-pressed="false"><span class="nh-tema-icone">💜</span><span>Sonho Lilás</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button><button class="nh-tema-card" type="button" data-escolher-visual="coelho" aria-pressed="false"><span class="nh-tema-icone">🐰</span><span>Mundo do Coelhinho</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button><button class="nh-tema-card" type="button" data-escolher-visual="diario" aria-pressed="false"><span class="nh-tema-icone">📸</span><span>Diário de Memórias</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button><button class="nh-tema-card" type="button" data-escolher-visual="minimal" aria-pressed="false"><span class="nh-tema-icone">🤍</span><span>Moderno Minimalista</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button><button class="nh-tema-card" type="button" data-escolher-visual="pixel" aria-pressed="false"><span class="nh-tema-icone">🎮</span><span>Pixel Love</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button><button class="nh-tema-card" type="button" data-escolher-visual="estrelas" aria-pressed="false"><span class="nh-tema-icone">🌙</span><span>Céu Estrelado</span><span class="nh-tema-amostra" style="background:linear-gradient(90deg,#101629 50%,#a18aff 50%)"></span></button></div><p id="nh-tema-atual" role="status" class="muted"></p></section>
 <section id="config-secao-perfil"><h2>Meu perfil 💗</h2><div class="stack"><div><label for="nome-usuario">Seu nome</label><input id="nome-usuario" maxlength="40" placeholder="Como deseja ser chamado(a)?"></div><button id="salvar-nome" class="primary" type="button">Salvar nome</button><div><p class="muted">Seu código pessoal de conexão:</p><p id="codigo-conexao">Carregando...</p><button id="copiar-codigo" class="secondary" type="button">Copiar código</button></div></div></section>
 <section id="config-secao-conectar"><h2>Conectar com alguém 💌</h2><label for="codigo-outra-pessoa">Código da outra pessoa</label><input id="codigo-outra-pessoa" placeholder="Cole o código aqui"><div class="actions"><button id="enviar-pedido" class="primary" type="button">Enviar solicitação</button></div><h3>Solicitações pendentes</h3><div id="solicitacoes">Carregando...</div></section>
 </div>
@@ -2277,4 +2310,27 @@ window.abrirGirininhoSecreto=open;
 </script>
 
 
+<script>
+/* Seletor visual: somente interface; nenhuma chamada ao banco. */
+(function(){
+ const nomes={kawaii:'Kawaii Rosa',luxo:'Romance Luxuoso',lilas:'Sonho Lilás',coelho:'Mundo do Coelhinho',diario:'Diário de Memórias',minimal:'Moderno Minimalista',pixel:'Pixel Love',estrelas:'Céu Estrelado'};
+ const chave='nossa-historia-interface-v1';
+ function aplicar(tema){
+   if(!Object.prototype.hasOwnProperty.call(nomes,tema))tema='kawaii';
+   document.body.dataset.visual=tema;
+   /* Evita que as regras antigas do tema escuro sobreponham o tema escolhido. */
+   document.body.classList.remove('tema-escuro');
+   document.querySelectorAll('[data-escolher-visual]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.escolherVisual===tema)));
+   const status=document.getElementById('nh-tema-atual');
+   if(status)status.textContent='Interface selecionada: '+nomes[tema];
+   try{localStorage.setItem(chave,tema)}catch(e){}
+ }
+ document.querySelectorAll('[data-escolher-visual]').forEach(b=>b.addEventListener('click',()=>aplicar(b.dataset.escolherVisual)));
+ let salvo='kawaii';try{salvo=localStorage.getItem(chave)||'kawaii'}catch(e){}
+ aplicar(salvo);
+ /* Mantém o botão de lua/sol legado sem interferir na escolha das 8 interfaces. */
+ const botaoAntigo=document.getElementById('botao-tema');
+ if(botaoAntigo){botaoAntigo.hidden=true;botaoAntigo.style.display='none';}
+})();
+</script>
 </body></html>
