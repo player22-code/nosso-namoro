@@ -578,6 +578,54 @@ body.cassino-aberto{overflow:hidden!important}
 #cassino-amor .cassino-nota{max-width:640px;margin:9px auto!important;font-size:11px}
 @media(max-height:730px){#cassino-amor .cassino-mascote{height:130px!important;transform:scale(1.5)!important}#cassino-amor .cassino-conteudo{padding-top:48px}#cassino-amor .cassino-cena{padding-top:3px}#cassino-amor .cassino-painel{margin:5px auto!important}}
 </style>
+
+<style id="nh-vidro-fosco-legibilidade">
+/* Vidro fosco: blur maior e camada translúcida para leitura confortável. */
+:root{--vidro:rgba(255,249,253,.69);--vidro-borda:rgba(255,255,255,.82)}
+body.tema-escuro{--vidro:rgba(24,20,47,.73);--vidro-borda:rgba(235,223,255,.46)}
+section,body.tema-escuro section,#login-painel,#modo-seletor,
+#conteudo-configuracoes,#mascote-juntos,#quiz-amor,#cassino-amor,
+#planos-casal .cartao-plano{
+ background:var(--vidro)!important;
+ backdrop-filter:blur(38px) saturate(115%)!important;
+ -webkit-backdrop-filter:blur(38px) saturate(115%)!important;
+ box-shadow:0 15px 42px rgba(45,24,45,.16),inset 0 1px 1px rgba(255,255,255,.65)!important;
+}
+#abas-nav,body.tema-escuro #abas-nav{
+ background:rgba(255,248,253,.76)!important;
+ backdrop-filter:blur(38px) saturate(115%)!important;
+ -webkit-backdrop-filter:blur(38px) saturate(115%)!important;
+}
+body.tema-escuro #abas-nav{background:rgba(25,20,49,.78)!important}
+.tempo,.item,.mascote-medidor,.quiz-pergunta,.quiz-item,
+#galeria .item-foto,#mascote-moedas{
+ background:rgba(255,250,253,.65)!important;
+ backdrop-filter:blur(24px) saturate(110%)!important;
+ -webkit-backdrop-filter:blur(24px) saturate(110%)!important;
+}
+body.tema-escuro .tempo,body.tema-escuro .item,
+body.tema-escuro .mascote-medidor,body.tema-escuro .quiz-pergunta,
+body.tema-escuro .quiz-item,body.tema-escuro #galeria .item-foto,
+body.tema-escuro #mascote-moedas{background:rgba(34,28,64,.72)!important}
+#recado-personagem{background:rgba(255,249,253,.78)!important;
+ backdrop-filter:blur(26px)!important;-webkit-backdrop-filter:blur(26px)!important}
+body.tema-escuro #recado-personagem{background:rgba(32,25,58,.78)!important}
+.primary,.secondary,.aba-btn,#abrir-planos,#login-google,#sair-conta,
+#adicionar-foto,#abrir-chat,#botao-configuracoes,#botao-tema,
+#botao-musica,#mascote-acoes button,#mascote-premios-abrir,
+#mascote-coletar,#modo-seletor button,#cassino-abrir,
+.cassino-girar,#planos-casal .cartao-plano button,#modo-abrir-opcoes{
+ backdrop-filter:blur(28px) saturate(120%)!important;
+ -webkit-backdrop-filter:blur(28px) saturate(120%)!important;
+}
+@media(max-width:650px){
+ section,body.tema-escuro section,#login-painel,#modo-seletor,
+ #conteudo-configuracoes,#mascote-juntos,#quiz-amor,#cassino-amor{
+  backdrop-filter:blur(32px) saturate(115%)!important;
+  -webkit-backdrop-filter:blur(32px) saturate(115%)!important;
+ }
+}
+</style>
 </head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
