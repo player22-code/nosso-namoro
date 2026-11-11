@@ -435,7 +435,7 @@ body.tema-escuro #mascote-cenario.nh-noite{background-image:url("imagens/quarto_
 #cassino-amor{grid-column:1/-1;background:linear-gradient(145deg,#fff3fa,#ffe8f4);border:1px solid #f3cfe0;border-radius:25px;padding:20px 14px;text-align:center;overflow:hidden}
 #cassino-amor h2{color:#a92e68;text-align:center}
 #cassino-amor .cassino-cena{background:linear-gradient(#a72779aa,#7a2b81aa),url('cassino/maquina/fundo_cassino.png') center/cover;border-radius:24px;padding:16px 8px;color:white}
-#cassino-amor .cassino-mascote{width:min(320px,85%);height:260px;object-fit:contain;display:block;margin:-15px auto -26px;filter:drop-shadow(0 6px 7px #3b103a77)}
+#cassino-amor .cassino-mascote{width:min(320px,85%);height:260px;object-fit:contain;display:block;margin:12px auto 34px;transform:scale(2.35);transform-origin:center center;filter:drop-shadow(0 6px 7px #3b103a77);pointer-events:none;position:relative;z-index:1}
 #cassino-amor .cassino-tela{width:min(560px,100%);margin:10px auto;background:linear-gradient(135deg,#e7318e,#8e165a);padding:12px;border:5px solid #f5bf4c;border-radius:25px;box-shadow:0 9px 18px #4d123b66}
 #cassino-amor .cassino-grade{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;background:#fff6fb;padding:8px;border-radius:15px}
 #cassino-amor .cassino-celula{background:linear-gradient(#fff,#ffe3f0);aspect-ratio:1;display:grid;place-items:center;border-radius:9px;min-width:0}
@@ -455,6 +455,34 @@ body.tema-escuro #mascote-cenario.nh-noite{background-image:url("imagens/quarto_
 #cassino-amor .cassino-controles{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
 #cassino-amor .cassino-controles button{background:#fff;border:1px solid #dca5c1;border-radius:15px;padding:8px 13px;color:#a02d66;font-weight:700}
 @media(prefers-reduced-motion:reduce){#cassino-amor .cassino-grade.girando .cassino-celula img{animation:none}}
+</style>
+
+<style id="cassino-modal-estilos">
+/* Atalho compacto, visível apenas na aba Jogos */
+#cassino-abrir.cassino-abrir{position:relative;display:flex;align-items:center;gap:14px;width:min(100%,420px);margin:18px auto;padding:9px 18px 9px 9px;border:2px solid #f3c15c;border-radius:28px;background:linear-gradient(115deg,#fff4fb,#ffe5a8);box-shadow:0 7px 23px #a62e6c35;cursor:pointer;text-align:left;color:#8b255b;font-size:19px;font-weight:900;z-index:1}
+#cassino-abrir img{width:68px;height:68px;object-fit:contain;flex-shrink:0}
+#cassino-abrir small{display:block;font-size:13px;font-weight:600;margin-top:4px;color:#885b71}
+/* A janela é colocada fora das abas para não ser cortada por seus containers */
+#cassino-amor.cassino-modal{position:fixed!important;inset:0!important;z-index:2147483000!important;display:flex!important;flex-direction:column!important;width:100vw!important;height:100vh!important;height:100dvh!important;max-width:none!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;overflow:hidden!important;background:linear-gradient(160deg,#ffedf7,#f4d9f0)!important;box-sizing:border-box!important;overscroll-behavior:contain}
+#cassino-amor.cassino-modal[hidden]{display:none!important}
+body.cassino-aberto{overflow:hidden!important}
+#cassino-amor .cassino-conteudo{width:100%;height:100%;overflow-y:auto;overflow-x:hidden;box-sizing:border-box;padding:calc(env(safe-area-inset-top,0px) + 43px) 10px calc(env(safe-area-inset-bottom,0px) + 14px);scrollbar-width:thin}
+#cassino-amor .cassino-fechar{position:absolute;right:calc(env(safe-area-inset-right,0px) + 12px);top:calc(env(safe-area-inset-top,0px) + 8px);z-index:10;width:43px;height:43px;border-radius:50%;border:2px solid #f4bfd7;background:#fff;color:#a12a65;font-size:31px;line-height:1;box-shadow:0 3px 9px #77304a33;cursor:pointer}
+#cassino-amor h2{font-size:clamp(21px,5vw,32px);margin:0 auto 5px!important}
+#cassino-amor .cassino-conteudo>p{margin:4px auto 10px!important;font-size:clamp(12px,3vw,16px)}
+#cassino-amor .cassino-cena{max-width:740px;margin:0 auto;border-radius:22px;padding:8px 9px 12px;min-height:0}
+/* Aumenta o personagem sem desperdiçar altura nas telas pequenas */
+#cassino-amor .cassino-mascote{width:min(70vw,380px)!important;height:clamp(135px,26dvh,265px)!important;margin:0 auto -10px!important;transform:scale(1.6)!important;transform-origin:center center!important}
+#cassino-amor .cassino-tela{width:min(100%,590px);margin:0 auto!important;padding:clamp(4px,1.2vw,10px)!important;border-width:clamp(3px,1vw,5px)!important;border-radius:18px}
+#cassino-amor .cassino-grade{gap:clamp(2px,.8vw,6px);padding:clamp(3px,1vw,8px);border-radius:10px}
+#cassino-amor .cassino-celula{border-radius:7px}
+#cassino-amor .cassino-painel{margin:9px auto!important;gap:7px}
+#cassino-amor .cassino-girar{padding:10px 22px;font-size:18px}
+#cassino-amor .cassino-resultado{font-size:clamp(14px,3.5vw,18px);margin:5px auto}
+#cassino-amor #cassino-limite{margin:4px auto!important}
+#cassino-amor .cassino-controles button{padding:7px 10px;font-size:12px}
+#cassino-amor .cassino-nota{max-width:640px;margin:9px auto!important;font-size:11px}
+@media(max-height:730px){#cassino-amor .cassino-mascote{height:130px!important;transform:scale(1.5)!important}#cassino-amor .cassino-conteudo{padding-top:48px}#cassino-amor .cassino-cena{padding-top:3px}#cassino-amor .cassino-painel{margin:5px auto!important}}
 </style>
 </head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
@@ -622,37 +650,10 @@ body.tema-escuro #mascote-cenario.nh-noite{background-image:url("imagens/quarto_
  <h3>💕 Nossos testes</h3><div id="compat-lista"></div>
 </section>
 
-<section id="cassino-amor" aria-labelledby="cassino-titulo">
-  <h2 id="cassino-titulo">🐰 Cassino do Amor</h2>
-  <p>Gire as roletas com as moedas virtuais do coelhinho! 💗</p>
-  <div class="cassino-cena">
-    <img id="cassino-mascote" class="cassino-mascote" src="cassino/animacoes/coelho_idle.gif" alt="Coelhinho branco com óculos dourados">
-    <div class="cassino-area-efeito">
-      <div class="cassino-tela">
-        <div class="cassino-grade" id="cassino-grade" aria-label="Roletas com três linhas e cinco colunas"></div>
-      </div>
-      <img id="cassino-efeito" class="cassino-efeito" alt="" hidden>
-    </div>
-    <div class="cassino-painel">
-      <span id="cassino-saldo" class="cassino-saldo">🪙 Saldo: --</span>
-      <label for="cassino-aposta">Aposta:</label>
-      <select id="cassino-aposta" aria-label="Quantidade de moedas para apostar">
-        <option value="1">1 moeda</option>
-        <option value="2">2 moedas</option>
-        <option value="3">3 moedas</option>
-      </select>
-      <button type="button" class="cassino-girar" id="cassino-girar">🎰 GIRAR</button>
-    </div>
-    <p class="cassino-resultado" id="cassino-resultado" role="status" aria-live="polite">Pronto para jogar? 💕</p>
-    <p id="cassino-limite" style="font-size:13px">Até 50 giros por casal a cada 24 horas.</p>
-    <div class="cassino-controles">
-      <button type="button" id="cassino-som">🔊 Som ligado</button>
-      <button type="button" id="cassino-musica">🎵 Música desligada</button>
-      <button type="button" id="cassino-atualizar">↻ Atualizar saldo</button>
-    </div>
-  </div>
-  <p class="cassino-nota">Três linhas horizontais premiam 3, 4 ou 5 símbolos iguais da esquerda para a direita. Prêmios: 3×, 7× ou 15× a aposta por linha. Apenas moedas gratuitas e recreativas: sem dinheiro, saques ou prêmios reais. Compartilhe o saldo com o mascote Juntos.</p>
-</section>
+<button type="button" id="cassino-abrir" class="cassino-abrir" aria-controls="cassino-amor" aria-expanded="false">
+  <img src="cassino/personagem/coelho_parado.png" alt="" loading="lazy">
+  <span>🎰 Cassino do Amor<small>Toque para jogar 🪙</small></span>
+</button>
 </div>
 <div class="aba-painel" id="aba-conexao" role="tabpanel" aria-labelledby="aba-btn-conexao" hidden>
 <section id="conexao-atalhos"><h2>Código e convites 💌</h2><p class="muted">Seu código pessoal, o envio de convites e as respostas às solicitações ficam na janela de Configurações. Abra direto pelo atalho:</p><div class="actions"><button id="aba-abrir-perfil" class="primary" type="button">💗 Meu código e perfil</button><button id="aba-abrir-conectar" class="primary" type="button">💌 Convites e solicitações</button></div></section>
@@ -1927,6 +1928,36 @@ timeout = setTimeout(function () {
  'use strict';
  const root=document.getElementById('cassino-amor');
  if(!root)return;
+ const abrir=document.getElementById('cassino-abrir');
+ const fechar=document.getElementById('cassino-fechar');
+ let focoAnterior=null;
+ function abrirCassino(){
+   focoAnterior=document.activeElement;
+   root.hidden=false;
+   document.body.classList.add('cassino-aberto');
+   abrir.setAttribute('aria-expanded','true');
+   fechar.focus();
+   atualizarSaldo();
+ }
+ function fecharCassino(){
+   root.hidden=true;
+   document.body.classList.remove('cassino-aberto');
+   abrir.setAttribute('aria-expanded','false');
+   music.pause();
+   if(focoAnterior&&focoAnterior.isConnected)focoAnterior.focus();
+ }
+ abrir.addEventListener('click',abrirCassino);
+ fechar.addEventListener('click',fecharCassino);
+ document.addEventListener('keydown',e=>{
+   if(root.hidden)return;
+   if(e.key==='Escape'){e.preventDefault();fecharCassino();}
+   if(e.key==='Tab'){
+     const nodes=[...root.querySelectorAll('button:not(:disabled),select:not(:disabled)')];
+     if(!nodes.length)return;
+     if(e.shiftKey&&document.activeElement===nodes[0]){e.preventDefault();nodes[nodes.length-1].focus();}
+     else if(!e.shiftKey&&document.activeElement===nodes[nodes.length-1]){e.preventDefault();nodes[0].focus();}
+   }
+ });
  const $c=id=>document.getElementById(id);
  const simbolos=['cenoura','coracao','morango','coelho','moeda','estrela','trevo','coroa'];
  const path=(nome)=>'cassino/simbolos/simbolo_'+nome+'.png';
@@ -2038,11 +2069,45 @@ timeout = setTimeout(function () {
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden)music.pause();else if(musicaLigada)music.play().catch(()=>{})});
  const obs=new MutationObserver(()=>{
-   if(!document.getElementById('aba-jogos').hidden)saldoAtual();
-   else music.pause();
+   if(!document.getElementById('aba-jogos').hidden && !root.hidden)saldoAtual();
+   else if(!root.hidden)fecharCassino();
  });
  obs.observe(document.getElementById('aba-jogos'),{attributes:true,attributeFilter:['hidden']});
- setInterval(()=>{if(!document.getElementById('aba-jogos').hidden && !ocupado)saldoAtual()},3000);
+ setInterval(()=>{if(!root.hidden && !ocupado)saldoAtual()},3000);
 })();
 </script>
+<section id="cassino-amor" class="cassino-modal" aria-labelledby="cassino-titulo" role="dialog" aria-modal="true" hidden>
+<button type="button" id="cassino-fechar" class="cassino-fechar" aria-label="Fechar cassino">×</button>
+<div class="cassino-conteudo">
+  <h2 id="cassino-titulo">🐰 Cassino do Amor</h2>
+  <p>Gire as roletas com as moedas virtuais do coelhinho! 💗</p>
+  <div class="cassino-cena">
+    <img id="cassino-mascote" class="cassino-mascote" src="cassino/animacoes/coelho_idle.gif" alt="Coelhinho branco com óculos dourados">
+    <div class="cassino-area-efeito">
+      <div class="cassino-tela">
+        <div class="cassino-grade" id="cassino-grade" aria-label="Roletas com três linhas e cinco colunas"></div>
+      </div>
+      <img id="cassino-efeito" class="cassino-efeito" alt="" hidden>
+    </div>
+    <div class="cassino-painel">
+      <span id="cassino-saldo" class="cassino-saldo">🪙 Saldo: --</span>
+      <label for="cassino-aposta">Aposta:</label>
+      <select id="cassino-aposta" aria-label="Quantidade de moedas para apostar">
+        <option value="1">1 moeda</option>
+        <option value="2">2 moedas</option>
+        <option value="3">3 moedas</option>
+      </select>
+      <button type="button" class="cassino-girar" id="cassino-girar">🎰 GIRAR</button>
+    </div>
+    <p class="cassino-resultado" id="cassino-resultado" role="status" aria-live="polite">Pronto para jogar? 💕</p>
+    <p id="cassino-limite" style="font-size:13px">Até 50 giros por casal a cada 24 horas.</p>
+    <div class="cassino-controles">
+      <button type="button" id="cassino-som">🔊 Som ligado</button>
+      <button type="button" id="cassino-musica">🎵 Música desligada</button>
+      <button type="button" id="cassino-atualizar">↻ Atualizar saldo</button>
+    </div>
+  </div>
+  <p class="cassino-nota">Três linhas horizontais premiam 3, 4 ou 5 símbolos iguais da esquerda para a direita. Prêmios: 3×, 7× ou 15× a aposta por linha. Apenas moedas gratuitas e recreativas: sem dinheiro, saques ou prêmios reais. Compartilhe o saldo com o mascote Juntos.</p>
+</div>
+</section>
 </body></html>
