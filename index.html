@@ -430,7 +430,33 @@ body.tema-escuro #mascote-cenario.nh-noite{background-image:url("imagens/quarto_
 #mascote-balao-mensagem{position:absolute!important;left:5%!important;right:5%!important;top:4%!important;bottom:auto!important;width:auto!important;max-width:none!important;margin:0!important;z-index:3!important;text-align:center!important}
 @media(max-width:650px){#mascote-cenario{min-height:315px!important;aspect-ratio:1/1!important}#mascote-figura{bottom:7%!important;width:57%!important}}
 
-</style></head>
+</style>
+<style id="cassino-estilos">
+#cassino-amor{grid-column:1/-1;background:linear-gradient(145deg,#fff3fa,#ffe8f4);border:1px solid #f3cfe0;border-radius:25px;padding:20px 14px;text-align:center;overflow:hidden}
+#cassino-amor h2{color:#a92e68;text-align:center}
+#cassino-amor .cassino-cena{background:linear-gradient(#a72779aa,#7a2b81aa),url('cassino/maquina/fundo_cassino.png') center/cover;border-radius:24px;padding:16px 8px;color:white}
+#cassino-amor .cassino-mascote{width:130px;height:130px;object-fit:contain;display:block;margin:0 auto -8px;filter:drop-shadow(0 4px 5px #3b103a77)}
+#cassino-amor .cassino-tela{width:min(560px,100%);margin:10px auto;background:linear-gradient(135deg,#e7318e,#8e165a);padding:12px;border:5px solid #f5bf4c;border-radius:25px;box-shadow:0 9px 18px #4d123b66}
+#cassino-amor .cassino-grade{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;background:#fff6fb;padding:8px;border-radius:15px}
+#cassino-amor .cassino-celula{background:linear-gradient(#fff,#ffe3f0);aspect-ratio:1;display:grid;place-items:center;border-radius:9px;min-width:0}
+#cassino-amor .cassino-celula img{width:95%;height:95%;object-fit:contain}
+#cassino-amor .cassino-grade.girando .cassino-celula img{animation:cassino-giro .15s linear infinite}
+@keyframes cassino-giro{0%{transform:translateY(-9px);filter:blur(2px)}50%{transform:translateY(9px);filter:blur(3px)}100%{transform:translateY(-9px);filter:blur(2px)}}
+#cassino-amor .cassino-painel{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin:12px auto}
+#cassino-amor .cassino-saldo{font-weight:800;background:#7c164e;color:#ffe6a7;border:2px solid #f6c255;padding:9px 14px;border-radius:18px}
+#cassino-amor .cassino-painel select{padding:10px 15px;border-radius:13px;border:2px solid #f5b94a;font-size:16px;background:white;color:#602746}
+#cassino-amor .cassino-girar{background:linear-gradient(#ffe080,#f5a828);color:#73331c;border:3px solid #fff1b2;border-radius:30px;padding:12px 34px;font-size:20px;font-weight:900;box-shadow:0 5px #b16c1e;cursor:pointer}
+#cassino-amor .cassino-girar:disabled{opacity:.55;cursor:wait}
+#cassino-amor .cassino-resultado{font-size:17px;font-weight:700;min-height:28px;margin:8px auto}
+#cassino-amor .cassino-efeito{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}
+#cassino-amor .cassino-efeito[hidden]{display:none}
+#cassino-amor .cassino-area-efeito{position:relative}
+#cassino-amor .cassino-nota{font-size:12px;color:#775266;line-height:1.5;margin:10px auto}
+#cassino-amor .cassino-controles{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+#cassino-amor .cassino-controles button{background:#fff;border:1px solid #dca5c1;border-radius:15px;padding:8px 13px;color:#a02d66;font-weight:700}
+@media(prefers-reduced-motion:reduce){#cassino-amor .cassino-grade.girando .cassino-celula img{animation:none}}
+</style>
+</head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
 <button id="botao-configuracoes" type="button" aria-label="Abrir configurações" title="Configurações">⚙️</button>
@@ -594,6 +620,38 @@ body.tema-escuro #mascote-cenario.nh-noite{background-image:url("imagens/quarto_
  <div id="compat-form" hidden><h3>💗 Suas respostas</h3><div id="compat-perguntas"></div><div class="actions"><button id="compat-enviar" class="primary" type="button">Salvar minhas respostas</button><button id="compat-cancelar" class="secondary" type="button">Cancelar</button></div></div>
  <div id="compat-resultado" hidden><h3>💖 Nossa sintonia</h3><p id="compat-placar" style="font-size:30px;font-weight:bold;color:#bd3267"></p><p id="compat-frase"></p><button id="compat-compartilhar" class="primary" type="button">📲 Compartilhar resultado</button></div>
  <h3>💕 Nossos testes</h3><div id="compat-lista"></div>
+</section>
+
+<section id="cassino-amor" aria-labelledby="cassino-titulo">
+  <h2 id="cassino-titulo">🐰 Cassino do Amor</h2>
+  <p>Gire as roletas com as moedas virtuais do coelhinho! 💗</p>
+  <div class="cassino-cena">
+    <img id="cassino-mascote" class="cassino-mascote" src="cassino/animacoes/coelho_idle.gif" alt="Coelhinho branco com óculos dourados">
+    <div class="cassino-area-efeito">
+      <div class="cassino-tela">
+        <div class="cassino-grade" id="cassino-grade" aria-label="Roletas com três linhas e cinco colunas"></div>
+      </div>
+      <img id="cassino-efeito" class="cassino-efeito" alt="" hidden>
+    </div>
+    <div class="cassino-painel">
+      <span id="cassino-saldo" class="cassino-saldo">🪙 Saldo: --</span>
+      <label for="cassino-aposta">Aposta:</label>
+      <select id="cassino-aposta" aria-label="Quantidade de moedas para apostar">
+        <option value="1">1 moeda</option>
+        <option value="2">2 moedas</option>
+        <option value="3">3 moedas</option>
+      </select>
+      <button type="button" class="cassino-girar" id="cassino-girar">🎰 GIRAR</button>
+    </div>
+    <p class="cassino-resultado" id="cassino-resultado" role="status" aria-live="polite">Pronto para jogar? 💕</p>
+    <p id="cassino-limite" style="font-size:13px">Até 50 giros por casal a cada 24 horas.</p>
+    <div class="cassino-controles">
+      <button type="button" id="cassino-som">🔊 Som ligado</button>
+      <button type="button" id="cassino-musica">🎵 Música desligada</button>
+      <button type="button" id="cassino-atualizar">↻ Atualizar saldo</button>
+    </div>
+  </div>
+  <p class="cassino-nota">Três linhas horizontais premiam 3, 4 ou 5 símbolos iguais da esquerda para a direita. Prêmios: 3×, 7× ou 15× a aposta por linha. Apenas moedas gratuitas e recreativas: sem dinheiro, saques ou prêmios reais. Compartilhe o saldo com o mascote Juntos.</p>
 </section>
 </div>
 <div class="aba-painel" id="aba-conexao" role="tabpanel" aria-labelledby="aba-btn-conexao" hidden>
@@ -1861,6 +1919,130 @@ timeout = setTimeout(function () {
 
   setInterval(conectar, 2000);
   conectar();
+})();
+</script>
+
+<script id="cassino-script">
+(() => {
+ 'use strict';
+ const root=document.getElementById('cassino-amor');
+ if(!root)return;
+ const $c=id=>document.getElementById(id);
+ const simbolos=['cenoura','coracao','morango','coelho','moeda','estrela','trevo','coroa'];
+ const path=(nome)=>'cassino/simbolos/simbolo_'+nome+'.png';
+ const audioBase='sons/audio/';
+ const audios={click:'botao_click.wav',apostar:'apostar_moeda.wav',iniciar:'roleta_iniciar.wav',
+  girando:'roleta_girando.wav',parar:'roleta_parar.wav',ganhou:'ganhou_moedas.wav',
+  grande:'grande_vitoria.wav',perdeu:'perdeu_rodada.wav',semSaldo:'saldo_insuficiente.wav',
+  comemorar:'coelho_comemorando.wav',musica:'musica_fundo_loop.wav'};
+ const music=new Audio(audioBase+audios.musica);
+ music.loop=true;music.volume=.15;
+ let somLigado=true,musicaLigada=false,ocupado=false,temporizador=null;
+ const grade=$c('cassino-grade');
+ const celulas=Array.from({length:15},()=>{
+   const el=document.createElement('div');el.className='cassino-celula';
+   const img=document.createElement('img');img.alt='Símbolo';img.loading='lazy';
+   el.append(img);grade.append(el);return img;
+ });
+ function mostrarGrade(itens){
+   itens.forEach((nome,i)=>{if(!celulas[i])return;
+     const n=simbolos.includes(nome)?nome:'coracao';
+     celulas[i].src=path(n);celulas[i].alt=n;
+   });
+ }
+ mostrarGrade(Array.from({length:15},(_,i)=>simbolos[i%simbolos.length]));
+ function tocar(nome){
+   if(!somLigado)return;
+   const a=new Audio(audioBase+audios[nome]);a.volume=.42;
+   a.play().catch(()=>{});
+ }
+ function mensagem(t){$c('cassino-resultado').textContent=t}
+ function gifMascote(nome){
+   $c('cassino-mascote').src='cassino/animacoes/coelho_'+nome+'.gif';
+ }
+ function efeito(nome){
+   const img=$c('cassino-efeito');
+   if(temporizador)clearTimeout(temporizador);
+   img.src='cassino/efeitos/efeito_'+nome+'.gif?x='+Date.now();
+   img.hidden=false;
+   temporizador=setTimeout(()=>{img.hidden=true},1800);
+ }
+ function saldoAtual(){
+   const n=Number(typeof mascoteDados!=='undefined' && mascoteDados?.moedas);
+   if(Number.isFinite(n) && n>=0){$c('cassino-saldo').textContent='🪙 Saldo: '+n;return;}
+   $c('cassino-saldo').textContent='🪙 Saldo: --';
+ }
+ async function atualizarSaldo(){
+   if(!historiaAtual?.historia_id){mensagem('Conecte seu casal para jogar.');return}
+   try{
+     const {data,error}=await db.from('mascote_casal').select('*').eq('story_id',historiaAtual.historia_id).single();
+     if(error)throw error;
+     mascoteDados=data;
+     if(typeof atualizarInterfaceMascote==='function')atualizarInterfaceMascote();
+     saldoAtual();
+   }catch(e){mensagem('Não foi possível atualizar o saldo: '+e.message)}
+ }
+ async function girar(){
+   if(ocupado)return;
+   if(!historiaAtual?.historia_id){mensagem('Conecte seu casal para jogar.');return}
+   if(!db){mensagem('Conexão com o Supabase indisponível.');return}
+   const historiaId=historiaAtual.historia_id;
+   const aposta=Number($c('cassino-aposta').value);
+   ocupado=true;$c('cassino-girar').disabled=true;
+   mensagem('Girando... boa sorte! 💕');tocar('iniciar');
+   grade.classList.add('girando');
+   gifMascote('idle');
+   const anim=setInterval(()=>mostrarGrade(Array.from({length:15},()=>simbolos[Math.floor(Math.random()*simbolos.length)])),100);
+   try{
+     // A aposta, o sorteio e o crédito são validados e registrados no Supabase.
+     const {data,error}=await db.rpc('cassino_girar',{p_story_id:historiaId,p_aposta:aposta});
+     if(error)throw error;
+     await new Promise(r=>setTimeout(r,1350));
+     if(historiaAtual?.historia_id!==historiaId)return;
+     mostrarGrade(data.simbolos);tocar('parar');
+     $c('cassino-saldo').textContent='🪙 Saldo: '+data.saldo;
+     $c('cassino-limite').textContent='Restam '+data.giros_restantes+' giros para o casal nas próximas 24 horas (limite móvel).';
+     if(data.premio>0){
+       const grande=data.premio>=aposta*7;
+       gifMascote(grande?'grande_vitoria':'vitoria');
+       efeito(grande?'grande_vitoria':'moedas');
+       tocar(grande?'grande':'ganhou');
+       mensagem('🎉 Você ganhou '+data.premio+' moedas! Saldo: '+data.saldo);
+     }else{
+       gifMascote('derrota');tocar('perdeu');
+       mensagem('💗 Não foi desta vez! Você gastou '+aposta+' moeda(s).');
+     }
+     // Recarrega o saldo do mascote para manter os dois jogos sincronizados.
+     await atualizarSaldo();
+   }catch(e){
+     tocar('semSaldo');
+     mensagem('⚠️ '+(e?.message||'Erro ao girar'));
+   }finally{
+     clearInterval(anim);grade.classList.remove('girando');
+     ocupado=false;$c('cassino-girar').disabled=false;
+   }
+ }
+ $c('cassino-girar').addEventListener('click',girar);
+ $c('cassino-atualizar').addEventListener('click',atualizarSaldo);
+ $c('cassino-som').addEventListener('click',()=>{
+   somLigado=!somLigado;
+   $c('cassino-som').textContent=somLigado?'🔊 Som ligado':'🔇 Som desligado';
+   if(somLigado)tocar('click');
+ });
+ $c('cassino-musica').addEventListener('click',async()=>{
+   musicaLigada=!musicaLigada;
+   if(musicaLigada){
+     try{await music.play()}catch(e){musicaLigada=false;mensagem('Toque novamente para ativar a música.')}
+   }else music.pause();
+   $c('cassino-musica').textContent=musicaLigada?'🎵 Música ligada':'🎵 Música desligada';
+ });
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)music.pause();else if(musicaLigada)music.play().catch(()=>{})});
+ const obs=new MutationObserver(()=>{
+   if(!document.getElementById('aba-jogos').hidden)saldoAtual();
+   else music.pause();
+ });
+ obs.observe(document.getElementById('aba-jogos'),{attributes:true,attributeFilter:['hidden']});
+ setInterval(()=>{if(!document.getElementById('aba-jogos').hidden && !ocupado)saldoAtual()},3000);
 })();
 </script>
 </body></html>
