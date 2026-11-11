@@ -1374,7 +1374,15 @@ $('cinema-sincronizar').onclick=async()=>{await cinemaBuscar();if(cinemaEstado)c
  const nav=$('abas-nav'),painel=$('historia-painel');
  function mostrarAba(nome,opcoes){
   opcoes=opcoes||{};
-  if(!ABAS.includes(nome))nome='inicio';if(nome==='mensagem'&&modoAtual==='solo'&&!nhSoloMensagemRevelada)nome='inicio';if(modoAtual==='solo'&&['galeria','conexao'].includes(nome))nome='inicio';
+  if(!ABAS.includes(nome))nome='inicio';
+  // Modo Solo: ao sair de Mensagem, revoga o acesso temporário imediatamente.
+  // Só outros cinco cliques no título poderão revelar a aba novamente.
+  if(modoAtual==='solo' && nome!=='mensagem' && nhSoloMensagemRevelada){
+   nhSoloMensagemRevelada=false;
+   atualizarInterfaceModo();
+  }
+  if(nome==='mensagem'&&modoAtual==='solo'&&!nhSoloMensagemRevelada)nome='inicio';
+  if(modoAtual==='solo'&&['galeria','conexao'].includes(nome))nome='inicio';
   ABAS.forEach(a=>{
    const ativa=a===nome,b=$('aba-btn-'+a);
    b.classList.toggle('ativa',ativa);
