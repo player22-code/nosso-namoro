@@ -1,0 +1,9 @@
+SONS ORIGINAIS — NOSSA HISTÓRIA / CAÇA-NÍQUEL
+
+13 arquivos WAV (mono, 22050 Hz), prontos para uso em HTML/JavaScript.
+Todos os efeitos são sintetizados e não copiam trilhas de jogos comerciais.
+
+Use <audio> ou new Audio("sons/audio/botao_click.wav").
+Navegadores geralmente exigem interação do usuário antes de tocar áudio.
+A música deve começar somente após clique e ter botão para ligar/desligar.
+Mantenha volume moderado e respeite a preferência do usuário por silêncio.
