@@ -765,7 +765,10 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
 }
 @media(prefers-reduced-motion:reduce){section{transition:none!important}}
 </style>
-</head>
+<style id="nh-visualizador-fix">
+#nh-visualizador{position:fixed!important;right:auto!important;bottom:auto!important;width:160px!important;height:160px!important;transform:translate(-50%,-50%)!important;z-index:999!important;pointer-events:none!important}
+@media(max-width:650px){#nh-visualizador{right:auto!important;bottom:auto!important;width:160px!important;height:160px!important}}
+</style></head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
 <button id="botao-configuracoes" type="button" aria-label="Abrir configurações" title="Configurações">⚙️</button>
@@ -2593,46 +2596,71 @@ window.abrirGirininhoSecreto=open;
 
 
 <script>
-/* Visualizador circular em tempo real, conectado à playlist existente. */
+/* Visualizador circular responsivo, centralizado no botão de música. */
 (function(){
  const audio=document.getElementById('musica'),btn=document.getElementById('botao-musica'),canvas=document.getElementById('nh-visualizador');
  if(!audio||!btn||!canvas)return;
  const ctx=canvas.getContext('2d');
- let ac,analyser,data,raf=0,source,ready=false;
- const bars=96,cx=75,cy=75,r=51;
- function draw(){
-   ctx.clearRect(0,0,150,150);
-   if(analyser)analyser.getByteFrequencyData(data);
-   for(let i=0;i<bars;i++){
-     const angle=i*Math.PI*2/bars-Math.PI/2;
-     const bucket=data?Math.min(data.length-1,Math.floor(i/bars*data.length)):0;
-     const v=data?data[bucket]/255:0;
-     const len=audio.paused?3:3+Math.pow(v,.8)*20;
+ const N=88,S=160,C=S/2,R=48;
+ let ac,analyser,source,data,ready=false,raf=0;
+ const smooth=new Float32Array(N);
+ function position(){
+   const b=btn.getBoundingClientRect();
+   canvas.style.left=(b.left+b.width/2)+'px';
+   canvas.style.top=(b.top+b.height/2)+'px';
+   canvas.style.display=getComputedStyle(btn).display==='none'?'none':'block';
+ }
+ function render(){
+   raf=0;
+   ctx.clearRect(0,0,S,S);
+   const playing=!audio.paused&&!audio.ended;
+   if(playing&&analyser)analyser.getByteFrequencyData(data);
+   // Reutiliza toda a faixa útil do espectro nos dois lados do círculo.
+   // Assim os agudos fracos não deixam metade do anel parada.
+   for(let i=0;i<N;i++){
+     const phase=i/N;
+     const mirrored=Math.min(phase,1-phase)*2;
+     const band=Math.min(42,Math.floor(mirrored*42));
+     let level=0;
+     if(playing&&data){
+       for(let j=0;j<5;j++)level+=data[Math.min(data.length-1,band+j)]/255;
+       level/=5;
+     }
+     const target=playing?Math.min(1,Math.pow(level,0.55)*2.0):0;
+     smooth[i]+=(target-smooth[i])*(target>smooth[i] ? .55 : .24);
+     const length=3+smooth[i]*27;
+     const angle=phase*Math.PI*2-Math.PI/2;
      const x=Math.cos(angle),y=Math.sin(angle);
-     ctx.beginPath();ctx.lineWidth=3.5;ctx.lineCap='round';
-     ctx.strokeStyle=document.body.classList.contains('tema-escuro')?'#f7a5ed':'#cf3d83';
-     ctx.moveTo(cx+x*r,cy+y*r);ctx.lineTo(cx+x*(r+len),cy+y*(r+len));ctx.stroke();
+     ctx.beginPath();ctx.lineWidth=3.3;ctx.lineCap='round';
+     ctx.strokeStyle='#ffb1e5';
+     ctx.moveTo(C+x*R,C+y*R);
+     ctx.lineTo(C+x*(R+length),C+y*(R+length));
+     ctx.stroke();
    }
-   if(!audio.paused)raf=requestAnimationFrame(draw);else raf=0;
+   if(playing||smooth.some(v=>v>.015))raf=requestAnimationFrame(render);
  }
  async function init(){
-   if(ready){if(ac.state==='suspended')await ac.resume();return}
+   if(ready){if(ac.state==='suspended')await ac.resume();return;}
    const AC=window.AudioContext||window.webkitAudioContext;
    if(!AC)return;
    try{
-     ac=new AC();analyser=ac.createAnalyser();analyser.fftSize=256;analyser.smoothingTimeConstant=.78;
-     source=ac.createMediaElementSource(audio);source.connect(analyser);analyser.connect(ac.destination);
+     ac=new AC();analyser=ac.createAnalyser();analyser.fftSize=512;
+     analyser.smoothingTimeConstant=.55;
+     source=ac.createMediaElementSource(audio);
+     source.connect(analyser);analyser.connect(ac.destination);
      data=new Uint8Array(analyser.frequencyBinCount);ready=true;
      if(ac.state==='suspended')await ac.resume();
-   }catch(e){console.warn('Visualizador de música indisponível:',e)}
+   }catch(e){console.warn('Não foi possível analisar a música:',e);}
  }
- audio.addEventListener('play',async()=>{canvas.style.display='block';await init();if(!raf)draw()});
- audio.addEventListener('pause',()=>{if(raf)cancelAnimationFrame(raf);raf=0;draw()});
- audio.addEventListener('ended',()=>{if(raf)cancelAnimationFrame(raf);raf=0;draw()});
- const observer=new MutationObserver(()=>{canvas.style.display=getComputedStyle(btn).display==='none'?'none':'block';if(audio.paused)draw()});
- observer.observe(btn,{attributes:true,attributeFilter:['style','class']});
- btn.addEventListener('click',()=>{if(audio.paused)draw()});
- draw();
+ function start(){position();if(!raf)raf=requestAnimationFrame(render);}
+ audio.addEventListener('play',async()=>{await init();start();});
+ audio.addEventListener('pause',start);
+ audio.addEventListener('ended',start);
+ btn.addEventListener('click',position);
+ new MutationObserver(position).observe(btn,{attributes:true,attributeFilter:['style','class']});
+ window.addEventListener('resize',position);
+ window.addEventListener('scroll',position,{passive:true});
+ position();render();
 })();
 </script>
 </body></html>
