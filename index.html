@@ -2044,7 +2044,7 @@ timeout = setTimeout(function () {
       <button type="button" class="cassino-girar" id="cassino-girar">🎰 GIRAR</button>
     </div>
     <p class="cassino-resultado" id="cassino-resultado" role="status" aria-live="polite">Pronto para jogar? 💕</p>
-    <p id="cassino-limite" style="font-size:13px">Sem limite diário de giros. Sujeito à disponibilidade de moedas.</p>
+    <p id="cassino-limite" style="display:none" hidden></p>
     <div class="cassino-controles">
       <button type="button" id="cassino-som">🔊 Som ligado</button>
       <button type="button" id="cassino-musica">🎵 Música desligada</button>
@@ -2161,7 +2161,7 @@ timeout = setTimeout(function () {
      if(historiaAtual?.historia_id!==historiaId)return;
      mostrarGrade(data.simbolos);tocar('parar');
      window.nhSaldoIndividual=Number(data.saldo);$c('cassino-saldo').textContent='🪙 Saldo: '+data.saldo;
-      $c('cassino-limite').textContent='Apostas sem limite diário de giros (após atualizar a função no Supabase).';
+      
      if(data.premio>0){
        const grande=data.premio>=aposta*7;
        gifMascote(grande?'grande_vitoria':'vitoria');
@@ -2232,7 +2232,7 @@ async function nhAtualizarColeta(){
 </style>
 <section id="girininho-modal" hidden role="dialog" aria-modal="true" aria-labelledby="girininho-title">
 <button type="button" id="girininho-close" class="gi-close" aria-label="Fechar Girininho">×</button>
-<div class="gi-wrap"><h2 id="girininho-title">✨ GIRININHO 777 ✨</h2><img class="gi-hero" id="girininho-hero" src="cucoparado.gif" alt="Mascote Girininho"><div class="gi-board"><div id="girininho-grid" class="gi-grid" aria-label="Roletas 3 por 5"></div><div class="gi-actions"><span id="girininho-balance" class="gi-label">🪙 Saldo: --</span><label class="gi-label">Aposta <select id="girininho-bet"><option value="1">1 moeda</option><option value="2">2 moedas</option><option value="3">3 moedas</option></select></label><button type="button" class="gi-spin" id="girininho-spin">🎰 GIRAR</button><button type="button" id="girininho-mute">🔊 Som</button></div><div id="girininho-message" class="gi-msg" role="status" aria-live="polite">Cassino secreto desbloqueado!</div><div id="girininho-limit"></div></div><p class="gi-note">Somente moedas virtuais, sem valor real. Este cassino utiliza a mesma carteira, as mesmas probabilidades do Cassino do Amor, sem limite diário de giros.</p></div>
+<div class="gi-wrap"><h2 id="girininho-title">✨ GIRININHO 777 ✨</h2><img class="gi-hero" id="girininho-hero" src="cucoparado.gif" alt="Mascote Girininho"><div class="gi-board"><div id="girininho-grid" class="gi-grid" aria-label="Roletas 3 por 5"></div><div class="gi-actions"><span id="girininho-balance" class="gi-label">🪙 Saldo: --</span><label class="gi-label">Aposta <select id="girininho-bet"><option value="1">1 moeda</option><option value="2">2 moedas</option><option value="3">3 moedas</option></select></label><button type="button" class="gi-spin" id="girininho-spin">🎰 GIRAR</button><button type="button" id="girininho-mute">🔊 Som</button></div><div id="girininho-message" class="gi-msg" role="status" aria-live="polite">Cassino secreto desbloqueado!</div><div id="girininho-limit" hidden></div></div><p class="gi-note">Somente moedas virtuais, sem valor real. Este cassino utiliza a mesma carteira, as mesmas probabilidades do Cassino do Amor, sem limite diário de giros.</p></div>
 </section>
 <script id="girininho-secret-script">
 (()=>{'use strict';
@@ -2263,7 +2263,7 @@ async function spin(){if(busy||modal.hidden)return;if(!validStory()||!validDb())
 // Mesma função segura do cassino principal: nunca calcular saldo ou prêmio no navegador.
 const result=await db.rpc('cassino_girar',{p_story_id:storyId,p_aposta:bet});if(result.error)throw result.error;
 await new Promise(resolve=>setTimeout(resolve,1300));if(!validStory()||historiaAtual.historia_id!==storyId){message.textContent='A história mudou. Atualize seu saldo.';return;}
-paint(result.data.simbolos);window.nhSaldoIndividual=Number(result.data.saldo);setBalance(result.data.saldo);$('girininho-limit').textContent='Sem limite diário de giros (após atualizar o Supabase).';play('stop');
+paint(result.data.simbolos);window.nhSaldoIndividual=Number(result.data.saldo);setBalance(result.data.saldo);play('stop');
 if(result.data.premio>0){const big=result.data.premio>=bet*7;pose('feliz');play(big?'big':'win');message.textContent='🎉 Você ganhou '+result.data.premio+' moedas!'}else{pose('triste');play('lose');message.textContent='Sem prêmio desta vez.'}
 }catch(e){pose('parado');message.textContent='Não foi possível girar: '+e.message;}finally{clearInterval(spinTimer);grid.classList.remove('gi-spinning');busy=false;$('girininho-spin').disabled=false;}}
 $('girininho-close').addEventListener('click',close);$('girininho-spin').addEventListener('click',spin);$('girininho-mute').addEventListener('click',()=>{sound=!sound;$('girininho-mute').textContent=sound?'🔊 Som':'🔇 Mudo'});
