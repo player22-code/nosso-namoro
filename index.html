@@ -626,11 +626,150 @@ body.tema-escuro #recado-personagem{background:rgba(32,25,58,.78)!important}
  }
 }
 </style>
+
+<style>
+/* Jogos: cartões de vidro romântico, preservando todos os controles */
+#aba-jogos #quiz-amor,#aba-jogos #compat-casal{
+ background:linear-gradient(145deg,rgba(37,27,67,.81),rgba(89,39,83,.76))!important;
+ border:2px solid rgba(255,173,218,.83)!important;
+ color:#fff0fa!important;box-shadow:0 12px 35px #180b2a65!important;
+ backdrop-filter:blur(18px) saturate(145%)!important;
+}
+#aba-jogos #quiz-amor h2,#aba-jogos #compat-casal h2{color:#fff5fd!important;text-shadow:none}
+#aba-jogos #quiz-amor .muted,#aba-jogos #compat-casal .muted{color:#ead3ed!important;opacity:1}
+#aba-jogos #quiz-amor>h3,#aba-jogos #compat-casal>h3{border-top:1px solid #f6b5d680;padding-top:22px;margin-top:24px}
+#aba-jogos .quiz-item{background:rgba(34,25,69,.58)!important;border:1.5px solid #e8a9dc!important;color:#fff!important}
+#aba-jogos .quiz-item .muted{color:#ead3ed!important}
+#aba-jogos .primary,#aba-jogos .secondary{background:linear-gradient(135deg,#e983af,#a94d90)!important;border:1.5px solid #ffd3ed!important;color:#fff!important;border-radius:999px!important}
+#aba-jogos .aviso-moedas-jogo{background:rgba(255,219,237,.13)!important;color:#ffe5f1!important;border:1px solid #efb7d3!important}
+#aba-jogos .aviso-moedas-jogo strong{color:#ffe8a6!important}
+#aba-jogos .quiz-pergunta{background:rgba(43,29,70,.86)!important;color:#fff!important}
+#aba-jogos .quiz-opcoes label{color:#51343d}
+#aba-jogos #compat-resultado{border:1.5px solid #f0a7d1;border-radius:22px;background:rgba(255,140,197,.15);padding:18px}
+#aba-jogos #compat-placar{color:#ffa7d1!important}
+#nh-visualizador{position:fixed;right:-27px;bottom:-27px;width:152px;height:152px;z-index:999;pointer-events:none;display:none}
+@media(max-width:650px){#nh-visualizador{right:-38px;bottom:31px;width:150px;height:150px}}
+@media(prefers-reduced-motion:reduce){#nh-visualizador{display:none!important}}
+</style>
+
+<style id="nh-tema-global-vidro">
+/* Tema global: aplica a referência roxo/rosa a TODAS as abas e janelas. */
+:root{--nh-fg:#fff0fa;--nh-sub:#ebd4ed;--nh-stroke:rgba(255,184,226,.78);--nh-glass:linear-gradient(145deg,rgba(36,30,76,.84),rgba(87,43,88,.78));--nh-inset:rgba(26,19,61,.65)}
+body,body:not(.tema-escuro),body.tema-escuro{color:var(--nh-fg)!important}
+header h1,header .subtitulo,#dados-conta,#barra-conta{color:var(--nh-fg)!important;text-shadow:0 2px 9px #29152a99}
+#abas-nav,body.tema-escuro #abas-nav{
+ background:linear-gradient(110deg,rgba(26,23,62,.94),rgba(38,25,60,.93))!important;
+ border:1.5px solid rgba(242,188,243,.63)!important;
+ box-shadow:0 12px 32px #150a2d7a!important;
+ backdrop-filter:blur(22px)!important;
+ border-radius:26px!important
+}
+#abas-nav .aba-btn,body.tema-escuro #abas-nav .aba-btn{
+ background:linear-gradient(140deg,rgba(60,56,126,.75),rgba(33,28,75,.9))!important;
+ border:2px solid rgba(201,190,255,.85)!important;
+ border-radius:999px!important;color:#fff!important;box-shadow:inset 0 1px 4px #ffffff22!important;
+ min-height:73px
+}
+#abas-nav .aba-btn.ativa,body.tema-escuro #abas-nav .aba-btn.ativa{
+ background:linear-gradient(135deg,#b35488,#733d78)!important;border-color:#ffc4e7!important;
+ box-shadow:0 0 20px #e881bc50,inset 0 1px 4px #fff5!important
+}
+#abas-nav .aba-btn .aba-rotulo{font-size:clamp(9px,1.4vw,14px);font-weight:800}
+#abas-nav .aba-btn .aba-icone{font-size:25px}
+section,body.tema-escuro section,#login-painel,body.tema-escuro #login-painel,
+#modo-seletor,body.tema-escuro #modo-seletor,#conteudo-configuracoes,body.tema-escuro #conteudo-configuracoes,
+#mascote-juntos,body.tema-escuro #mascote-juntos,#quiz-amor,body.tema-escuro #quiz-amor,
+#compat-casal,#cassino-amor,#planos-casal .cartao-plano,body.tema-escuro #planos-casal .cartao-plano{
+ background:var(--nh-glass)!important;
+ border:1.7px solid var(--nh-stroke)!important;
+ border-radius:27px!important;color:var(--nh-fg)!important;
+ box-shadow:0 14px 36px #160b3270,inset 0 1px 2px #fff3!important;
+ backdrop-filter:blur(19px) saturate(135%)!important;-webkit-backdrop-filter:blur(19px) saturate(135%)!important
+}
+section h2,body.tema-escuro section h2,section h3,section strong,#conteudo-configuracoes h2,#login-painel h2{
+ color:#fff4fc!important;text-shadow:0 2px 6px #1c10366b!important
+}
+section .muted,section .subtitulo,section .legenda,section .tag,
+body.tema-escuro section .muted,body.tema-escuro section .subtitulo,
+#inicio-status,#aviso-galeria,#cinema-status,#cinema-sincronia{color:var(--nh-sub)!important;opacity:1!important}
+section .item,section .quiz-item,section .quiz-pergunta,section .tempo,section .mascote-medidor,
+#galeria .item-foto,#planos-casal .cartao-plano,#memorias-legenda,
+body.tema-escuro section .item,body.tema-escuro section .tempo,
+#modo-seletor button,.mascote-dia{
+ background:var(--nh-inset)!important;border:1.5px solid rgba(225,175,241,.65)!important;
+ border-radius:19px!important;color:#fff0fa!important
+}
+.numero,#quiz-resultado-numero,#compat-placar{color:#ffa6d4!important}
+#mascote-moedas,.aviso-moedas-jogo,body.tema-escuro .aviso-moedas-jogo{
+ background:rgba(111,65,99,.62)!important;border:1px solid #e9b4c8!important;
+ color:#fff0d4!important;border-radius:17px!important
+}
+#mascote-moedas strong,.aviso-moedas-jogo strong{color:#ffe9a7!important}
+.primary,.secondary,#adicionar-foto,#abrir-planos,#login-google,#sair-conta,
+#abrir-chat,#botao-configuracoes,#botao-tema,#botao-musica,#modo-seletor button,
+#mascote-acoes button,#mascote-premios-abrir,#mascote-coletar,
+#cassino-abrir,.cassino-girar,#planos-casal .cartao-plano button,
+body.tema-escuro .primary,body.tema-escuro .secondary{
+ background:linear-gradient(135deg,rgba(226,119,170,.9),rgba(145,67,136,.9))!important;
+ border:1.5px solid #ffd0ed!important;color:white!important;border-radius:999px!important;
+ box-shadow:0 5px 16px #170b2b48,inset 0 1px 2px #fff7!important;
+ text-shadow:0 1px 2px #37163955!important;font-weight:750
+}
+input,select,textarea,body.tema-escuro input,body.tema-escuro select,body.tema-escuro textarea{
+ background:rgba(33,26,65,.8)!important;border:1.5px solid #c49ed9!important;
+ color:#fff!important;border-radius:14px!important
+}
+input::placeholder,textarea::placeholder{color:#d4bbdd!important}
+input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
+.quiz-opcoes label,#memorias-temas label,body.tema-escuro .quiz-opcoes label,
+#chat-config label{color:#fff2fa!important}
+.quiz-opcoes label,#memorias-temas label{background:rgba(57,38,88,.72)!important;border-color:#b58acb!important}
+#quiz-resultado,#compat-resultado,body.tema-escuro #quiz-resultado{
+ background:rgba(119,59,113,.6)!important;border:1px solid #eea9d1!important;
+ border-radius:20px!important;color:#fff!important
+}
+.cartao-mensagem,.cartao-mensagem .mensagem,body.tema-escuro .cartao-mensagem .mensagem{color:#fff0fa!important}
+#janela-chat,body.tema-escuro #janela-chat,#janela-musicas,body.tema-escuro #janela-musicas,
+#mascote-premios-caixa,body.tema-escuro #mascote-premios-caixa{
+ background:linear-gradient(145deg,#30254e,#55325e)!important;color:#fff0fa!important;
+ border:2px solid #df9dd2!important;box-shadow:0 16px 48px #140a28a6!important
+}
+#janela-musicas:after{background:#55325e!important;border-color:#df9dd2!important}
+#janela-musicas h3,#musica-atual,#voz-nome{color:#fff0fa!important}
+.faixa-musica,body.tema-escuro .faixa-musica{background:#30254e!important;color:#fff!important;border:1px solid #a784c9!important}
+.faixa-musica.ativa,body.tema-escuro .faixa-musica.ativa{background:#8e467d!important}
+#chat-cabecalho,body.tema-escuro #chat-cabecalho,#chat-rodape,#chat-status,
+#chat-mensagens,body.tema-escuro #chat-mensagens{background:#30254e!important;color:#fff0fa!important}
+.chat-balao,body.tema-escuro .chat-balao{background:#49355f!important;color:#fff!important}
+.chat-linha.minha .chat-balao{background:#8e467d!important}
+#chat-nome,#chat-status,#chat-hora{color:#f4d4ed!important}
+#voz-tela,body.tema-escuro #voz-tela{background:linear-gradient(145deg,#33244c,#6b3a69)!important}
+#voz-status,#voz-tempo{color:#fff0fa!important}
+#conteudo-configuracoes,#mascote-premios-caixa{color:#fff!important}
+#fechar-configuracoes,#fechar-musicas,#mascote-premios-fechar,#chat-fechar{
+ background:#7b457e!important;color:#fff!important;border:1px solid #e8b8e9!important
+}
+#recado-personagem{background:rgba(50,33,77,.86)!important;color:#fff!important;border-color:#d7a4d7!important}
+#recado-personagem::before{background:#32214d!important}
+#recarregar-personagem{background:#a8588f!important;color:#fff!important}
+#mascote-balao-mensagem{background:rgba(49,33,72,.87)!important;color:#fff!important}
+#galeria .botao-excluir{background:#8b497f!important;color:#fff!important}
+#aviso-global,#mensagem-login{color:#ffd6e6!important}
+@media(min-width:900px){#aba-jogos>section{min-height:380px}}
+@media(max-width:650px){
+ #abas-nav,body.tema-escuro #abas-nav{border-radius:21px 21px 0 0!important;padding:7px 5px calc(7px + env(safe-area-inset-bottom))!important;gap:4px!important}
+ #abas-nav .aba-btn{min-height:58px!important;border-radius:15px!important;padding:7px 2px!important}
+ #abas-nav .aba-btn .aba-rotulo{font-size:9px!important}
+ #abas-nav .aba-btn .aba-icone{font-size:19px!important}
+ section{border-radius:22px!important}
+}
+@media(prefers-reduced-motion:reduce){section{transition:none!important}}
+</style>
 </head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
 <button id="botao-configuracoes" type="button" aria-label="Abrir configurações" title="Configurações">⚙️</button>
-<button id="botao-musica" type="button" aria-label="Abrir nuvem de músicas" aria-expanded="false" aria-controls="janela-musicas">🎵</button>
+<canvas id="nh-visualizador" width="150" height="150" aria-hidden="true"></canvas><button id="botao-musica" type="button" aria-label="Abrir nuvem de músicas" aria-expanded="false" aria-controls="janela-musicas">🎵</button>
 <div id="janela-musicas" hidden role="dialog" aria-label="Nuvem de músicas">
 <button id="fechar-musicas" type="button" aria-label="Fechar músicas">×</button>
 <img id="personagem-musica" src="musicaboa.gif" alt="Personagem dançando">
@@ -1757,7 +1896,7 @@ async function quizMostrarPerguntas(modo,rodada){quizModo=modo;quizRodadaAtual=r
 async function quizCarregar(){if(!historiaAtual||quizCarregando)return;const id=historiaAtual.historia_id;quizCarregando=true;quizStatus('Carregando quizzes...');
  try{const rodadas=await rpc('quiz_amor_listar_v2',{p_story_id:id});if(historiaAtual?.historia_id!==id)return;const area=$('quiz-lista');area.replaceChildren();
  if(!rodadas?.length){const p=document.createElement('p');p.className='muted';p.textContent='Nenhum quiz ainda. Crie o primeiro para seu amor! 💕';area.append(p)}
- (rodadas||[]).forEach(r=>{const item=document.createElement('div');item.className='quiz-item';const titulo=document.createElement('strong');titulo.textContent=r.sou_criador?'💌 Quiz que você criou':'💖 Quiz criado pelo seu amor';const info=document.createElement('div');info.className='muted';info.textContent=new Date(r.criado_em).toLocaleString('pt-BR');item.append(titulo,info);
+ (rodadas||[]).slice().sort((a,b)=>new Date(b.criado_em)-new Date(a.criado_em)).slice(0,1).forEach(r=>{const item=document.createElement('div');item.className='quiz-item';const titulo=document.createElement('strong');titulo.textContent=r.sou_criador?'💌 Quiz que você criou':'💖 Quiz criado pelo seu amor';const info=document.createElement('div');info.className='muted';info.textContent=new Date(r.criado_em).toLocaleString('pt-BR');item.append(titulo,info);
  if(r.concluido){const p=document.createElement('p');p.textContent='🏆 Resultado: '+r.acertos+'/5 acertos ('+(r.acertos*20)+'%)';item.append(p);const b=document.createElement('button');b.className='secondary';b.textContent='📲 Ver e compartilhar resultado';b.onclick=()=>quizResultado(r.acertos);item.append(b)}
  else if(r.sou_criador){const p=document.createElement('p');p.textContent='⏳ Aguardando seu amor responder.';item.append(p)}
  else{const b=document.createElement('button');b.className='primary';b.textContent='💘 Responder quiz';b.onclick=()=>quizMostrarPerguntas('responder',r.id);item.append(b)}area.append(item)});quizStatus('');
@@ -1794,7 +1933,7 @@ async function compatCarregar(){
   if(historiaAtual?.historia_id!==id)return;
   const area=$('compat-lista');area.replaceChildren();
   if(!dados.length){const p=document.createElement('p');p.className='muted';p.textContent='Nenhum teste ainda. Crie o primeiro! 💗';area.append(p)}
-  for(const d of dados){
+  for(const d of [...dados].sort((a,b)=>new Date(b.criado_em)-new Date(a.criado_em)).slice(0,1)){
    const card=document.createElement('div');card.className='quiz-item';
    const titulo=document.createElement('strong');titulo.textContent='💞 Teste de '+new Date(d.criado_em).toLocaleString('pt-BR');card.append(titulo);
    const descricao=document.createElement('p');descricao.className='muted';descricao.textContent=d.respostas_recebidas+' de 2 respostas recebidas';card.append(descricao);
@@ -2452,4 +2591,48 @@ window.abrirGirininhoSecreto=open;
 })();
 </script>
 
+
+<script>
+/* Visualizador circular em tempo real, conectado à playlist existente. */
+(function(){
+ const audio=document.getElementById('musica'),btn=document.getElementById('botao-musica'),canvas=document.getElementById('nh-visualizador');
+ if(!audio||!btn||!canvas)return;
+ const ctx=canvas.getContext('2d');
+ let ac,analyser,data,raf=0,source,ready=false;
+ const bars=96,cx=75,cy=75,r=51;
+ function draw(){
+   ctx.clearRect(0,0,150,150);
+   if(analyser)analyser.getByteFrequencyData(data);
+   for(let i=0;i<bars;i++){
+     const angle=i*Math.PI*2/bars-Math.PI/2;
+     const bucket=data?Math.min(data.length-1,Math.floor(i/bars*data.length)):0;
+     const v=data?data[bucket]/255:0;
+     const len=audio.paused?3:3+Math.pow(v,.8)*20;
+     const x=Math.cos(angle),y=Math.sin(angle);
+     ctx.beginPath();ctx.lineWidth=3.5;ctx.lineCap='round';
+     ctx.strokeStyle=document.body.classList.contains('tema-escuro')?'#f7a5ed':'#cf3d83';
+     ctx.moveTo(cx+x*r,cy+y*r);ctx.lineTo(cx+x*(r+len),cy+y*(r+len));ctx.stroke();
+   }
+   if(!audio.paused)raf=requestAnimationFrame(draw);else raf=0;
+ }
+ async function init(){
+   if(ready){if(ac.state==='suspended')await ac.resume();return}
+   const AC=window.AudioContext||window.webkitAudioContext;
+   if(!AC)return;
+   try{
+     ac=new AC();analyser=ac.createAnalyser();analyser.fftSize=256;analyser.smoothingTimeConstant=.78;
+     source=ac.createMediaElementSource(audio);source.connect(analyser);analyser.connect(ac.destination);
+     data=new Uint8Array(analyser.frequencyBinCount);ready=true;
+     if(ac.state==='suspended')await ac.resume();
+   }catch(e){console.warn('Visualizador de música indisponível:',e)}
+ }
+ audio.addEventListener('play',async()=>{canvas.style.display='block';await init();if(!raf)draw()});
+ audio.addEventListener('pause',()=>{if(raf)cancelAnimationFrame(raf);raf=0;draw()});
+ audio.addEventListener('ended',()=>{if(raf)cancelAnimationFrame(raf);raf=0;draw()});
+ const observer=new MutationObserver(()=>{canvas.style.display=getComputedStyle(btn).display==='none'?'none':'block';if(audio.paused)draw()});
+ observer.observe(btn,{attributes:true,attributeFilter:['style','class']});
+ btn.addEventListener('click',()=>{if(audio.paused)draw()});
+ draw();
+})();
+</script>
 </body></html>
