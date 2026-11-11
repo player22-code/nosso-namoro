@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<link rel="preload" as="image" href="imagens/wallpaper_dia.png" fetchpriority="high">
+<link rel="prefetch" as="image" href="imagens/wallpaper_noite.png">
+<link rel="prefetch" as="image" href="imagens/quarto_acordado.png">
+<link rel="prefetch" as="image" href="imagens/quarto_dormindo.png">
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#fff5f7"><title>Nossa História ❤️</title>
 <style>
 *{box-sizing:border-box}
@@ -766,8 +770,8 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
 @media(prefers-reduced-motion:reduce){section{transition:none!important}}
 </style>
 <style id="nh-visualizador-fix">
-#nh-visualizador{position:fixed!important;right:auto!important;bottom:auto!important;width:80px!important;height:80px!important;transform:translate(-50%,-50%)!important;z-index:999!important;pointer-events:none!important}
-@media(max-width:650px){#nh-visualizador{right:auto!important;bottom:auto!important;width:80px!important;height:80px!important}}
+#nh-visualizador{position:fixed!important;left:auto!important;top:auto!important;right:9px!important;bottom:9px!important;width:80px!important;height:80px!important;transform:none!important;z-index:999!important;pointer-events:none!important}
+@media(max-width:650px){#nh-visualizador{right:-3px!important;bottom:68px!important}}
 </style></head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -1066,8 +1070,55 @@ function iniciarMonitorConexoes(){
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)verificarNovasConexoes()});
 async function carregarHistorias(){historias=await rpc('minhas_historias')||[];const area=$('lista-historias');limpar(area);$('sem-historias').hidden=historias.length>0;if(!historias.length){if(modoAtual==='casal'){historiaAtual=null;mascoteDesligar();chatDesligar();vozDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;$('historia-painel').hidden=true;$('titulo-site').textContent='Modo Casal';}return;}for(const h of historias){const b=elemento('button',`❤️ ${h.meu_nome} + ${h.parceiro_nome}`,'secondary');b.style.margin='5px';b.onclick=()=>selecionarHistoria(h.historia_id);area.append(b);}if(modoAtual==='solo')return;if(modoAtual==='casal'){const id=historias.some(h=>h.historia_id===historiaAtual?.historia_id)?historiaAtual.historia_id:historias[0].historia_id;await selecionarHistoria(id);}}
 async function selecionarHistoria(id){modoAtual='casal';atualizarInterfaceModo();historiaAtual=historias.find(h=>h.historia_id===id)||null;$('historia-painel').hidden=!historiaAtual;if(!historiaAtual)return;atualizarTitulo();await carregarFotos();await chatConectarHistoria();await vozConectarHistoria();await cinemaConectarHistoria();await mascoteConectarHistoria();$('modo-status').textContent='Modo Casal ativo 💗';}
-async function carregarFotos(){fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];const area=$('galeria');limpar(area);if(!historiaAtual)return;const id=historiaAtual.historia_id;const {data,error}=await db.from('story_photos').select('id,file_path,uploaded_by,created_at').eq('story_id',id).order('created_at',{ascending:true});if(error){area.append(elemento('p','Não foi possível carregar as fotos: '+error.message,'muted'));return;}if(!data.length){area.append(elemento('p','Nosso mural está esperando novas lembranças. ❤️','muted'));return;}for(const f of data){const {data:blob,error:e}=await db.storage.from('fotos-privadas').download(f.file_path);if(e){area.append(elemento('p','Não foi possível abrir uma foto.','muted'));continue;}const url=URL.createObjectURL(blob);fotosUrls.push(url);const item=elemento('div',undefined,'item-foto');const img=elemento('img');img.src=url;img.alt='Uma lembrança nossa';img.className='foto';img.loading='lazy';item.append(img);const b=elemento('button','Excluir foto','botao-excluir');b.onclick=()=>excluirFoto(f);item.append(b);area.append(item);}}
-async function excluirFoto(f){if(!historiaAtual||!confirm('Excluir esta foto definitivamente?'))return;const {error:e}=await db.storage.from('fotos-privadas').remove([f.file_path]);if(e){erro(e);return;}const {error}=await db.from('story_photos').delete().eq('id',f.id);if(error){erro(error);return;}await carregarFotos();}
+// Galeria: downloads privados paralelos e cache somente na memoria desta aba.
+// Nao persiste fotos privadas no armazenamento local ou em service workers.
+const nhFotosCache=new Map();
+let nhFotosGeracao=0;
+async function carregarFotos(){
+ const geracao=++nhFotosGeracao;
+ const area=$('galeria');
+ if(!historiaAtual){limpar(area);return;}
+ const id=historiaAtual.historia_id;
+ const {data,error}=await db.from('story_photos').select('id,file_path,uploaded_by,created_at').eq('story_id',id).order('created_at',{ascending:true});
+ if(geracao!==nhFotosGeracao||historiaAtual?.historia_id!==id)return;
+ if(error){if(!area.children.length)area.append(elemento('p','Nao foi possivel carregar as fotos: '+error.message,'muted'));return;}
+ const lista=data||[];
+ const ativos=new Set(lista.map(f=>f.file_path));
+ for(const [path,entrada] of nhFotosCache){if(!ativos.has(path)){URL.revokeObjectURL(entrada.url);nhFotosCache.delete(path);}}
+ fotosUrls=[...nhFotosCache.values()].map(v=>v.url);
+ if(!lista.length){limpar(area);area.append(elemento('p','Nosso mural está esperando novas lembranças. ❤️','muted'));return;}
+ // Exibe imediatamente o que ja esta em cache e baixa as demais em paralelo.
+ const fragment=document.createDocumentFragment();
+ const pendentes=[];
+ for(const f of lista){
+  const item=elemento('div',undefined,'item-foto');
+  const img=elemento('img');img.alt='Uma lembrança nossa';img.className='foto';img.loading='lazy';img.decoding='async';
+  const cache=nhFotosCache.get(f.file_path);
+  if(cache)img.src=cache.url;
+  else {img.style.minHeight='140px';pendentes.push({f,img});}
+  item.append(img);
+  const b=elemento('button','Excluir foto','botao-excluir');b.onclick=()=>excluirFoto(f);item.append(b);
+  fragment.append(item);
+ }
+ area.replaceChildren(fragment);
+ let proximo=0;
+ async function trabalhador(){
+  while(proximo<pendentes.length){
+   const {f,img}=pendentes[proximo++];
+   let entrada=nhFotosCache.get(f.file_path);
+   if(!entrada){
+    const {data:blob,error:e}=await db.storage.from('fotos-privadas').download(f.file_path);
+    if(e||!blob){if(geracao===nhFotosGeracao)img.alt='Não foi possível abrir esta foto';continue;}
+    entrada={url:URL.createObjectURL(blob)};
+    nhFotosCache.set(f.file_path,entrada);
+    fotosUrls=[...nhFotosCache.values()].map(v=>v.url);
+   }
+   if(geracao===nhFotosGeracao&&historiaAtual?.historia_id===id&&img.isConnected){img.src=entrada.url;img.style.minHeight='';}
+  }
+ }
+ await Promise.all(Array.from({length:Math.min(4,pendentes.length)},()=>trabalhador()));
+}
+async function excluirFoto(f){if(!historiaAtual||!confirm('Excluir esta foto definitivamente?'))return;const {error:e}=await db.storage.from('fotos-privadas').remove([f.file_path]);if(e){erro(e);return;}const {error}=await db.from('story_photos').delete().eq('id',f.id);if(error){erro(error);return;}const antiga=nhFotosCache.get(f.file_path);if(antiga){URL.revokeObjectURL(antiga.url);nhFotosCache.delete(f.file_path);}await carregarFotos();}
 function abrirAvisoLimite(quantidade){
  const modal=$('modal-limite-fotos');
  $('texto-limite-fotos').textContent=quantidade===null
@@ -1329,7 +1380,7 @@ for(const [id,plano] of [['comprar-essencial','essencial'],['comprar-memorias','
 const redirectTo=location.origin+location.pathname;
 botao('login-google',async()=>{if(!db)return;const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo}});if(error)throw error;});
 botao('sair-conta',async()=>{const {error}=await db.auth.signOut();if(error)throw error;await mostrarSessao(null);});
-let sessaoId=0;async function mostrarSessao(u){const token=++sessaoId;usuario=u;$('login-painel').hidden=!!u;$('conteudo-privado').style.display=u?'block':'none';$('barra-conta').style.display=u?'flex':'none';musicaBotao.style.display=u?'flex':'none';$('botao-configuracoes').style.display=u?'flex':'none';if(!u){clearInterval(conexaoMonitorTimer);conexaoMonitorTimer=null;conexaoPedidosAnterior=null;$('janela-configuracoes').hidden=true;historiaAtual=null;historias=[];perfil=null;modoAtual=null;soloStoryId=null;atualizarInterfaceModo();mascoteDesligar();chatDesligar();vozDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;musica.pause();fecharNuvem();fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];return;}$('janela-configuracoes').hidden=false;$('dados-conta').textContent=u.email||'Conectado';aviso('');try{await carregarPerfil();if(token!==sessaoId)return;await carregarPedidos();if(token!==sessaoId)return;iniciarMonitorConexoes();await carregarModoUsuario();if(token!==sessaoId)return;await carregarHistorias();if(modoAtual==='solo'&&soloStoryId)await selecionarHistoriaSolo(soloStoryId);if(historias.length>0)$('janela-configuracoes').hidden=true}catch(e){if(token===sessaoId)erro(e)}}
+let sessaoId=0;async function mostrarSessao(u){const token=++sessaoId;usuario=u;$('login-painel').hidden=!!u;$('conteudo-privado').style.display=u?'block':'none';$('barra-conta').style.display=u?'flex':'none';musicaBotao.style.display=u?'flex':'none';$('botao-configuracoes').style.display=u?'flex':'none';if(!u){clearInterval(conexaoMonitorTimer);conexaoMonitorTimer=null;conexaoPedidosAnterior=null;$('janela-configuracoes').hidden=true;historiaAtual=null;historias=[];perfil=null;modoAtual=null;soloStoryId=null;atualizarInterfaceModo();mascoteDesligar();chatDesligar();vozDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;musica.pause();fecharNuvem();fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];nhFotosCache.clear();return;}$('janela-configuracoes').hidden=false;$('dados-conta').textContent=u.email||'Conectado';aviso('');try{await carregarPerfil();if(token!==sessaoId)return;await carregarPedidos();if(token!==sessaoId)return;iniciarMonitorConexoes();await carregarModoUsuario();if(token!==sessaoId)return;await carregarHistorias();if(modoAtual==='solo'&&soloStoryId)await selecionarHistoriaSolo(soloStoryId);if(historias.length>0)$('janela-configuracoes').hidden=true}catch(e){if(token===sessaoId)erro(e)}}
 async function iniciar(){ $('modo-seletor').hidden=true;$('login-painel').hidden=false;if(!db){$('mensagem-login').textContent='Falha ao carregar o login. Atualize a página.';return;}const {data}=await db.auth.getSession();await mostrarSessao(data?.session?.user||null);db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT')mostrarSessao(session?.user||null)});}
 iniciar();
 
@@ -2605,9 +2656,7 @@ window.abrirGirininhoSecreto=open;
  let ac,analyser,source,data,ready=false,raf=0;
  const smooth=new Float32Array(N);
  function position(){
-   const b=btn.getBoundingClientRect();
-   canvas.style.left=(b.left+b.width/2)+'px';
-   canvas.style.top=(b.top+b.height/2)+'px';
+   // O anel permanece fixo na tela, alinhado ao botão por CSS.
    canvas.style.display=getComputedStyle(btn).display==='none'?'none':'block';
  }
  function render(){
@@ -2659,7 +2708,6 @@ window.abrirGirininhoSecreto=open;
  btn.addEventListener('click',position);
  new MutationObserver(position).observe(btn,{attributes:true,attributeFilter:['style','class']});
  window.addEventListener('resize',position);
- window.addEventListener('scroll',position,{passive:true});
  position();render();
 })();
 </script>
