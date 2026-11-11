@@ -443,6 +443,87 @@ body.tema-escuro #modo-seletor{background:#30253e;border-color:#76547f;color:#f4
 body.tema-escuro #modo-seletor button{background:#49335e;color:#f4eaff;border-color:#805e91}
 body.tema-escuro #modo-seletor button.ativo{background:#a65391;border-color:#a65391}
 
+
+
+/* ===== NOVO VISUAL: WALLPAPERS + VIDRO FLUTUANTE ===== */
+:root{--vidro:rgba(255,246,252,.23);--vidro-borda:rgba(255,255,255,.68);--vidro-sombra:0 14px 38px rgba(74,26,62,.17);--vidro-texto:#4e2940}
+html{min-height:100%;background:#f7dbe9}
+body,body:not(.tema-escuro),body.tema-escuro{
+  background-image:linear-gradient(180deg,rgba(255,244,252,.22),rgba(255,235,249,.12)),url('imagens/wallpaper_dia.png')!important;
+  background-position:center center!important;background-repeat:no-repeat!important;background-size:cover!important;
+  background-attachment:fixed!important;min-height:100vh;color:var(--vidro-texto)
+}
+body.tema-escuro{--vidro:rgba(31,24,58,.33);--vidro-borda:rgba(240,218,255,.4);--vidro-sombra:0 16px 40px rgba(10,5,30,.35);--vidro-texto:#fff3ff;
+  background-image:linear-gradient(180deg,rgba(22,13,49,.32),rgba(20,11,41,.22)),url('imagens/wallpaper_noite.png')!important;color:var(--vidro-texto)}
+/* cartões de vidro com contorno luminoso, flutuação sutil */
+section,body.tema-escuro section,#login-painel,body.tema-escuro #login-painel,
+#modo-seletor,body.tema-escuro #modo-seletor,#conteudo-configuracoes,body.tema-escuro #conteudo-configuracoes,
+#mascote-juntos,body.tema-escuro #mascote-juntos,#quiz-amor,body.tema-escuro #quiz-amor,
+#cassino-amor,#planos-casal .cartao-plano,body.tema-escuro #planos-casal .cartao-plano{
+ background:var(--vidro)!important;border:1.5px solid var(--vidro-borda)!important;
+ box-shadow:inset 0 1px 1px rgba(255,255,255,.55),var(--vidro-sombra)!important;
+ backdrop-filter:blur(19px) saturate(140%)!important;-webkit-backdrop-filter:blur(19px) saturate(140%)!important;
+ border-radius:26px!important}
+section{transition:transform .25s ease,box-shadow .25s ease}
+@media(hover:hover){section:hover{transform:translateY(-3px)}}
+section h2,body.tema-escuro section h2{color:inherit;text-shadow:0 1px 10px rgba(255,255,255,.36)}
+.muted,.subtitulo,#inicio-status,.legenda,body.tema-escuro .muted,body.tema-escuro .subtitulo{color:inherit;opacity:.88}
+/* botões em cápsulas transparentes */
+.primary,.secondary,.aba-btn,#abrir-planos,#login-google,#sair-conta,#adicionar-foto,
+#abrir-chat,#botao-configuracoes,#botao-tema,#botao-musica,#mascote-acoes button,
+#mascote-premios-abrir,#mascote-coletar,#modo-seletor button,
+#cassino-abrir,.cassino-girar,#planos-casal .cartao-plano button{
+ background:linear-gradient(145deg,rgba(255,255,255,.44),rgba(255,210,235,.16))!important;
+ border:1.5px solid rgba(255,255,255,.75)!important;
+ color:var(--vidro-texto)!important;border-radius:999px!important;
+ box-shadow:inset 0 1px 1px rgba(255,255,255,.8),0 6px 16px rgba(81,36,76,.17)!important;
+ backdrop-filter:blur(15px) saturate(150%)!important;-webkit-backdrop-filter:blur(15px) saturate(150%)!important;
+ text-shadow:0 1px 3px rgba(255,255,255,.24);font-weight:750}
+body.tema-escuro .primary,body.tema-escuro .secondary,body.tema-escuro .aba-btn,
+body.tema-escuro #modo-seletor button,body.tema-escuro #botao-configuracoes,
+body.tema-escuro #botao-tema,body.tema-escuro #botao-musica{
+ background:linear-gradient(145deg,rgba(224,200,255,.24),rgba(93,65,135,.22))!important;
+ border-color:rgba(246,222,255,.49)!important;color:#fff3ff!important}
+.aba-btn.ativa,body.tema-escuro .aba-btn.ativa,#modo-seletor button.ativo,body.tema-escuro #modo-seletor button.ativo{
+ background:linear-gradient(145deg,rgba(242,111,174,.48),rgba(197,77,147,.35))!important;
+ border-color:rgba(255,244,253,.85)!important;box-shadow:0 6px 22px rgba(123,34,87,.28),inset 0 1px 2px #fff9!important}
+#abas-nav,body.tema-escuro #abas-nav{
+ background:rgba(255,244,252,.22)!important;border:1px solid var(--vidro-borda)!important;
+ backdrop-filter:blur(25px) saturate(150%)!important;-webkit-backdrop-filter:blur(25px) saturate(150%)!important;
+ box-shadow:0 8px 26px rgba(60,23,57,.15)!important}
+body.tema-escuro #abas-nav{background:rgba(26,19,52,.4)!important}
+.tempo,.item,.mascote-medidor,.quiz-pergunta,.quiz-item,#galeria .item-foto,
+#mascote-moedas,body.tema-escuro .tempo,body.tema-escuro .item,
+body.tema-escuro .mascote-medidor,body.tema-escuro #galeria .item-foto{
+ background:rgba(255,255,255,.2)!important;border:1px solid rgba(255,255,255,.52)!important;
+ backdrop-filter:blur(11px)!important;-webkit-backdrop-filter:blur(11px)!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.38)!important}
+body.tema-escuro .tempo,body.tema-escuro .mascote-medidor{background:rgba(38,26,65,.25)!important}
+.numero,body.tema-escuro .numero{color:inherit!important}
+#recado-personagem,body.tema-escuro #recado-personagem{background:rgba(255,247,253,.38)!important;color:var(--vidro-texto)!important;backdrop-filter:blur(16px)!important;border:1px solid var(--vidro-borda)!important}
+body.tema-escuro #recado-personagem{background:rgba(34,24,60,.44)!important}
+#recado-personagem::before{display:none}
+#modo-alternar[hidden],#modo-seletor[hidden]{display:none!important}
+#modo-alternar{display:flex;justify-content:center;margin:15px auto 20px}
+#modo-abrir-opcoes{width:min(100%,360px);padding:15px 23px;font-size:16px;min-height:56px;
+ border-radius:999px;border:1.5px solid var(--vidro-borda);color:var(--vidro-texto);
+ background:linear-gradient(145deg,rgba(255,255,255,.52),rgba(255,212,235,.22));
+ box-shadow:inset 0 1px 2px #fff9,0 10px 25px #6b2e5833;
+ backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);font-weight:800}
+#modo-atual-indicador{font-size:12px;opacity:.8;margin-left:5px}
+#modo-seletor{max-width:700px;margin:15px auto 20px;text-align:center!important}
+#modo-seletor h2{text-align:center!important}
+#modo-seletor .modo-botoes{gap:12px}
+#modo-seletor .modo-botoes button{min-height:54px;min-width:155px}
+@media(max-width:650px){
+ body,body:not(.tema-escuro),body.tema-escuro{background-attachment:scroll!important;background-position:center top!important;background-size:auto 100%!important}
+ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:url('imagens/wallpaper_dia.png') center center/cover no-repeat}
+ body.tema-escuro::before{background-image:url('imagens/wallpaper_noite.png')}
+ #abas-nav{border-radius:22px 22px 0 0!important}
+ section{backdrop-filter:blur(15px) saturate(130%)!important;-webkit-backdrop-filter:blur(15px) saturate(130%)!important}
+}
+@media(prefers-reduced-motion:reduce){section:hover{transform:none}}
+
 </style>
 <style id="cassino-estilos">
 #cassino-amor{grid-column:1/-1;background:linear-gradient(145deg,#fff3fa,#ffe8f4);border:1px solid #f3cfe0;border-radius:25px;padding:20px 14px;text-align:center;overflow:hidden}
@@ -530,6 +611,7 @@ body.cassino-aberto{overflow:hidden!important}
 <div id="barra-conta"><span id="dados-conta"></span><button id="sair-conta" class="secondary" type="button">Sair da conta</button></div>
 <header><div id="personagem-com-recado"><img id="animacao-cabecalho" class="coracao" src="danca.png" alt="Animação do casal" role="button" tabindex="0" aria-label="Reproduzir animação de beijo"><div id="recado-personagem"><p>Não carregou direitinho? 💗</p><button id="recarregar-personagem" type="button" onclick="window.location.reload()" aria-label="Recarregar a página">↻ Atualizar</button></div></div><h1 id="titulo-site" title="">Nossa História</h1><p class="subtitulo">Cada história merece um lugar especial.</p></header>
 <main id="conteudo-privado"><p id="aviso-global" role="status"></p>
+<div id="modo-alternar" hidden><button id="modo-abrir-opcoes" type="button" aria-expanded="false" aria-controls="modo-seletor">💗 Escolher modo <span id="modo-atual-indicador"></span></button></div>
 <section id="modo-seletor" hidden aria-label="Escolher modo de uso">
  <h2>Como você quer usar o Nosso Namoro?</h2>
  <p class="muted">Escolha seu espaço. Suas moedas individuais permanecem separadas.</p>
@@ -2276,5 +2358,50 @@ window.abrirGirininhoSecreto=open;
 })();
 </script>
 
+
+
+<script id="nh-vidro-modos-script">
+(()=>{
+ const painel=document.getElementById('modo-seletor');
+ const alternar=document.getElementById('modo-alternar');
+ const abrir=document.getElementById('modo-abrir-opcoes');
+ const indicador=document.getElementById('modo-atual-indicador');
+ if(!painel||!alternar||!abrir)return;
+ let aberto=false;
+ function sincronizar(){
+   const conectado=typeof usuario!=='undefined'&&!!usuario;
+   const escolhido=typeof modoAtual!=='undefined'&&(modoAtual==='solo'||modoAtual==='casal');
+   alternar.hidden=!conectado||!escolhido;
+   painel.hidden=!conectado||(escolhido&&!aberto);
+   abrir.setAttribute('aria-expanded',String(escolhido&&aberto));
+   indicador.textContent=escolhido?'· '+(modoAtual==='solo'?'Solo 🌷':'Casal 💗'):'';
+ }
+ abrir.addEventListener('click',()=>{aberto=!aberto;sincronizar();if(aberto)painel.scrollIntoView({behavior:'smooth',block:'center'});});
+ for(const id of ['modo-btn-solo','modo-btn-casal']){
+   document.getElementById(id)?.addEventListener('click',()=>{
+     // fecha somente quando a escolha for concluída com sucesso
+     const escolhidoAntes=typeof modoAtual!=='undefined'?modoAtual:null;
+     let tentativas=0;
+     const checar=()=>{
+       if(typeof modoTrocando!=='undefined'&&modoTrocando&&tentativas++<100){setTimeout(checar,100);return;}
+       if(typeof modoAtual!=='undefined'&&modoAtual&&(modoAtual!==escolhidoAntes||document.getElementById(id).classList.contains('ativo')))aberto=false;
+       sincronizar();
+     };
+     setTimeout(checar,120);
+   });
+ }
+ // Reaplica a visibilidade após carregamento, login e atualizações assíncronas.
+ const observador=new MutationObserver(()=>{
+   const conectado=typeof usuario!=='undefined'&&!!usuario;
+   const escolhido=typeof modoAtual!=='undefined'&&!!modoAtual;
+   const visivel=conectado&&(!escolhido||aberto);
+   if(painel.hidden===visivel||alternar.hidden===(conectado&&escolhido))sincronizar();
+ });
+ observador.observe(painel,{attributes:true,attributeFilter:['hidden']});
+ observador.observe(document.getElementById('conteudo-privado'),{attributes:true,attributeFilter:['style']});
+ setTimeout(sincronizar,0);
+ window.addEventListener('pageshow',sincronizar);
+})();
+</script>
 
 </body></html>
