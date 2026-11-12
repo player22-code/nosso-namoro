@@ -2674,7 +2674,7 @@ async function nhAtualizarColeta(){
 </style>
 <section id="girininho-modal" hidden role="dialog" aria-modal="true" aria-labelledby="girininho-title">
 <button type="button" id="girininho-close" class="gi-close" aria-label="Fechar Girininho">×</button>
-<div class="gi-wrap"><h2 id="girininho-title">✨ GIRININHO 777 ✨</h2><span class="nh-reacao-personagem" id="girininho-personagem-status" aria-hidden="true">Pronto para jogar</span><img class="gi-hero" id="girininho-hero" src="cucoparado.gif" alt="Mascote Girininho"><div class="gi-board"><div class="nh-gi-roletas"><div id="girininho-grid" class="gi-grid" aria-label="Roletas 3 por 5"></div><div class="nh-gi-particulas" id="girininho-particulas" hidden><img id="girininho-particulas-imagem" src="efeito_moedas.gif" alt=""></div><div class="nh-premio-tematico" id="girininho-premio" hidden><strong id="girininho-premio-titulo"></strong><span id="girininho-premio-valor"></span></div></div><div class="gi-actions"><span id="girininho-balance" class="gi-label">🪙 Saldo: --</span><label class="gi-label">Aposta <select id="girininho-bet"><option value="1">1 moeda</option><option value="2">2 moedas</option><option value="3">3 moedas</option></select></label><button type="button" class="gi-spin" id="girininho-spin">🎰 GIRAR</button><button type="button" id="girininho-mute">🔊 Som</button></div><div id="girininho-message" class="gi-msg" role="status" aria-live="polite">Cassino secreto desbloqueado!</div><div id="girininho-limit" hidden></div></div><p class="gi-note">Somente moedas virtuais, sem valor real. Este cassino utiliza a mesma carteira, as mesmas probabilidades do Cassino do Amor, sem limite diário de giros.</p></div>
+<div class="gi-wrap"><div class="nh-girinnho-cabecalho" role="img" aria-label="Girinnho com olho cibernético"></div><h2 id="girininho-title">✨ GIRININHO 777 ✨</h2><span class="nh-reacao-personagem" id="girininho-personagem-status" aria-hidden="true">Pronto para jogar</span><img class="gi-hero" id="girininho-hero" src="cucoparado.gif" alt="Mascote Girininho"><div class="gi-board"><div class="nh-gi-roletas"><div id="girininho-grid" class="gi-grid" aria-label="Roletas 3 por 5"></div><div class="nh-gi-particulas" id="girininho-particulas" hidden><img id="girininho-particulas-imagem" src="efeito_moedas.gif" alt=""></div><div class="nh-premio-tematico" id="girininho-premio" hidden><strong id="girininho-premio-titulo"></strong><span id="girininho-premio-valor"></span></div></div><div class="gi-actions"><span id="girininho-balance" class="gi-label">🪙 Saldo: --</span><label class="gi-label">Aposta <select id="girininho-bet"><option value="1">1 moeda</option><option value="2">2 moedas</option><option value="3">3 moedas</option></select></label><button type="button" class="gi-spin" id="girininho-spin">🎰 GIRAR</button><button type="button" id="girininho-mute">🔊 Som</button></div><div id="girininho-message" class="gi-msg" role="status" aria-live="polite">Cassino secreto desbloqueado!</div><div id="girininho-limit" hidden></div></div><p class="gi-note">Somente moedas virtuais, sem valor real. Este cassino utiliza a mesma carteira, as mesmas probabilidades do Cassino do Amor, sem limite diário de giros.</p></div>
 </section>
 <script id="girininho-secret-script">
 (()=>{'use strict';
@@ -2927,11 +2927,6 @@ window.abrirGirininhoSecreto=open;
 #cassino-amor .ft-cabecalho .nh-reacao-personagem{display:block!important}
 #cassino-amor .nh-reacao-personagem,#girininho-modal .nh-reacao-personagem{position:absolute;right:12px;top:10px;padding:6px 10px;border-radius:999px;background:#280519df;border:1px solid #ff91bd;color:#ffe9aa;font-size:12px;font-weight:700;text-shadow:0 1px 2px #000;z-index:2;max-width:85%;pointer-events:none}
 #girininho-modal .nh-reacao-personagem{background:#041407e8;border-color:#90ec62;color:#e6ffc5;top:12px;right:14px}
-#cassino-amor[data-estado="idle"] .ft-cabecalho,#girininho-modal[data-estado="idle"] .gi-wrap::before{animation:nh-arte-repouso 4s ease-in-out infinite}
-#cassino-amor[data-estado="girando"] .ft-cabecalho,#girininho-modal[data-estado="girando"] .gi-wrap::before{animation:nh-arte-torcendo .6s ease-in-out infinite alternate}
-#cassino-amor[data-estado="vitoria"] .ft-cabecalho,#girininho-modal[data-estado="vitoria"] .gi-wrap::before{animation:nh-arte-vitoria .9s ease-in-out 5}
-#cassino-amor[data-estado="derrota"] .ft-cabecalho,#girininho-modal[data-estado="derrota"] .gi-wrap::before{animation:nh-arte-derrota 1.15s ease-in-out 4}
-#cassino-amor[data-estado="grande_vitoria"] .ft-cabecalho,#girininho-modal[data-estado="grande_vitoria"] .gi-wrap::before{animation:nh-arte-grande-premio .8s ease-in-out infinite}
 #cassino-amor[data-estado="derrota"] .nh-reacao-personagem,#girininho-modal[data-estado="derrota"] .nh-reacao-personagem{color:#f2d7df;border-color:#97727e;background:#1a131aeb}
 #cassino-amor[data-estado="grande_vitoria"] .nh-reacao-personagem,#girininho-modal[data-estado="grande_vitoria"] .nh-reacao-personagem{color:#fff5b9;border-color:#ffe99e;box-shadow:0 0 15px #ffc83977}
 #cassino-amor .nh-premio-tematico,#girininho-modal .nh-premio-tematico{position:absolute;inset:0;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:10px;pointer-events:none;z-index:5;text-align:center;background:radial-gradient(ellipse,#270012c7,transparent 75%);padding:12px}
@@ -2945,14 +2940,83 @@ window.abrirGirininhoSecreto=open;
 #girininho-modal .nh-gi-particulas img{width:100%;height:100%;object-fit:contain}
 #girininho-modal .nh-premio-tematico{background:radial-gradient(ellipse,#031805cc,transparent 75%)}
 #girininho-modal .nh-premio-tematico span{background:#052109ef;border-color:#c1ff89}
-@keyframes nh-arte-repouso{0%,100%{transform:scale(1)}50%{transform:scale(1.018)}}
-@keyframes nh-arte-torcendo{0%{transform:translateY(0) scale(1.01)}100%{transform:translateY(-3px) scale(1.025);filter:brightness(1.08)}}
-@keyframes nh-arte-vitoria{0%,100%{transform:translateY(0) scale(1)}25%{transform:translateY(-9px) rotate(-1deg) scale(1.025);filter:brightness(1.18)}55%{transform:translateY(0) rotate(0)}75%{transform:translateY(-5px) rotate(1deg) scale(1.025)}}
-@keyframes nh-arte-derrota{0%,100%{transform:translateY(0);filter:brightness(1)}25%{transform:translateY(5px) rotate(-1deg);filter:brightness(.8) saturate(.8)}55%{transform:translateY(5px) rotate(1deg);filter:brightness(.8) saturate(.8)}80%{transform:translateY(3px) rotate(-.5deg)}}
-@keyframes nh-arte-grande-premio{0%,100%{transform:scale(1.01);filter:brightness(1.05)}45%{transform:translateY(-7px) scale(1.055);filter:brightness(1.24) drop-shadow(0 0 12px #ffcd52)}}
 @keyframes nh-premio-respirar{to{transform:scale(1.045)}}
 @media(max-width:420px){#cassino-amor .nh-reacao-personagem,#girininho-modal .nh-reacao-personagem{font-size:10px;padding:5px 8px;top:6px;right:8px}#cassino-amor .nh-premio-tematico,#girininho-modal .nh-premio-tematico{gap:7px}}
 @media(prefers-reduced-motion:reduce){#cassino-amor[data-estado] .ft-cabecalho,#girininho-modal[data-estado] .gi-wrap::before,#cassino-amor .nh-premio-tematico strong,#girininho-modal .nh-premio-tematico strong{animation:none!important;will-change:auto}#cassino-amor .ft-efeitos,#girininho-modal .nh-gi-particulas{visibility:hidden}}
 
 </style>
+<style id="nh-personagens-em-camadas">
+/* O banner e o cenário nunca se movem. Só os pixels da camada do rosto mudam. */
+#cassino-amor,#girininho-modal{transform:none!important}
+#cassino-amor[data-estado] .ft-cabecalho,#girininho-modal[data-estado] .gi-wrap::before{animation:none!important;transform:none!important;filter:none!important;will-change:auto!important}
+#girininho-modal .gi-wrap::before{display:none!important;content:none!important}
+#girininho-modal .nh-girinnho-cabecalho{display:block;position:relative;width:calc(100% + 24px);aspect-ratio:640/286;margin:0 -12px;background:url('cassinos-referencia.jpg') 100% 11.35%/200% auto no-repeat;overflow:hidden;isolation:isolate}
+#cassino-amor .ft-cabecalho{position:relative;isolation:isolate}
+#cassino-amor .ft-cabecalho .nh-reacao-personagem,#girininho-modal .nh-reacao-personagem{display:none!important}
+#cassino-amor .ft-cabecalho .nh-expression-layer,#girininho-modal .nh-expression-layer{display:block!important;position:absolute;inset:0;width:100%;height:100%;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;max-width:none!important;pointer-events:none;z-index:1;animation:none!important;transform:none!important;filter:none!important}
+#cassino-amor .ft-cabecalho .nh-expression-layer[hidden],#girininho-modal .nh-expression-layer[hidden]{display:none!important}
+@media(max-width:600px){#girininho-modal .nh-girinnho-cabecalho{width:calc(100% + 14px);margin-left:-7px;margin-right:-7px}}
+
+</style>
+<script id="nh-personagens-expressoes">
+/* Renderer visual independente: lê o resultado existente; não toca na carteira. */
+(() => {
+ 'use strict';
+ const W=640,H=286,frameWidth=512,frameHeight=256;
+ const frames={vitoria:[0,1,2,3],derrota:[4,5,6,7],grande_vitoria:[8,9,10,11]};
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ const configs=[
+  {root:'cassino-amor',header:'.ft-cabecalho',asset:'coelho-expressoes.png',mask:[334,132,89,58],offsets:[[1,16],[2,16],[1,21],[2,18],[6,24],[7,8],[7,-5],[3,30],[1,14],[2,22],[0,42],[3,14]]},
+  {root:'girininho-modal',header:'.nh-girinnho-cabecalho',asset:'girinnho-expressoes.png',mask:[391,82,46,59],offsets:[[-5,-6],[-2,-4],[-4,-6],[-2,-4],[-4,1],[-3,-10],[-6,-12],[-3,-3],[-4,1],[-3,-6],[-4,1],[-2,1]]}
+ ];
+ const preloaders=[];
+ for(const config of configs){
+  const root=document.getElementById(config.root),header=root?.querySelector(config.header);
+  if(!header)continue;
+  const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
+  canvas.className='nh-expression-layer';canvas.dataset.mask=JSON.stringify(config.mask);canvas.hidden=true;canvas.setAttribute('aria-hidden','true');canvas.dataset.ready='false';header.append(canvas);
+  const ctx=canvas.getContext('2d');if(!ctx)continue;
+  const mask=document.createElement('canvas');mask.width=W;mask.height=H;const mc=mask.getContext('2d');
+  const [cx,cy,rx,ry]=config.mask;mc.save();mc.translate(cx,cy);mc.scale(rx,ry);
+  const gradient=mc.createRadialGradient(0,0,0,0,0,1);gradient.addColorStop(0,'#000');gradient.addColorStop(.72,'#000');gradient.addColorStop(1,'#0000');
+  mc.fillStyle=gradient;mc.fillRect(-1,-1,2,2);mc.restore();
+  const atlas=new Image();atlas.decoding='async';let loaded=false,requested=false,state='',started=0,lastFrame=-1,raf=0;
+  function stop(){if(raf)cancelAnimationFrame(raf);raf=0;lastFrame=-1;ctx.clearRect(0,0,W,H);canvas.hidden=true;canvas.dataset.frame='';}
+  function paint(index){
+   ctx.clearRect(0,0,W,H);ctx.globalCompositeOperation='source-over';ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+   const [dx,dy]=config.offsets[index];
+   ctx.drawImage(atlas,(index%2)*frameWidth,Math.floor(index/2)*frameHeight,frameWidth,frameHeight,dx,dy,W,H);
+   // O alfa é zero fora do rosto: fundo, títulos, moedas e corpo são os originais.
+   ctx.globalCompositeOperation='destination-in';ctx.drawImage(mask,0,0);ctx.globalCompositeOperation='source-over';
+   canvas.dataset.frame=String(index);canvas.hidden=false;lastFrame=index;
+  }
+  function tick(now){
+   raf=0;const group=frames[state];
+   if(!group||!loaded||root.hidden||document.hidden){stop();return}
+   const index=group[reduced.matches?1:Math.floor(Math.max(0,now-started)/210)%group.length];
+   if(index!==lastFrame)paint(index);
+   if(!reduced.matches)raf=requestAnimationFrame(tick);
+  }
+  function update(){
+   const next=root.dataset.estado||'idle';
+   if(next!==state){state=next;started=performance.now();lastFrame=-1;}
+   if(root.hidden||document.hidden||!frames[state]){stop();return}
+   load();if(loaded&&!raf)tick(performance.now());
+  }
+  function load(){
+   if(requested)return;requested=true;
+   atlas.onload=()=>{if(atlas.naturalWidth!==1024||atlas.naturalHeight!==1536){canvas.dataset.error='invalid-atlas';return}loaded=true;canvas.dataset.ready='true';update()};
+   atlas.onerror=()=>{requested=false;canvas.dataset.error='load-failed';console.warn('Não foi possível carregar a animação do personagem:',config.asset)};
+   atlas.src=config.asset;
+  }
+  // Carrega ao abrir o jogo; a arte original fica visível durante o carregamento.
+  new MutationObserver(()=>{if(!root.hidden)load();update()}).observe(root,{attributes:true,attributeFilter:['data-estado','hidden']});
+  reduced.addEventListener('change',()=>{if(raf)cancelAnimationFrame(raf);raf=0;lastFrame=-1;update()});
+  document.addEventListener('visibilitychange',update);preloaders.push(load);
+  if(!root.hidden)load();update();
+ }
+ document.getElementById('aba-btn-jogos')?.addEventListener('click',()=>preloaders.forEach(start=>start()),{once:true});
+})();
+
+</script>
 </body></html>
