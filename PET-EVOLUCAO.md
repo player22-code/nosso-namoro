@@ -18,6 +18,10 @@ As animações temporárias retornam ao estado atual após 3,2 segundos, preserv
 
 A introdução ganhou um cartão de vidro. A mensagem diária mantém sua localização e usa texto escuro no modo dia e claro no modo noite.
 
+## Visualização do progresso
+
+O balão “Progresso”, acima do cenário, abre e fecha uma lista demonstrativa das cinco fases. Cada fase mostra seu GIF, o nível inicial e o estado (atual, conquistado ou a conquistar). A lista não tem seleção de aparência; a evolução continua automática. O nível atual, o XP total e o progresso de 0 a 100 XP para o próximo nível ficam sempre visíveis abaixo do cenário, fora do painel de cuidados.
+
 ## Verificação local
 
 Com um servidor HTTP na raiz do projeto em `127.0.0.1:8765`, execute:

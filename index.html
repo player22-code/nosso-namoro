@@ -943,7 +943,12 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
  <h2 id="mascote-titulo">🐰 Nosso mascote: <span id="mascote-nome-titulo">Juntos</span> 💕</h2>
  <p class="muted">Um coelhinho para vocês cuidarem juntos, em tempo real!</p>
  <div id="mascote-moedas"><span id="mascote-saldo" aria-live="polite">🪙 --</span><button type="button" id="mascote-premios-abrir">🎁 Recompensas</button></div>
+ <details id="mascote-progresso">
+  <summary>Progresso <span class="nh-progresso-seta" aria-hidden="true">⌄</span></summary>
+  <div class="nh-progresso-conteudo"><p class="muted">Veja as próximas fases do seu pet. A evolução acontece automaticamente ao subir de nível.</p><ul id="mascote-fases" aria-label="Idades e níveis para desbloquear"></ul></div>
+ </details>
  <div id="mascote-cenario"><span id="mascote-figura" role="img" aria-label="Coelhinho Juntos">🐰</span><span id="mascote-balao-mensagem" aria-live="polite">Carregando nosso coelhinho... 💗</span></div>
+ <div id="mascote-evolucao-atual"><p>⭐ Nível <strong id="mascote-nivel">1</strong> · <span id="mascote-xp">0 XP</span></p><span id="mascote-xp-etapa">0 / 100 XP para o próximo nível</span><div id="mascote-xp-trilho" role="progressbar" aria-label="Experiência para o próximo nível" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="mascote-xp-barra"></div></div></div>
  <details id="nh-mascote-detalhes"><summary>Cuidados e evolução</summary>
  <div id="mascote-estatisticas">
   <div class="mascote-medidor"><div class="mascote-medidor-topo"><span>🥕 Fome</span><b id="val-fome">--</b></div><div class="mascote-trilho"><div class="mascote-preenchimento" id="barra-fome"></div></div></div>
@@ -951,10 +956,8 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
   <div class="mascote-medidor"><div class="mascote-medidor-topo"><span>⚡ Energia</span><b id="val-energia">--</b></div><div class="mascote-trilho"><div class="mascote-preenchimento" id="barra-energia"></div></div></div>
   <div class="mascote-medidor"><div class="mascote-medidor-topo"><span>🌙 Sono</span><b id="val-sono">--</b></div><div class="mascote-trilho"><div class="mascote-preenchimento" id="barra-sono"></div></div></div>
  </div>
- <p>⭐ Nível <strong id="mascote-nivel">1</strong> · <span id="mascote-xp">0 XP</span></p>
  <p id="mascote-idade" aria-live="polite">Bebê · Macacão e babador</p>
  <p class="muted nh-idades-regra">Bebê 1–4 · Filhote 5–9 · Juvenil 10–19 · Jovem 20–29 · Adulto 30+. Cada 100 XP sobe um nível.</p>
- <div id="mascote-xp-trilho"><div id="mascote-xp-barra"></div></div>
  </details>
  <div id="mascote-acoes"><button type="button" data-mascote-acao="alimentar" disabled>🥕 Alimentar · 5 🪙</button><button type="button" data-mascote-acao="brincar" disabled>🎾 Brincar · 4 🪙</button><button type="button" data-mascote-acao="carinho" disabled>💖 Dar carinho · 2 🪙</button><button type="button" data-mascote-acao="banho" disabled>🛁 Dar banho · 3 🪙</button><button type="button" id="btn-mascote-dormir" data-mascote-acao="dormir" disabled>😴 Dormir</button></div>
  <p id="mascote-status" role="status">Aguardando conexão...</p>
@@ -1865,6 +1868,30 @@ function mascoteIdadeAtual(){
  const xp=Math.max(0,Number(mascoteDados?.experiencia)||0),nivel=Math.floor(xp/100)+1;
  return [...mascoteIdades].reverse().find(idade=>nivel>=idade.min)||mascoteIdades[0];
 }
+function mascoteMostrarProgresso(nivel){
+ const lista=$('mascote-fases');if(!lista)return;
+ const atual=mascoteIdadeAtual();
+ if(!lista.children.length){
+  for(const idade of mascoteIdades){
+   const item=document.createElement('li');item.dataset.idade=idade.id;
+   const img=document.createElement('img');img.src='pet-'+idade.id+'-parado.gif';img.alt='Pet na fase '+idade.nome;img.loading='lazy';img.width=100;img.height=100;
+   const nome=document.createElement('strong');nome.textContent=idade.nome;
+   const requisito=document.createElement('span');requisito.textContent='Desbloqueia no nível '+idade.min;
+   const estado=document.createElement('small');estado.className='nh-fase-estado';
+   item.append(img,nome,requisito,estado);lista.append(item);
+  }
+ }
+ for(const item of lista.children){
+  const idade=mascoteIdades.find(i=>i.id===item.dataset.idade);
+  const estado=item.querySelector('.nh-fase-estado');
+  estado.textContent=idade.id===atual.id?'Fase atual':nivel>=idade.min?'Conquistado':'A conquistar';
+  if(idade.id===atual.id)item.setAttribute('aria-current','step');else item.removeAttribute('aria-current');
+ }
+ const xp=Math.max(0,Number(mascoteDados?.experiencia)||0),restante=xp%100;
+ $('mascote-xp-etapa').textContent=restante+' / 100 XP para o próximo nível';
+ $('mascote-xp-trilho').setAttribute('aria-valuenow',String(restante));
+ $('mascote-xp-trilho').setAttribute('aria-valuetext','Nível '+nivel+', '+restante+' de 100 XP para o próximo nível');
+}
 function mascoteArquivo(acao){return 'pet-'+mascoteIdadeAtual().id+'-'+(Object.hasOwn(mascoteGifs,acao)?acao:'parado')+'.gif';}
 let mascoteAnimacaoTimer=null,mascoteAnimacaoAtiva=false;
 function mascoteGif(acao,temporaria=false){
@@ -1916,7 +1943,7 @@ function atualizarInterfaceMascote(){
   const valor=mascoteLimitar(d[chave]);$(valorId).textContent=Math.round(valor)+'%';$(barraId).style.width=valor+'%';
  }
  const xp=Math.max(0,Number(d.experiencia)||0),nivel=Math.floor(xp/100)+1;
- $('mascote-saldo').textContent='🪙 '+(window.nhSaldoIndividual??'--');mascoteAtualizarPremios();$('mascote-nivel').textContent=nivel;const idade=mascoteIdadeAtual();$('mascote-idade').textContent=idade.nome+' · '+idade.roupa;$('mascote-xp').textContent=xp+' XP';$('mascote-xp-barra').style.width=(xp%100)+'%';
+ $('mascote-saldo').textContent='🪙 '+(window.nhSaldoIndividual??'--');mascoteAtualizarPremios();$('mascote-nivel').textContent=nivel;const idade=mascoteIdadeAtual();$('mascote-idade').textContent=idade.nome+' · '+idade.roupa;$('mascote-xp').textContent=xp+' XP';$('mascote-xp-barra').style.width=(xp%100)+'%';mascoteMostrarProgresso(nivel);
  const figura=$('mascote-figura');figura.classList.toggle('dormindo',dormindo);
  const cenarioMascote=$('mascote-cenario');if(cenarioMascote)cenarioMascote.classList.toggle('nh-noite',dormindo);
  const problemasMascote=[];
@@ -3225,5 +3252,25 @@ body[data-interface="vidro"].tema-escuro #mensagem-romantica-aviso{color:#efd6e0
 #mascote-figura[data-idade="adulto"] img{width:min(210px,48vw);height:210px}
 #mascote-idade{font-weight:700;color:var(--ui-ink,#541c37);text-align:center}
 .nh-idades-regra{font-size:12px;line-height:1.6;text-align:center}
+</style>
+<style id="nh-pet-progresso">
+#mascote-progresso{margin:16px auto 8px;max-width:330px;color:var(--ui-ink,#541c37)}
+#mascote-progresso>summary{display:flex;align-items:center;justify-content:center;gap:12px;list-style:none;cursor:pointer;min-height:44px;width:max-content;max-width:100%;margin:auto;padding:8px 20px;box-sizing:border-box;background:var(--ui-control,rgba(255,245,250,.6));border:1px solid var(--ui-edge,#fff);border-radius:22px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);font-weight:700;box-shadow:0 4px 14px #541c3715}
+#mascote-progresso>summary::-webkit-details-marker{display:none}
+#mascote-progresso>summary:focus-visible{outline:3px solid #c04b80;outline-offset:3px}
+.nh-progresso-seta{font-size:20px;line-height:1;transition:transform .2s}
+#mascote-progresso[open] .nh-progresso-seta{transform:rotate(180deg)}
+.nh-progresso-conteudo{margin-top:10px;padding:12px;border:1px solid var(--ui-edge,#fff);border-radius:20px;background:var(--ui-control,rgba(255,245,250,.65));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.nh-progresso-conteudo>p{font-size:12px;line-height:1.6;margin:0 0 12px}
+#mascote-fases{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0;margin:0;list-style:none}
+#mascote-fases li{display:flex;align-items:center;flex-direction:column;gap:6px;padding:10px 6px;border:1px solid var(--ui-edge,#fff);border-radius:16px;text-align:center;min-width:0}
+#mascote-fases img{width:min(100px,100%);height:100px;object-fit:contain}
+#mascote-fases span{font-size:11px;line-height:1.5}
+#mascote-fases small{font-size:10px;color:var(--ui-muted,#704658)}
+#mascote-fases [aria-current="step"]{outline:2px solid #cc6596;outline-offset:-2px}
+#mascote-evolucao-atual{max-width:330px;margin:8px auto 18px;color:var(--ui-ink,#541c37);text-align:center}
+#mascote-evolucao-atual>p{font-size:14px;font-weight:650;margin:8px 0}
+#mascote-xp-etapa{display:block;font-size:12px;margin-bottom:8px;color:var(--ui-muted,#704658)}
+body.tema-escuro #mascote-xp-trilho{background:#59394e}
 </style>
 </body></html>
