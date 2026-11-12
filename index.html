@@ -2437,15 +2437,15 @@ timeout = setTimeout(function () {
   <h2 id="cassino-titulo">🐰 Cassino do Amor</h2>
   <p>Gire as roletas com as moedas virtuais do coelhinho! 💗</p>
   <div class="cassino-cena">
-    <div class="ft-cabecalho"><img class="ft-topstatic" src="topstatic.webp" alt=""><video src="top3.webm" autoplay muted loop playsinline preload="metadata" poster="topstatic.webp"></video></div>
+    <div class="ft-cabecalho" role="img" aria-label="Coelhinho branco do Cassino do Amor"><span class="nh-reacao-personagem" id="cassino-personagem-status" aria-hidden="true">Pronto para jogar</span></div>
     <img class="ft-faixa" src="marquee.webp" alt="">
     <img id="cassino-mascote" class="cassino-mascote" src="cassino/animacoes/coelho_idle.gif" alt="Coelhinho branco com óculos dourados">
     <div class="cassino-area-efeito">
       <div class="cassino-tela">
         <div class="cassino-grade" id="cassino-grade" aria-label="Roletas com três linhas e cinco colunas"></div>
       </div>
-      <div class="ft-efeitos" id="ft-efeitos" hidden><video id="ft-video-efeito" muted playsinline preload="none"></video></div>
-      <div class="ft-premio" id="ft-premio" hidden><img id="ft-premio-imagem" alt="Premiação"></div>
+      <div class="ft-efeitos" id="ft-efeitos" hidden><img id="cassino-particulas" src="efeito_moedas.gif" alt=""></div>
+      <div class="ft-premio nh-premio-tematico" id="ft-premio" hidden><strong id="cassino-premio-titulo"></strong><span id="cassino-premio-valor"></span></div>
       <img id="cassino-efeito" class="cassino-efeito" alt="" hidden>
     </div>
     <div class="ft-enfeites" aria-hidden="true">
@@ -2479,16 +2479,18 @@ timeout = setTimeout(function () {
  if(!root)return;
  const abrir=document.getElementById('cassino-abrir');
  const fechar=document.getElementById('cassino-fechar');
- let focoAnterior=null;
+ let focoAnterior=null,temporizadorRepouso=null;
  function abrirCassino(){
    focoAnterior=document.activeElement;
    root.hidden=false;
    document.body.classList.add('cassino-aberto');
    abrir.setAttribute('aria-expanded','true');
    fechar.focus();
+   limparEfeitos();gifMascote('idle');
    atualizarSaldo();
  }
  function fecharCassino(){
+   clearTimeout(temporizadorRepouso);limparEfeitos();gifMascote('idle');
    root.hidden=true;
    document.body.classList.remove('cassino-aberto');
    abrir.setAttribute('aria-expanded','false');
@@ -2539,20 +2541,32 @@ timeout = setTimeout(function () {
    a.play().catch(()=>{});
  }
  function mensagem(t){$c('cassino-resultado').textContent=t}
+ const reacoesCoelho={idle:'Pronto para jogar',girando:'Torcendo por você…',vitoria:'Você ganhou! ♡',derrota:'Não foi desta vez…',grande_vitoria:'Grande prêmio! ♡'};
  function gifMascote(nome){
-   /* O vídeo animado do tigre substitui o mascote antigo. */
+   clearTimeout(temporizadorRepouso);
+   const estado=Object.hasOwn(reacoesCoelho,nome)?nome:'idle';
+   root.dataset.estado=estado;
+   $c('cassino-personagem-status').textContent=reacoesCoelho[estado];
+   root.querySelector('.ft-cabecalho').setAttribute('aria-label','Coelhinho branco — '+reacoesCoelho[estado]);
  }
- function efeito(nome){
-   const faixa=$c('ft-premio'),foto=$c('ft-premio-imagem');
-   const arquivo=nome==='grande_vitoria'?'super-mega-ganho2.webp':'grande-ganho.webp';
-   foto.src=''+arquivo;
-   faixa.hidden=false;
-   if(temporizador)clearTimeout(temporizador);
-   const camada=$c('ft-efeitos'),video=$c('ft-video-efeito');
-   video.src=''+(nome==='grande_vitoria'?'speedlight.webm':'stars.webm');
-   camada.hidden=false;video.currentTime=0;video.play().catch(()=>{});
-   if(nome==='grande_vitoria')tocar('comemorar');
-   temporizador=setTimeout(()=>{faixa.hidden=true;camada.hidden=true;video.pause()},1900);
+ function repousarDepois(){
+   clearTimeout(temporizadorRepouso);
+   temporizadorRepouso=setTimeout(()=>{if(!root.hidden&&!ocupado)gifMascote('idle')},5500);
+ }
+ function limparEfeitos(){
+   clearTimeout(temporizador);
+   $c('ft-premio').hidden=true;$c('ft-efeitos').hidden=true;
+ }
+ function efeito(nome,premio){
+   if(root.hidden)return;
+   limparEfeitos();
+   const grande=nome==='grande_vitoria';
+   $c('cassino-premio-titulo').textContent=grande?'GRANDE PRÊMIO DO AMOR':'VITÓRIA DO AMOR';
+   $c('cassino-premio-valor').textContent='+'+Number(premio).toLocaleString('pt-BR')+' moedas';
+   $c('cassino-particulas').src=grande?'efeito_grande_vitoria.gif':'efeito_moedas.gif';
+   $c('ft-premio').hidden=false;$c('ft-efeitos').hidden=false;
+   if(grande)tocar('comemorar');
+   temporizador=setTimeout(limparEfeitos,3500);
  }
  function saldoAtual(){
    const n=Number(window.nhSaldoIndividual);
@@ -2576,7 +2590,7 @@ timeout = setTimeout(function () {
    ocupado=true;$c('cassino-girar').disabled=true;
    mensagem('Girando... boa sorte! 💕');tocar('iniciar');tocar('apostar');
    grade.classList.add('girando');
-   gifMascote('idle');
+   limparEfeitos();gifMascote('girando');
    const anim=setInterval(()=>mostrarGrade(Array.from({length:15},()=>simbolos[Math.floor(Math.random()*simbolos.length)])),100);
    try{
      // A aposta, o sorteio e o crédito são validados e registrados no Supabase.
@@ -2584,22 +2598,25 @@ timeout = setTimeout(function () {
      if(error)throw error;
      await new Promise(r=>setTimeout(r,1350));
      if(historiaAtual?.historia_id!==historiaId)return;
+     clearInterval(anim);grade.classList.remove('girando');
      mostrarGrade(data.simbolos);tocar('parar');
      window.nhSaldoIndividual=Number(data.saldo);$c('cassino-saldo').textContent='🪙 Saldo: '+data.saldo;
       
-     if(data.premio>0){
+     if(!root.hidden&&data.premio>0){
        const grande=data.premio>=aposta*7;
        gifMascote(grande?'grande_vitoria':'vitoria');
-       efeito(grande?'grande_vitoria':'moedas');
+       efeito(grande?'grande_vitoria':'moedas',data.premio);
        tocar(grande?'grande':'ganhou');
        mensagem('🎉 Você ganhou '+data.premio+' moedas! Saldo: '+data.saldo);
-     }else{
+     }else if(!root.hidden){
        gifMascote('derrota');tocar('perdeu');
        mensagem('💗 Não foi desta vez! Você gastou '+aposta+' moeda(s).');
      }
+     if(!root.hidden)repousarDepois();
      // Recarrega o saldo do mascote para manter os dois jogos sincronizados.
      await atualizarSaldo();
    }catch(e){
+     limparEfeitos();gifMascote('idle');
      tocar('semSaldo');
      mensagem('⚠️ '+(e?.message||'Erro ao girar'));
    }finally{
@@ -2657,7 +2674,7 @@ async function nhAtualizarColeta(){
 </style>
 <section id="girininho-modal" hidden role="dialog" aria-modal="true" aria-labelledby="girininho-title">
 <button type="button" id="girininho-close" class="gi-close" aria-label="Fechar Girininho">×</button>
-<div class="gi-wrap"><h2 id="girininho-title">✨ GIRININHO 777 ✨</h2><img class="gi-hero" id="girininho-hero" src="cucoparado.gif" alt="Mascote Girininho"><div class="gi-board"><div id="girininho-grid" class="gi-grid" aria-label="Roletas 3 por 5"></div><div class="gi-actions"><span id="girininho-balance" class="gi-label">🪙 Saldo: --</span><label class="gi-label">Aposta <select id="girininho-bet"><option value="1">1 moeda</option><option value="2">2 moedas</option><option value="3">3 moedas</option></select></label><button type="button" class="gi-spin" id="girininho-spin">🎰 GIRAR</button><button type="button" id="girininho-mute">🔊 Som</button></div><div id="girininho-message" class="gi-msg" role="status" aria-live="polite">Cassino secreto desbloqueado!</div><div id="girininho-limit" hidden></div></div><p class="gi-note">Somente moedas virtuais, sem valor real. Este cassino utiliza a mesma carteira, as mesmas probabilidades do Cassino do Amor, sem limite diário de giros.</p></div>
+<div class="gi-wrap"><h2 id="girininho-title">✨ GIRININHO 777 ✨</h2><span class="nh-reacao-personagem" id="girininho-personagem-status" aria-hidden="true">Pronto para jogar</span><img class="gi-hero" id="girininho-hero" src="cucoparado.gif" alt="Mascote Girininho"><div class="gi-board"><div class="nh-gi-roletas"><div id="girininho-grid" class="gi-grid" aria-label="Roletas 3 por 5"></div><div class="nh-gi-particulas" id="girininho-particulas" hidden><img id="girininho-particulas-imagem" src="efeito_moedas.gif" alt=""></div><div class="nh-premio-tematico" id="girininho-premio" hidden><strong id="girininho-premio-titulo"></strong><span id="girininho-premio-valor"></span></div></div><div class="gi-actions"><span id="girininho-balance" class="gi-label">🪙 Saldo: --</span><label class="gi-label">Aposta <select id="girininho-bet"><option value="1">1 moeda</option><option value="2">2 moedas</option><option value="3">3 moedas</option></select></label><button type="button" class="gi-spin" id="girininho-spin">🎰 GIRAR</button><button type="button" id="girininho-mute">🔊 Som</button></div><div id="girininho-message" class="gi-msg" role="status" aria-live="polite">Cassino secreto desbloqueado!</div><div id="girininho-limit" hidden></div></div><p class="gi-note">Somente moedas virtuais, sem valor real. Este cassino utiliza a mesma carteira, as mesmas probabilidades do Cassino do Amor, sem limite diário de giros.</p></div>
 </section>
 <script id="girininho-secret-script">
 (()=>{'use strict';
@@ -2666,31 +2683,45 @@ const names=['cenoura','coracao','morango','coelho','moeda','estrela','trevo','c
 const imgDir='',sndDir='';
 const girininhoSymbols={cenoura:'botao_jogar.png',coracao:'bonus_liberado.png',morango:'super_win.png',coelho:'personagem_parado.png',moeda:'chuva_moedas.png',estrela:'brilho_vitoria.png',trevo:'tigre_sorte.png',coroa:'mega_win.png'};
 const sounds={open:'18_abrir_menu.wav',close:'19_fechar_menu.wav',spin:'03_roleta_girando.wav',start:'02_iniciar_rodada.wav',stop:'04_roleta_parando.wav',win:'06_vitoria_pequena.wav',big:'07_big_win.wav',lose:'05_sem_premio.wav',click:'01_clique_botao.wav'};
-let busy=false,sound=true,spinTimer=null,previousFocus=null,previousOverflow='';
+let busy=false,sound=true,spinTimer=null,previousFocus=null,previousOverflow='',poseTimer=null,prizeTimer=null;
 const cells=Array.from({length:15},()=>{const el=document.createElement('div');el.className='gi-cell';const img=document.createElement('img');img.alt='Símbolo';el.append(img);grid.append(el);return img});
 function paint(arr){arr.forEach((name,i)=>{if(!cells[i])return;const n=names.includes(name)?name:'coracao';cells[i].src=imgDir+girininhoSymbols[n];cells[i].alt=n})}
 paint(Array.from({length:15},(_,i)=>names[i%8]));
 function play(which){if(!sound)return;const a=new Audio(sndDir+sounds[which]);a.volume=.4;a.play().catch(()=>{});}
-const cucoGifs={parado:'cucoparado.gif',feliz:'cucofeliz.gif',triste:'cucotriste.gif'};
+const cucoEstados={parado:'idle',girando:'girando',feliz:'vitoria',triste:'derrota',super:'grande_vitoria'};
+const cucoRotulos={parado:'Pronto para jogar',girando:'Torcendo por você…',feliz:'Você ganhou! ⚡',triste:'Não foi desta vez…',super:'Grande prêmio! ⚡'};
 function pose(estado){
-  const arquivo=cucoGifs[estado]||cucoGifs.parado;
-  hero.onerror=()=>{hero.onerror=null;hero.alt='Animação do Girininho indisponível: '+arquivo;};
-  hero.alt='Girininho '+estado;
-  if(hero.getAttribute('src')!==arquivo)hero.src=arquivo;
+ clearTimeout(poseTimer);
+ const nome=Object.hasOwn(cucoEstados,estado)?estado:'parado';
+ modal.dataset.estado=cucoEstados[nome];
+ $('girininho-personagem-status').textContent=cucoRotulos[nome];
 }
+function resetPrize(){clearTimeout(prizeTimer);$('girininho-premio').hidden=true;$('girininho-particulas').hidden=true}
+function showPrize(big,value){
+ if(modal.hidden)return;
+ resetPrize();
+ $('girininho-premio-titulo').textContent=big?'GRANDE PRÊMIO DO GIRINNHO':'VITÓRIA DO GIRINNHO';
+ $('girininho-premio-valor').textContent='+'+Number(value).toLocaleString('pt-BR')+' moedas';
+ $('girininho-particulas-imagem').src=big?'efeito_grande_vitoria.gif':'efeito_moedas.gif';
+ $('girininho-premio').hidden=false;$('girininho-particulas').hidden=false;
+ prizeTimer=setTimeout(resetPrize,3500);
+}
+function restPoseLater(){clearTimeout(poseTimer);poseTimer=setTimeout(()=>{if(!modal.hidden&&!busy)pose('parado')},5500)}
 function validStory(){return typeof historiaAtual!=='undefined'&&historiaAtual?.historia_id}
 function validDb(){return typeof db!=='undefined'&&db}
 function setBalance(value){$('girininho-balance').textContent='🪙 Saldo: '+value}
 async function refresh(){if(!validStory()||!validDb()){message.textContent='É preciso estar em uma história ativa para jogar.';return;}try{if(typeof nhAtualizarSaldo==='function')await nhAtualizarSaldo();const v=window.nhSaldoIndividual;setBalance(Number.isFinite(Number(v))&&v!==null?v:'--')}catch(e){message.textContent='Falha ao atualizar saldo: '+e.message}}
-function open(){if(!validStory()){message.textContent='Entre em uma história para jogar.';return;}previousFocus=document.activeElement;previousOverflow=document.body.style.overflow;modal.hidden=false;document.body.style.overflow='hidden';pose('parado');play('open');$('girininho-close').focus();refresh()}
-function close(){if(busy)return;play('close');modal.hidden=true;document.body.style.overflow=previousOverflow;if(previousFocus?.isConnected)previousFocus.focus()}
-async function spin(){if(busy||modal.hidden)return;if(!validStory()||!validDb()){message.textContent='Entre em uma história para jogar.';return;}const storyId=historiaAtual.historia_id,bet=Number($('girininho-bet').value);busy=true;$('girininho-spin').disabled=true;message.textContent='Girando...';pose('parado');play('start');grid.classList.add('gi-spinning');spinTimer=setInterval(()=>paint(Array.from({length:15},()=>names[Math.floor(Math.random()*8)])),110);try{
+function open(){if(!validStory()){message.textContent='Entre em uma história para jogar.';return;}previousFocus=document.activeElement;previousOverflow=document.body.style.overflow;modal.hidden=false;document.body.style.overflow='hidden';resetPrize();pose('parado');play('open');$('girininho-close').focus();refresh()}
+function close(){if(busy)return;play('close');resetPrize();pose('parado');modal.hidden=true;document.body.style.overflow=previousOverflow;if(previousFocus?.isConnected)previousFocus.focus()}
+async function spin(){if(busy||modal.hidden)return;if(!validStory()||!validDb()){message.textContent='Entre em uma história para jogar.';return;}const storyId=historiaAtual.historia_id,bet=Number($('girininho-bet').value);busy=true;$('girininho-spin').disabled=true;message.textContent='Girando...';resetPrize();pose('girando');play('start');grid.classList.add('gi-spinning');spinTimer=setInterval(()=>paint(Array.from({length:15},()=>names[Math.floor(Math.random()*8)])),110);try{
 // Mesma função segura do cassino principal: nunca calcular saldo ou prêmio no navegador.
 const result=await db.rpc('cassino_girar',{p_story_id:storyId,p_aposta:bet});if(result.error)throw result.error;
 await new Promise(resolve=>setTimeout(resolve,1300));if(!validStory()||historiaAtual.historia_id!==storyId){message.textContent='A história mudou. Atualize seu saldo.';return;}
+clearInterval(spinTimer);grid.classList.remove('gi-spinning');
 paint(result.data.simbolos);window.nhSaldoIndividual=Number(result.data.saldo);setBalance(result.data.saldo);play('stop');
-if(result.data.premio>0){const big=result.data.premio>=bet*7;pose('feliz');play(big?'big':'win');message.textContent='🎉 Você ganhou '+result.data.premio+' moedas!'}else{pose('triste');play('lose');message.textContent='Sem prêmio desta vez.'}
-}catch(e){pose('parado');message.textContent='Não foi possível girar: '+e.message;}finally{clearInterval(spinTimer);grid.classList.remove('gi-spinning');busy=false;$('girininho-spin').disabled=false;}}
+if(result.data.premio>0){const big=result.data.premio>=bet*7;pose(big?'super':'feliz');showPrize(big,result.data.premio);play(big?'big':'win');message.textContent='🎉 Você ganhou '+result.data.premio+' moedas!'}else{pose('triste');play('lose');message.textContent='Sem prêmio desta vez.'}
+restPoseLater();
+}catch(e){resetPrize();pose('parado');message.textContent='Não foi possível girar: '+e.message;}finally{clearInterval(spinTimer);grid.classList.remove('gi-spinning');busy=false;$('girininho-spin').disabled=false;}}
 $('girininho-close').addEventListener('click',close);$('girininho-spin').addEventListener('click',spin);$('girininho-mute').addEventListener('click',()=>{sound=!sound;$('girininho-mute').textContent=sound?'🔊 Som':'🔇 Mudo'});
 document.addEventListener('keydown',e=>{if(!modal.hidden&&e.key==='Escape'){e.preventDefault();close()}});
 // Captura o comando ANTES do onsubmit existente, sem gravá-lo nem enviá-lo ao Supabase.
@@ -2887,5 +2918,41 @@ window.abrirGirininhoSecreto=open;
 #girininho-modal .gi-cell:has(img[src="tigre_sorte.png"]) img{visibility:hidden!important}
 #girininho-modal .gi-cell:has(img[src="mega_win.png"]){background-image:url("ft_cartas.png")!important;background-size:90% 90%!important;background-position:center!important;background-repeat:no-repeat!important;}
 #girininho-modal .gi-cell:has(img[src="mega_win.png"]) img{visibility:hidden!important}
+</style>
+<style id="nh-cassinos-reacoes-arte-original">
+/* Anima as artes originais; nenhum personagem é substituído por outro desenho. */
+#cassino-amor .ft-cabecalho{position:relative;transform-origin:50% 70%;will-change:transform,filter}
+#girininho-modal .gi-wrap::before{transform-origin:65% 70%;will-change:transform,filter}
+#girininho-modal .gi-hero{display:none!important}
+#cassino-amor .ft-cabecalho .nh-reacao-personagem{display:block!important}
+#cassino-amor .nh-reacao-personagem,#girininho-modal .nh-reacao-personagem{position:absolute;right:12px;top:10px;padding:6px 10px;border-radius:999px;background:#280519df;border:1px solid #ff91bd;color:#ffe9aa;font-size:12px;font-weight:700;text-shadow:0 1px 2px #000;z-index:2;max-width:85%;pointer-events:none}
+#girininho-modal .nh-reacao-personagem{background:#041407e8;border-color:#90ec62;color:#e6ffc5;top:12px;right:14px}
+#cassino-amor[data-estado="idle"] .ft-cabecalho,#girininho-modal[data-estado="idle"] .gi-wrap::before{animation:nh-arte-repouso 4s ease-in-out infinite}
+#cassino-amor[data-estado="girando"] .ft-cabecalho,#girininho-modal[data-estado="girando"] .gi-wrap::before{animation:nh-arte-torcendo .6s ease-in-out infinite alternate}
+#cassino-amor[data-estado="vitoria"] .ft-cabecalho,#girininho-modal[data-estado="vitoria"] .gi-wrap::before{animation:nh-arte-vitoria .9s ease-in-out 5}
+#cassino-amor[data-estado="derrota"] .ft-cabecalho,#girininho-modal[data-estado="derrota"] .gi-wrap::before{animation:nh-arte-derrota 1.15s ease-in-out 4}
+#cassino-amor[data-estado="grande_vitoria"] .ft-cabecalho,#girininho-modal[data-estado="grande_vitoria"] .gi-wrap::before{animation:nh-arte-grande-premio .8s ease-in-out infinite}
+#cassino-amor[data-estado="derrota"] .nh-reacao-personagem,#girininho-modal[data-estado="derrota"] .nh-reacao-personagem{color:#f2d7df;border-color:#97727e;background:#1a131aeb}
+#cassino-amor[data-estado="grande_vitoria"] .nh-reacao-personagem,#girininho-modal[data-estado="grande_vitoria"] .nh-reacao-personagem{color:#fff5b9;border-color:#ffe99e;box-shadow:0 0 15px #ffc83977}
+#cassino-amor .nh-premio-tematico,#girininho-modal .nh-premio-tematico{position:absolute;inset:0;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:10px;pointer-events:none;z-index:5;text-align:center;background:radial-gradient(ellipse,#270012c7,transparent 75%);padding:12px}
+#cassino-amor .nh-premio-tematico[hidden],#girininho-modal .nh-premio-tematico[hidden]{display:none!important}
+#cassino-amor .nh-premio-tematico strong,#girininho-modal .nh-premio-tematico strong{display:block;font-size:clamp(19px,4.5vw,38px);font-weight:900;line-height:1.25;color:#fff0af;text-shadow:0 3px 4px #000,0 0 18px #f4b332;animation:nh-premio-respirar .8s ease-in-out infinite alternate}
+#cassino-amor .nh-premio-tematico span,#girininho-modal .nh-premio-tematico span{display:block;color:#fff8df;background:#32001ddd;border:2px solid #ffe5a1;padding:8px 18px;border-radius:999px;font-size:clamp(19px,4vw,30px);font-weight:900;box-shadow:0 0 18px #f4b33255}
+#cassino-amor .ft-efeitos img{width:100%;height:100%;object-fit:contain}
+#girininho-modal .nh-gi-roletas{position:relative}
+#girininho-modal .nh-gi-particulas{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:4}
+#girininho-modal .nh-gi-particulas[hidden]{display:none!important}
+#girininho-modal .nh-gi-particulas img{width:100%;height:100%;object-fit:contain}
+#girininho-modal .nh-premio-tematico{background:radial-gradient(ellipse,#031805cc,transparent 75%)}
+#girininho-modal .nh-premio-tematico span{background:#052109ef;border-color:#c1ff89}
+@keyframes nh-arte-repouso{0%,100%{transform:scale(1)}50%{transform:scale(1.018)}}
+@keyframes nh-arte-torcendo{0%{transform:translateY(0) scale(1.01)}100%{transform:translateY(-3px) scale(1.025);filter:brightness(1.08)}}
+@keyframes nh-arte-vitoria{0%,100%{transform:translateY(0) scale(1)}25%{transform:translateY(-9px) rotate(-1deg) scale(1.025);filter:brightness(1.18)}55%{transform:translateY(0) rotate(0)}75%{transform:translateY(-5px) rotate(1deg) scale(1.025)}}
+@keyframes nh-arte-derrota{0%,100%{transform:translateY(0);filter:brightness(1)}25%{transform:translateY(5px) rotate(-1deg);filter:brightness(.8) saturate(.8)}55%{transform:translateY(5px) rotate(1deg);filter:brightness(.8) saturate(.8)}80%{transform:translateY(3px) rotate(-.5deg)}}
+@keyframes nh-arte-grande-premio{0%,100%{transform:scale(1.01);filter:brightness(1.05)}45%{transform:translateY(-7px) scale(1.055);filter:brightness(1.24) drop-shadow(0 0 12px #ffcd52)}}
+@keyframes nh-premio-respirar{to{transform:scale(1.045)}}
+@media(max-width:420px){#cassino-amor .nh-reacao-personagem,#girininho-modal .nh-reacao-personagem{font-size:10px;padding:5px 8px;top:6px;right:8px}#cassino-amor .nh-premio-tematico,#girininho-modal .nh-premio-tematico{gap:7px}}
+@media(prefers-reduced-motion:reduce){#cassino-amor[data-estado] .ft-cabecalho,#girininho-modal[data-estado] .gi-wrap::before,#cassino-amor .nh-premio-tematico strong,#girininho-modal .nh-premio-tematico strong{animation:none!important;will-change:auto}#cassino-amor .ft-efeitos,#girininho-modal .nh-gi-particulas{visibility:hidden}}
+
 </style>
 </body></html>
