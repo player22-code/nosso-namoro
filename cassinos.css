@@ -1,0 +1,68 @@
+/* Scoped to the casino view. All navigation and controls are real HTML buttons. */
+.nh-casino-entry{display:flex;align-items:center;gap:14px;width:min(100%,420px);margin:18px auto;padding:9px 18px 9px 9px;border:2px solid #69fc83;border-radius:28px;background:linear-gradient(115deg,#051109,#17392c);color:#caffc9;text-align:left;font-size:19px;font-weight:900}.nh-casino-entry img{width:68px;height:68px;object-fit:contain;border-radius:16px}.nh-casino-entry small{display:block;font-size:13px;margin-top:4px}
+body.nh-casino-open{overflow:hidden!important}
+#nh-casinos[hidden],#nh-casinos [hidden]{display:none!important}
+#nh-casinos{position:fixed;inset:0;z-index:2147483100;overflow:auto;overscroll-behavior:contain;background:radial-gradient(ellipse at 25% 10%,#31051d,transparent 60%),#08060b;color:#fff4e7;font-family:Arial,sans-serif;text-align:center;isolation:isolate}
+#nh-casinos *{box-sizing:border-box}
+#nh-casinos .nh-topbar{display:flex;align-items:center;gap:16px;padding:8px 14px;padding-top:calc(8px + env(safe-area-inset-top));background:linear-gradient(#160611,#080307);border-bottom:1px solid #772747;box-shadow:0 2px 20px #e8006333;position:relative;z-index:2}
+#nh-casinos .nh-brand{margin:0;color:#fff0f5!important;text-shadow:0 0 6px #ff3988,0 0 14px #ff3988;font:italic bold clamp(22px,2.5vw,35px) Georgia,serif;white-space:nowrap}
+#nh-casinos nav{display:flex;align-items:center;justify-content:center;gap:5px;flex:1}
+#nh-casinos nav button,#nh-casinos .nh-nav-current{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:10px 13px;border:1px solid transparent;border-radius:10px;background:transparent;color:#e7dce4;font-size:15px;white-space:nowrap}
+#nh-casinos .nh-nav-current{border-color:#ff2787;background:#460524;box-shadow:inset 0 0 10px #fc167166,0 0 12px #f51973;color:#fff}
+#nh-casinos .nh-wallet{display:flex;align-items:center;gap:10px;border:1px solid #6e344f;border-radius:12px;padding:5px 7px 5px 12px;background:#170e17;font-weight:800;white-space:nowrap;font-size:20px}
+#nh-casinos .nh-wallet button{height:34px;width:34px;border:1px solid #ff80b6;border-radius:9px;background:linear-gradient(#ff5ca2,#b90051);color:#fff;font-size:28px;line-height:1}
+#nh-casinos .nh-close{flex-shrink:0;width:38px;min-height:44px;background:transparent;color:#e2b4c8;border:1px solid #6e344f;border-radius:10px;font-size:28px}
+#nh-casinos .nh-disclaimer{font-size:10px;letter-spacing:2px;color:#c99aac;margin:9px 0}
+#nh-casinos .nh-theme-tabs{display:none}
+#nh-casinos .nh-casino-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:0 10px;max-width:1440px;margin:auto}
+#nh-casinos .nh-casino{--neon:#ff258a;--dark:#360117;--light:#ffe1ed;--glow:#ff006e88;min-width:0;position:relative;border:2px solid var(--neon);border-radius:24px;background:radial-gradient(ellipse at top,#660727,#12010c 70%);box-shadow:0 0 18px var(--glow),inset 0 0 14px var(--glow);overflow:hidden;padding:0 12px 16px}
+#nh-casinos .nh-casino-girinnho{--neon:#63ff26;--dark:#041606;--light:#ddffd0;--glow:#3cff004d;background:radial-gradient(ellipse at top,#193407,#010802 70%)}
+/* The supplied reference stays intact; CSS windows reuse its header and symbol artwork. */
+#nh-casinos .nh-banner{aspect-ratio:640/286;margin:-1px -13px 0;background-image:url('cassinos-referencia.jpg');background-size:200% auto;background-position:0 11.35%;background-repeat:no-repeat}
+#nh-casinos .nh-casino-girinnho .nh-banner{background-position:100% 11.35%}
+#nh-casinos .nh-machine{position:relative;border:7px ridge #ffd36c;border-radius:13px;padding:7px;background:linear-gradient(135deg,#7f4812,#f4c558 30%,#533407 55%,#ffe9a6);box-shadow:0 0 0 2px #63380a,0 0 16px var(--glow);overflow:hidden}
+#nh-casinos .nh-reels{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:var(--dark);border:2px solid #c59435;border-radius:4px;overflow:hidden;gap:1px}
+#nh-casinos .nh-cell{min-width:0;aspect-ratio:1;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse,#540725,#1d000e);border:1px solid #8f672e80;position:relative}
+#nh-casinos .nh-casino-girinnho .nh-cell{background:radial-gradient(ellipse,#122204,#010501)}
+#nh-casinos .nh-symbol{width:100%;height:100%;display:block;background-repeat:no-repeat;filter:drop-shadow(0 0 5px #ffe25655)}
+#nh-casinos .nh-symbol.nh-symbol-file{width:88%;height:88%;background-size:contain;background-position:center}
+#nh-casinos .nh-spinning .nh-symbol{animation:nh-reel .16s linear infinite}
+#nh-casinos .nh-cell.nh-paid{box-shadow:inset 0 0 20px var(--neon);outline:3px solid #ffe36d;outline-offset:-3px;z-index:1}
+#nh-casinos .nh-controls{display:grid;grid-template-columns:1fr 1.5fr 1fr;align-items:center;gap:12px;border:4px ridge #ffc85e;border-radius:15px;padding:19px 12px 13px;margin-top:15px;background:linear-gradient(160deg,#65012d,#1f000d 65%);box-shadow:0 0 0 2px var(--neon),inset 0 0 15px var(--glow);position:relative}
+#nh-casinos .nh-controls::before{content:'♥';position:absolute;top:-24px;left:50%;transform:translateX(-50%);color:var(--neon);font-size:35px;line-height:1;text-shadow:0 0 4px #fff,0 0 10px var(--neon);pointer-events:none}
+#nh-casinos .nh-casino-girinnho .nh-controls{background:linear-gradient(160deg,#103415,#000a03 65%)}
+#nh-casinos .nh-bet-group>span,#nh-casinos .nh-auto-group>span{display:block;font-size:14px;color:#fff1df;margin-bottom:7px}
+#nh-casinos .nh-stepper{display:flex;align-items:center;justify-content:center;gap:6px}
+#nh-casinos .nh-stepper button{background:linear-gradient(#ff589e,#a90045);color:white;font-size:25px;font-weight:bold;border:1px solid #ff9ec7;border-radius:9px;min-width:34px;min-height:40px;padding:0}
+#nh-casinos .nh-casino-girinnho .nh-stepper button{background:linear-gradient(#4caa45,#155c1e);border-color:#9fcf6f}
+#nh-casinos .nh-bet{font-size:20px;font-weight:700;min-width:25px;color:white;font-variant-numeric:tabular-nums}
+#nh-casinos .nh-spin{min-height:67px;min-width:0;width:100%;border:4px ridge #ffe59c;border-radius:40px;background:linear-gradient(#ff80bb 0%,#e91374 45%,#ac0045 51%,#f43287);color:#fff6eb;font-size:clamp(22px,3.1vw,42px);font-weight:900;text-shadow:0 3px 3px #430019;box-shadow:inset 0 0 0 3px #ffb1d0,0 0 6px #ffe66e,0 0 20px var(--neon);cursor:pointer;letter-spacing:1px}
+#nh-casinos .nh-casino-girinnho .nh-spin{background:linear-gradient(#c3ff54,#5ac706 45%,#188000 51%,#7be500);color:#fffddb;text-shadow:0 3px 3px #143600;box-shadow:inset 0 0 0 3px #caff73,0 0 6px #ffe66e,0 0 20px var(--neon)}
+#nh-casinos .nh-spin:active{transform:translateY(2px)}
+#nh-casinos .nh-auto{display:block;margin:auto;width:59px;min-height:32px;padding:3px;border:2px solid #cea1b3;border-radius:24px;background:#4c1531}
+#nh-casinos .nh-auto span{display:block;width:22px;height:22px;background:#fff6ed;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px #000}
+#nh-casinos .nh-auto[aria-checked="true"]{background:var(--neon);border-color:#ffe1a9}
+#nh-casinos .nh-auto[aria-checked="true"] span{transform:translateX(25px)}
+#nh-casinos .nh-auto-count{display:block;font-size:10px;color:#d4b9ad;margin-top:5px}
+#nh-casinos .nh-feedback{display:flex;align-items:center;gap:10px;text-align:left;margin:15px 0 6px;min-height:72px;padding:8px;background:#0004;border-radius:12px}
+#nh-casinos .nh-hero{width:60px;height:60px;object-fit:contain;flex-shrink:0;border-radius:10px}
+#nh-casinos .nh-casino-amor .nh-hero[src="coelho_idle.gif"],#nh-casinos .nh-casino-amor .nh-hero[src="coelho_derrota.gif"]{transform:scale(1.6);pointer-events:none}
+#nh-casinos .nh-balance{font-size:12px;color:#e5c67f;font-weight:700}
+#nh-casinos .nh-result{font-size:13px;line-height:1.5;margin:4px 0 0;color:#fff1dd;min-height:38px;overflow-wrap:anywhere}
+#nh-casinos .nh-options{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+#nh-casinos .nh-options button{background:#0004;border:1px solid #b7905755;border-radius:9px;color:#e8d6ba;font-size:12px;padding:10px;min-height:44px}
+#nh-casinos .nh-rules{font-size:12px;line-height:1.7;text-align:left;margin-top:12px;padding:10px;color:#d9c7b5;background:#0004;border-radius:10px}
+#nh-casinos .nh-rules summary{cursor:pointer;color:var(--light);min-height:28px;font-weight:700}
+#nh-casinos .nh-win-effect{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;z-index:2}
+#nh-casinos .nh-big-win{position:absolute;inset:0;display:grid;place-items:center;color:#fff3ab;text-shadow:0 3px 5px #000,0 0 20px var(--neon);font-size:clamp(23px,3.5vw,45px);font-weight:900;pointer-events:none;z-index:3;animation:nh-prize .8s infinite alternate}
+#nh-casinos .nh-bottom-note{font-size:12px;color:#b58c9d;margin:22px 16px;padding-bottom:env(safe-area-inset-bottom)}
+#nh-casinos button:disabled{opacity:.45;cursor:default}#nh-casinos button:focus-visible,#nh-casinos summary:focus-visible{outline:3px solid #ffe89e;outline-offset:3px}
+.nh-sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+@keyframes nh-reel{from{transform:translateY(-28%);filter:blur(3px)}to{transform:translateY(28%);filter:blur(3px)}}
+@keyframes nh-prize{to{transform:scale(1.05)}}
+@media(max-width:1050px){#nh-casinos .nh-topbar{gap:8px;flex-wrap:wrap}#nh-casinos .nh-brand{flex:1;text-align:left}#nh-casinos nav{order:4;flex-basis:100%}#nh-casinos .nh-controls{gap:6px;padding:18px 6px 10px}#nh-casinos .nh-spin{min-height:58px}#nh-casinos .nh-casino{padding-left:8px;padding-right:8px}#nh-casinos .nh-banner{margin-left:-9px;margin-right:-9px}}
+@media(max-width:700px){#nh-casinos .nh-casino-pair{grid-template-columns:minmax(0,1fr);padding:0 8px}#nh-casinos .nh-brand{font-size:23px}#nh-casinos .nh-wallet{font-size:16px;padding-left:8px;gap:6px}#nh-casinos .nh-wallet button{width:28px;height:28px}#nh-casinos .nh-close{width:32px}#nh-casinos nav button,#nh-casinos .nh-nav-current{font-size:12px;padding:8px;gap:4px}#nh-casinos .nh-theme-tabs{display:flex;gap:8px;justify-content:center;margin:10px 8px 13px}#nh-casinos .nh-theme-tabs button{flex:1;max-width:250px;border:1px solid #74454c;background:#190d16;color:#ebc7d7;border-radius:10px;padding:10px 7px;min-height:44px;font-size:13px}#nh-casinos .nh-theme-tabs button[aria-pressed="true"]{border-color:#ff4b91;background:#440720;box-shadow:0 0 8px #ff277344;color:#fff}#nh-casinos .nh-theme-tabs button[data-theme="girinnho"][aria-pressed="true"]{border-color:#64ff39;background:#123010;box-shadow:0 0 8px #64ff3944}#nh-casinos .nh-spin{font-size:28px;min-height:58px}#nh-casinos .nh-machine{border-width:5px;padding:4px}#nh-casinos .nh-controls{margin-top:14px}#nh-casinos .nh-banner{aspect-ratio:640/286}#nh-casinos .nh-bet-group>span,#nh-casinos .nh-auto-group>span{font-size:12px}#nh-casinos .nh-controls{grid-template-columns:1fr 1.35fr .8fr}#nh-casinos .nh-stepper{gap:3px}#nh-casinos .nh-stepper button{min-width:28px;min-height:44px}#nh-casinos .nh-auto{min-height:36px}#nh-casinos .nh-auto-count{font-size:9px}}
+@media(prefers-reduced-motion:reduce){#nh-casinos .nh-spinning .nh-symbol,#nh-casinos .nh-big-win{animation:none}#nh-casinos .nh-win-effect{visibility:hidden}#nh-casinos .nh-auto span{transition:none}}
+@media(max-width:360px){#nh-casinos .nh-topbar{padding-left:8px;padding-right:8px;gap:6px}#nh-casinos .nh-brand{font-size:20px}#nh-casinos .nh-wallet{font-size:14px}#nh-casinos nav{gap:2px}#nh-casinos nav button,#nh-casinos .nh-nav-current{font-size:11px;padding:8px 5px;gap:3px}}
+#nh-casinos .nh-nav-status{margin:10px 14px;color:#ffdfa1;font-size:13px;line-height:1.5}
+@media(max-width:360px){#nh-casinos .nh-spin{font-size:24px;letter-spacing:0;padding:8px 4px;border-width:3px}#nh-casinos .nh-controls{grid-template-columns:.95fr 1.4fr .7fr;gap:5px}#nh-casinos .nh-bet{font-size:18px;min-width:18px}#nh-casinos .nh-stepper button{font-size:22px;min-width:27px}#nh-casinos .nh-auto{width:50px}#nh-casinos .nh-auto[aria-checked="true"] span{transform:translateX(16px)}}
