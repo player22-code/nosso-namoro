@@ -834,6 +834,32 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
 #cassino-amor .ft-faixa{width:min(350px,88%);height:25px;object-fit:fill;margin:0 auto;display:block}
 @media(max-width:600px){#cassino-amor .cassino-cena{padding:7px 5px!important}#cassino-amor .ft-cabecalho{height:125px}#cassino-amor .ft-enfeites img{width:37px;height:32px}#cassino-amor .ft-premio img{max-height:130px}}
 </style>
+
+<style id="cassino-grade-fix-2026">
+/* Cada faixa col*.webp e uma sprite vertical de 10 simbolos, NAO um icone.
+   Os simbolos foram recortados em PNGs individuais para evitar esticar a grade. */
+#cassino-amor .cassino-tela{box-sizing:border-box!important;max-width:100%!important;min-width:0!important}
+#cassino-amor .cassino-grade{
+ display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;
+ grid-template-rows:repeat(3,minmax(0,1fr))!important;
+ grid-auto-flow:row!important;grid-auto-rows:0!important;
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ aspect-ratio:5/3!important;box-sizing:border-box!important;overflow:hidden!important;
+ gap:clamp(2px,.8vw,5px)!important;padding:clamp(3px,1vw,8px)!important;
+}
+#cassino-amor .cassino-celula{
+ position:relative!important;box-sizing:border-box!important;min-width:0!important;
+ min-height:0!important;width:100%!important;height:100%!important;
+ aspect-ratio:auto!important;overflow:hidden!important;display:block!important;
+}
+#cassino-amor .cassino-celula img{
+ position:absolute!important;inset:0!important;display:block!important;
+ width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;
+ max-width:100%!important;max-height:100%!important;object-fit:contain!important;
+ object-position:center!important;box-sizing:border-box!important;
+}
+@media(max-width:600px){#cassino-amor .cassino-grade{aspect-ratio:5/3!important}}
+</style>
 </head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -2484,7 +2510,7 @@ timeout = setTimeout(function () {
  });
  const $c=id=>document.getElementById(id);
  const simbolos=['cenoura','coracao','morango','coelho','moeda','estrela','trevo','coroa'];
- const imagensFT={cenoura:'orange.webp',coracao:'col1.webp',morango:'col2.webp',coelho:'col3.webp',moeda:'fichas.webp',estrela:'circle.webp',trevo:'tesouro.webp',coroa:'capa2.webp'};
+ const imagensFT={cenoura:'orange.webp',coracao:'ft_cartas.png',morango:'ft_fogos.png',coelho:'ft_wild.png',moeda:'fichas.webp',estrela:'ft_ouro.png',trevo:'ft_jade.png',coroa:'tesouro.webp'};
  const path=(nome)=>''+(imagensFT[nome]||'orange.webp');
  const audioBase='';
  const audios={click:'clickbtn.ogg',apostar:'coins.ogg',iniciar:'spin2.ogg',
