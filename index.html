@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<link rel="preconnect" href="https://xttqhfaapgimaxfendzr.supabase.co" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preload" as="image" href="inicio-quarto-rosa.webp" fetchpriority="high">
-<link rel="prefetch" as="image" href="imagens/quarto_acordado.png">
-<link rel="prefetch" as="image" href="imagens/quarto_dormindo.png">
+<link rel="prefetch" as="image" href="imagens/quarto_acordado.webp">
+<link rel="prefetch" as="image" href="imagens/quarto_dormindo.webp">
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#b37a9f"><title>Nossa História ❤️</title>
 <style>
 *{box-sizing:border-box}
@@ -415,10 +417,10 @@ body.tema-escuro .quiz-opcoes label:has(input:checked){background:#60416c}
 
 
 /* Cenário dinâmico: mesmas posições de objetos de dia e de noite */
-#mascote-cenario{background-image:url("imagens/quarto_acordado.png")!important;background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important;min-height:350px!important;overflow:hidden;border:1px solid #e6c1d3!important;isolation:isolate}
-#mascote-cenario.nh-noite{background-image:url("imagens/quarto_dormindo.png")!important;border-color:#8f6da9!important}
-body.tema-escuro #mascote-cenario:not(.nh-noite){background-image:url("imagens/quarto_acordado.png")!important}
-body.tema-escuro #mascote-cenario.nh-noite{background-image:url("imagens/quarto_dormindo.png")!important}
+#mascote-cenario{background-image:url("imagens/quarto_acordado.webp")!important;background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important;min-height:350px!important;overflow:hidden;border:1px solid #e6c1d3!important;isolation:isolate}
+#mascote-cenario.nh-noite{background-image:url("imagens/quarto_dormindo.webp")!important;border-color:#8f6da9!important}
+body.tema-escuro #mascote-cenario:not(.nh-noite){background-image:url("imagens/quarto_acordado.webp")!important}
+body.tema-escuro #mascote-cenario.nh-noite{background-image:url("imagens/quarto_dormindo.webp")!important}
 #mascote-figura{position:relative;z-index:2;min-height:225px!important;display:flex!important;align-items:flex-end!important;justify-content:center!important;filter:drop-shadow(0 8px 6px #492b4933)}
 #mascote-figura img{max-height:215px;object-fit:contain}
 #mascote-balao-mensagem{position:relative;z-index:3;background:rgba(255,255,255,.94)!important;box-shadow:0 3px 14px #532f5322}
@@ -859,6 +861,45 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
 }
 @media(max-width:600px){#cassino-amor .cassino-grade{aspect-ratio:5/3!important}}
 </style>
+<script id="nh-cache-imagens">
+// Cache apenas de artes públicas do próprio site. Fotos privadas ficam no fluxo autenticado.
+(()=>{
+ const blobs=new Map(),versoes=new WeakMap(),urls=new WeakMap();
+ function arquivoPublico(src){const u=new URL(src,location.href);return u.origin===location.origin&&/\.(gif|png|webp)$/i.test(u.pathname);}
+ window.nhImagemBlob=function(src){
+  if(!arquivoPublico(src))return Promise.reject(new Error('Recurso fora do cache público'));
+  if(blobs.has(src)){const p=blobs.get(src);blobs.delete(src);blobs.set(src,p);return p;}
+  const p=fetch(src).then(r=>{if(!r.ok)throw new Error('Imagem indisponível');return r.blob()}).catch(e=>{if(blobs.get(src)===p)blobs.delete(src);throw e});
+  blobs.set(src,p);if(blobs.size>20)blobs.delete(blobs.keys().next().value);return p;
+ };
+ window.nhDefinirImagem=function(img,src,reiniciar=false){
+  const versao=(versoes.get(img)||0)+1;versoes.set(img,versao);img.dataset.nhSource=src;img.decoding='async';
+  function aplicar(url){if(versoes.get(img)!==versao)return;const anterior=urls.get(img);img.src=url;if(url.startsWith('blob:'))urls.set(img,url);else urls.delete(img);if(anterior)URL.revokeObjectURL(anterior);}
+  if(!reiniciar||!/\.gif$/i.test(src)){aplicar(src);return;}
+  // Um novo URL de Blob reinicia o GIF usando os mesmos bytes, sem ?replay e outro download.
+  window.nhImagemBlob(src).then(blob=>{if(versoes.get(img)===versao)aplicar(URL.createObjectURL(blob))}).catch(()=>{if(versoes.get(img)===versao)aplicar(src)});
+ };
+ const vistos=new Set(),fila=[];let ativos=0;
+ function proximo(){while(ativos<2&&fila.length){const src=fila.shift();ativos++;
+  const tarefa=/\.gif$/i.test(src)?window.nhImagemBlob(src):new Promise((ok,fail)=>{const im=new Image();im.decoding='async';im.onload=ok;im.onerror=fail;im.src=src});
+  Promise.resolve(tarefa).catch(()=>vistos.delete(src)).finally(()=>{ativos--;proximo()});}}
+ window.nhPrepararImagens=function(fontes){if(navigator.connection?.saveData||/2g/.test(navigator.connection?.effectiveType||''))return;
+  for(const src of fontes){if(!src||!arquivoPublico(src)||vistos.has(src)||fila.length>=24)continue;vistos.add(src);fila.push(src)}
+  (window.requestIdleCallback||((fn)=>setTimeout(fn,800)))(proximo,{timeout:2500});
+ };
+ addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('img').forEach(img=>{if(!img.hasAttribute('decoding'))img.decoding='async'});
+  window.nhPrepararImagens(['beijo.gif','kuromid.gif','kuromib.gif']);
+  function preparar(e){const botao=e.target.closest('button,summary,label');if(!botao)return;
+   const aba=botao.dataset.uiTab||botao.dataset.aba;
+   if(aba){const painel=document.getElementById('aba-'+aba);if(painel)window.nhPrepararImagens([...painel.querySelectorAll('img[src]')].map(i=>i.getAttribute('src')))}
+   if(['nh-jogar-amor','nh-jogar-girinnho','cassino-abrir'].includes(botao.id))window.nhPrepararImagens(['coelho-expressoes.webp','girinnho-expressoes.webp']);
+   if(botao.closest('#mascote-progresso'))window.nhPrepararImagens(['bebe','filhote','juvenil','jovem','adulto'].map(i=>'pet-'+i+'-parado.gif'));
+  }
+  document.addEventListener('pointerover',preparar,{passive:true});document.addEventListener('focusin',preparar);document.addEventListener('pointerdown',preparar,{passive:true});
+ });
+})();
+</script>
 </head>
 <body data-aba="inicio" data-interface="vidro"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -876,16 +917,11 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
 <!-- Chat privado da história selecionada -->
 <button id="abrir-chat" type="button" hidden aria-controls="janela-chat" aria-expanded="false">💬 Nosso Chat</button>
 <div id="janela-chat" hidden role="dialog" aria-label="Conversa do casal">
- <div id="chat-cabecalho"><strong>💞 Nosso Chat</strong><button id="chat-ligar" type="button" title="Ligar para meu amor" aria-label="Iniciar ligação de voz">📞</button><button id="chat-fechar" type="button" aria-label="Fechar chat">×</button></div>
+ <div id="chat-cabecalho"><strong>💞 Nosso Chat</strong><button id="chat-video" type="button" title="Iniciar videochamada" aria-label="Iniciar videochamada">▣</button><button id="chat-ligar" type="button" title="Ligar para meu amor" aria-label="Iniciar ligação de voz">📞</button><button id="chat-fechar" type="button" aria-label="Fechar chat">×</button></div>
  <div id="chat-config"><label>Seu nome no chat<input id="chat-apelido" maxlength="40" placeholder="Seu nome"></label><label>Seu personagem<div id="chat-personagens" aria-label="Escolher personagem"></div></label><button id="chat-salvar-perfil" type="button">Salvar nome e personagem</button></div>
  <div id="chat-mensagens" aria-live="polite" aria-relevant="additions text"></div>
  <div id="chat-status" role="status">Selecione uma história para conversar.</div>
- <div id="voz-tela" hidden aria-label="Ligação de voz">
-   <img id="voz-avatar" src="Cinnamoroll.png" alt="Avatar do parceiro">
-   <div id="voz-nome">Meu amor 💕</div><div id="voz-status" role="status">Preparando ligação...</div><div id="voz-tempo">00:00</div>
-   <div id="voz-botoes"><button id="voz-atender" type="button" hidden>📞 Atender</button><button id="voz-recusar" type="button" hidden>Recusar</button><button id="voz-microfone" type="button">🎙️ Silenciar</button><button id="voz-altofalante" type="button">🔊 Áudio</button><button id="voz-encerrar" type="button">📵 Desligar</button></div>
-   <audio id="voz-audio-remoto" autoplay playsinline></audio>
- </div>
+
  <form id="chat-rodape"><textarea id="chat-texto-enviar" maxlength="2000" rows="1" placeholder="Escreva uma mensagem..." aria-label="Mensagem"></textarea><button id="chat-enviar" type="submit" aria-label="Enviar mensagem">➤</button></form>
 </div>
 <header class="nh-hero-referencia"><div id="personagem-com-recado"><img id="animacao-cabecalho" class="coracao" src="danca.png" alt="Animação do casal" role="button" tabindex="0" aria-label="Reproduzir animação de beijo"><span class="nh-marca-texto">Nossa História ♡</span></div><h1 id="titulo-site" title="">Nossa História</h1><p class="subtitulo">Cada história merece um lugar especial.</p><button id="nh-notificacoes" type="button" aria-label="Ver solicitações de conexão" title="Solicitações de conexão"></button></header>
@@ -909,7 +945,7 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
 <h2 id="titulo-configuracoes">Configurações ⚙️</h2><div class="actions"><button id="nh-config-tema" class="secondary" type="button">☾ Alternar dia / noite</button><button id="nh-config-musica" class="secondary" type="button">♫ Nossas músicas</button><button id="nh-config-chat" class="secondary" type="button">♡ Nosso Chat</button></div><div id="recado-personagem"><p>Não carregou direitinho? 💗</p><button id="recarregar-personagem" type="button" onclick="window.location.reload()" aria-label="Recarregar a página">↻ Atualizar</button></div>
 <div id="barra-conta"><span id="dados-conta"></span><button id="sair-conta" class="secondary" type="button">Sair da conta</button></div>
 <p class="muted">Altere seu nome, consulte seu código e gerencie a conexão do casal.</p>
-<section id="config-secao-perfil"><h2>Meu perfil 💗</h2><div class="stack"><div><label for="nome-usuario">Seu nome</label><input id="nome-usuario" maxlength="40" placeholder="Como deseja ser chamado(a)?"></div><button id="salvar-nome" class="primary" type="button">Salvar nome</button><div><p class="muted">Seu código pessoal de conexão:</p><p id="codigo-conexao">Carregando...</p><button id="copiar-codigo" class="secondary" type="button">Copiar código</button></div></div></section>
+<section id="nh-preferencias"><h2>Minhas preferências</h2><p id="nh-preferencias-status" role="status">Entre para sincronizar suas preferências.</p><label for="nh-volume-musica">Volume da música</label><input id="nh-volume-musica" type="range" min="0" max="1" step="0.05" value="0.35"><label><input id="nh-sons-avisos" type="checkbox" checked> Sons de chamadas e mensagens</label><label for="nh-volume-avisos">Volume dos avisos</label><input id="nh-volume-avisos" type="range" min="0" max="1" step="0.05" value="0.5"></section><section id="config-secao-perfil"><h2>Meu perfil 💗</h2><div class="stack"><div><label for="nome-usuario">Seu nome</label><input id="nome-usuario" maxlength="40" placeholder="Como deseja ser chamado(a)?"></div><button id="salvar-nome" class="primary" type="button">Salvar nome</button><div><p class="muted">Seu código pessoal de conexão:</p><p id="codigo-conexao">Carregando...</p><button id="copiar-codigo" class="secondary" type="button">Copiar código</button></div></div></section>
 <section id="config-secao-conectar"><h2>Conectar com alguém 💌</h2><label for="codigo-outra-pessoa">Código da outra pessoa</label><input id="codigo-outra-pessoa" placeholder="Cole o código aqui"><div class="actions"><button id="enviar-pedido" class="primary" type="button">Enviar solicitação</button></div><h3>Solicitações pendentes</h3><div id="solicitacoes">Carregando...</div></section>
 </div>
 </div>
@@ -976,10 +1012,10 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
  <p class="muted">Escolha uma foto da nossa galeria e crie uma lembrança para compartilhar.</p>
  <div id="memorias-fotos" aria-label="Escolha uma foto"></div>
  <div id="memorias-temas" role="group" aria-label="Tema da imagem">
-  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="claro" checked> ☀️ Hello Kitty<img class="memorias-tema-previa" src="template_hello_kitty.png" alt="Prévia do template Hello Kitty" loading="lazy" onerror="if(!this.dataset.alt){this.dataset.alt='1';this.src='template_hello_kit.png'}"></label>
-  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="escuro"> 🌙 Kuromi<img class="memorias-tema-previa" src="template_kuromi.png" alt="Prévia do template Kuromi" loading="lazy"></label>
-  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="melody"> 🎀 My Melody<img class="memorias-tema-previa" src="mymelodytemplate.png" alt="Prévia do template My Melody" loading="lazy" onerror="if(!this.dataset.r){this.dataset.r='1';this.src=this.getAttribute('src')+'?v='+Date.now()}"></label>
-  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="cinnamoroll"> ☁️ Cinnamoroll<img class="memorias-tema-previa" src="cinnamorolltemplate.png" alt="Prévia do template Cinnamoroll" loading="lazy" onerror="if(!this.dataset.r){this.dataset.r='1';this.src=this.getAttribute('src')+'?v='+Date.now()}"></label>
+  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="claro" checked> ☀️ Hello Kitty<img class="memorias-tema-previa" src="template_hello_kitty.webp" alt="Prévia do template Hello Kitty" loading="lazy" onerror="this.onerror=null;this.src='template_hello_kitty.png'"></label>
+  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="escuro"> 🌙 Kuromi<img class="memorias-tema-previa" src="template_kuromi.webp" alt="Prévia do template Kuromi" loading="lazy" onerror="this.onerror=null;this.src='template_kuromi.png'"></label>
+  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="melody"> 🎀 My Melody<img class="memorias-tema-previa" src="mymelodytemplate.webp" alt="Prévia do template My Melody" loading="lazy" onerror="this.onerror=null;this.src='mymelodytemplate.png'"></label>
+  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="cinnamoroll"> ☁️ Cinnamoroll<img class="memorias-tema-previa" src="cinnamorolltemplate.webp" alt="Prévia do template Cinnamoroll" loading="lazy" onerror="this.onerror=null;this.src='cinnamorolltemplate.png'"></label>
  </div>
  <button id="memorias-gerar" class="primary" type="button">✨ Gerar minha memória</button>
  <p id="memorias-status" class="muted" role="status"></p>
@@ -1065,6 +1101,12 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
   <button id="mascote-coletar" type="button" disabled>🎁 Coletar 20 moedas</button>
   <p id="mascote-premios-aviso">A recompensa é individual. Dias não resgatados não acumulam.</p>
  </div>
+</div>
+<div id="voz-tela" hidden role="dialog" aria-label="Chamada do casal" aria-modal="false" data-minimizada="false">
+ <div id="voz-arrastar"><div><strong id="voz-nome">Meu amor ♡</strong><span id="voz-status" role="status">Preparando chamada…</span></div><span id="voz-tempo">00:00</span><button id="voz-minimizar" type="button" aria-label="Minimizar chamada" aria-expanded="true">−</button><button id="voz-tela-cheia" type="button" aria-label="Alternar tela cheia">⛶</button></div>
+ <div id="voz-palco"><video id="voz-video-remoto" autoplay playsinline></video><div id="voz-sem-video"><img id="voz-avatar" src="Cinnamoroll.png" alt="Avatar do parceiro"><span>Conectando vocês ♡</span></div><video id="voz-video-local" autoplay playsinline muted aria-label="Sua câmera"></video></div>
+ <div id="voz-botoes"><div id="voz-barra-alca" aria-hidden="true"></div><button id="voz-atender" type="button" hidden>Atender</button><button id="voz-recusar" type="button" hidden>Recusar</button><button id="voz-camera" type="button" aria-label="Desativar câmera" aria-pressed="true">▣</button><button id="voz-trocar-camera" type="button" aria-label="Alternar câmera frontal e traseira">⟳</button><button id="voz-microfone" type="button" aria-label="Silenciar microfone" aria-pressed="false">♩</button><button id="voz-encerrar" type="button" aria-label="Encerrar chamada">☎</button></div>
+ <button id="voz-altofalante" type="button">Ativar áudio</button><audio id="voz-audio-remoto" autoplay playsinline></audio>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
@@ -1162,12 +1204,19 @@ function iniciarMonitorConexoes(){
  conexaoMonitorTimer=setInterval(verificarNovasConexoes,4000);
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)verificarNovasConexoes()});
-async function carregarHistorias(){historias=await rpc('minhas_historias')||[];const area=$('lista-historias');limpar(area);$('sem-historias').hidden=historias.length>0;if(!historias.length){if(modoAtual==='casal'){historiaAtual=null;mascoteDesligar();chatDesligar();vozDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;$('historia-painel').hidden=true;$('titulo-site').textContent='Modo Casal';}return;}for(const h of historias){const b=elemento('button',`❤️ ${h.meu_nome} + ${h.parceiro_nome}`,'secondary');b.style.margin='5px';b.onclick=()=>selecionarHistoria(h.historia_id);area.append(b);}if(modoAtual==='solo')return;if(modoAtual==='casal'){const id=historias.some(h=>h.historia_id===historiaAtual?.historia_id)?historiaAtual.historia_id:historias[0].historia_id;await selecionarHistoria(id);}}
-async function selecionarHistoria(id){modoAtual='casal';atualizarInterfaceModo();historiaAtual=historias.find(h=>h.historia_id===id)||null;$('historia-painel').hidden=!historiaAtual;if(!historiaAtual)return;atualizarTitulo();await carregarFotos();await chatConectarHistoria();await vozConectarHistoria();await cinemaConectarHistoria();await mascoteConectarHistoria();$('modo-status').textContent='Modo Casal ativo 💗';}
+async function carregarHistorias(){historias=await rpc('minhas_historias')||[];const area=$('lista-historias');limpar(area);$('sem-historias').hidden=historias.length>0;if(!historias.length){if(modoAtual==='casal'){historiaAtual=null;mascoteDesligar();chatDesligar();vozDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;$('historia-painel').hidden=true;$('titulo-site').textContent='Modo Casal';}return;}for(const h of historias){const b=elemento('button',`❤️ ${h.meu_nome} + ${h.parceiro_nome}`,'secondary');b.style.margin='5px';b.onclick=()=>selecionarHistoria(h.historia_id);area.append(b);}if(modoAtual==='solo')return;if(modoAtual==='casal'){const salvo=window.nhPreferencias?.valor('historiaId');const id=historias.some(h=>h.historia_id===salvo)?salvo:historias.some(h=>h.historia_id===historiaAtual?.historia_id)?historiaAtual.historia_id:historias[0].historia_id;await selecionarHistoria(id);}}
+async function selecionarHistoria(id){modoAtual='casal';atualizarInterfaceModo();historiaAtual=historias.find(h=>h.historia_id===id)||null;$('historia-painel').hidden=!historiaAtual;if(!historiaAtual)return;atualizarTitulo();await Promise.all([carregarFotos(),chatConectarHistoria(),vozConectarHistoria(),cinemaConectarHistoria(),mascoteConectarHistoria()]);$('modo-status').textContent='Modo Casal ativo 💗';window.nhPreferencias?.historia(historiaAtual?.historia_id);}
 // Galeria: downloads privados paralelos e cache somente na memoria desta aba.
 // Nao persiste fotos privadas no armazenamento local ou em service workers.
 const nhFotosCache=new Map();
 let nhFotosGeracao=0;
+const nhFotosPendentes=new Map();
+function nhBaixarFoto(path){
+ if(nhFotosPendentes.has(path))return nhFotosPendentes.get(path);
+ const tarefa=db.storage.from('fotos-privadas').download(path);
+ const promessa=Promise.resolve(tarefa).finally(()=>{if(nhFotosPendentes.get(path)===promessa)nhFotosPendentes.delete(path)});
+ nhFotosPendentes.set(path,promessa);return promessa;
+}
 async function carregarFotos(){
  const geracao=++nhFotosGeracao;
  const area=$('galeria');
@@ -1186,7 +1235,7 @@ async function carregarFotos(){
  const pendentes=[];
  for(const f of lista){
   const item=elemento('div',undefined,'item-foto');
-  const img=elemento('img');img.alt='Uma lembrança nossa';img.className='foto';img.loading='lazy';img.decoding='async';
+  const img=elemento('img');img.alt='Uma lembrança nossa';img.className='foto';img.loading='lazy';img.decoding='async';img.dataset.fotoPath=f.file_path;
   const cache=nhFotosCache.get(f.file_path);
   if(cache)img.src=cache.url;
   else {img.style.minHeight='140px';pendentes.push({f,img});}
@@ -1198,10 +1247,12 @@ async function carregarFotos(){
  let proximo=0;
  async function trabalhador(){
   while(proximo<pendentes.length){
+   if(geracao!==nhFotosGeracao||historiaAtual?.historia_id!==id)return;
    const {f,img}=pendentes[proximo++];
    let entrada=nhFotosCache.get(f.file_path);
    if(!entrada){
-    const {data:blob,error:e}=await db.storage.from('fotos-privadas').download(f.file_path);
+    const {data:blob,error:e}=await nhBaixarFoto(f.file_path);
+    if(geracao!==nhFotosGeracao||historiaAtual?.historia_id!==id||!img.isConnected)continue;
     if(e||!blob){if(geracao===nhFotosGeracao)img.alt='Não foi possível abrir esta foto';continue;}
     entrada={url:URL.createObjectURL(blob)};
     nhFotosCache.set(f.file_path,entrada);
@@ -1246,7 +1297,7 @@ async function enviarFoto(arquivo){if(!historiaAtual)return;const tipos=['image/
     abrirAvisoLimite(typeof count==='number'?count:null);
   }else{erro(cadastroErro)}
   return;
- }const {error:uploadErro}=await db.storage.from('fotos-privadas').upload(caminho,arquivo,{contentType:arquivo.type,upsert:false});if(uploadErro){await db.from('story_photos').delete().eq('id',id);erro(uploadErro);return;}aviso('Foto enviada! ❤️');await carregarFotos();}
+ }const {error:uploadErro}=await db.storage.from('fotos-privadas').upload(caminho,arquivo,{contentType:arquivo.type,upsert:false});if(uploadErro){await db.from('story_photos').delete().eq('id',id);erro(uploadErro);return;}if(historiaAtual&&caminho.startsWith(historiaAtual.historia_id+'/'))nhFotosCache.set(caminho,{url:URL.createObjectURL(arquivo)});aviso('Foto enviada! ❤️');await carregarFotos();}
 botao('salvar-nome',async()=>{const nome=$('nome-usuario').value.trim();if(!nome||nome.length>40){aviso('Digite um nome de 1 a 40 caracteres.');return;}const {error}=await db.from('profiles').update({username:nome}).eq('id',usuario.id);if(error)throw error;aviso('Nome atualizado! ❤️');await carregarPerfil();await carregarHistorias();});
 botao('copiar-codigo',async()=>{await navigator.clipboard.writeText(perfil.connection_code);aviso('Código copiado!');});
 botao('enviar-pedido',async()=>{await rpc('enviar_solicitacao',{codigo_digitado:$('codigo-outra-pessoa').value.trim()});$('codigo-outra-pessoa').value='';aviso('Solicitação enviada! ❤️');await carregarPedidos();});
@@ -1265,16 +1316,11 @@ const animacoesTema={
 
 function definirAnimacaoCabecalho(arquivo,reiniciar=false){
     if(!animacaoCabecalho)return;
-    animacaoCabecalho.src=reiniciar
-        ? arquivo+'?replay='+Date.now()
-        : arquivo;
+    nhDefinirImagem(animacaoCabecalho,arquivo,reiniciar);
 }
 
 function lerDuracaoGif(arquivo){
-    return fetch(arquivo).then(res=>{
-        if(!res.ok)throw new Error('Não foi possível carregar '+arquivo);
-        return res.arrayBuffer();
-    }).then(buffer=>{
+    return nhImagemBlob(arquivo).then(blob=>blob.arrayBuffer()).then(buffer=>{
         const bytes=new Uint8Array(buffer);
         let pos=13;
         const packed=bytes[10];
@@ -1474,7 +1520,7 @@ for(const [id,plano] of [['comprar-essencial','essencial'],['comprar-memorias','
 const redirectTo=location.origin+location.pathname;
 botao('login-google',async()=>{if(!db)return;const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo}});if(error)throw error;});
 botao('sair-conta',async()=>{const {error}=await db.auth.signOut();if(error)throw error;await mostrarSessao(null);});
-let sessaoId=0;async function mostrarSessao(u){const token=++sessaoId;usuario=u;$('login-painel').hidden=!!u;$('conteudo-privado').style.display=u?'block':'none';$('barra-conta').style.display=u?'flex':'none';musicaBotao.style.display=u?'flex':'none';$('botao-configuracoes').style.display=u?'flex':'none';if(!u){clearInterval(conexaoMonitorTimer);conexaoMonitorTimer=null;conexaoPedidosAnterior=null;$('janela-configuracoes').hidden=true;historiaAtual=null;historias=[];perfil=null;modoAtual=null;soloStoryId=null;atualizarInterfaceModo();mascoteDesligar();chatDesligar();vozDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;musica.pause();fecharNuvem();fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];nhFotosCache.clear();return;}$('janela-configuracoes').hidden=false;$('dados-conta').textContent=u.email||'Conectado';aviso('');try{await carregarPerfil();if(token!==sessaoId)return;await carregarPedidos();if(token!==sessaoId)return;iniciarMonitorConexoes();await carregarModoUsuario();if(token!==sessaoId)return;await carregarHistorias();if(modoAtual==='solo'&&soloStoryId)await selecionarHistoriaSolo(soloStoryId);if(historias.length>0)$('janela-configuracoes').hidden=true}catch(e){if(token===sessaoId)erro(e)}}
+let sessaoId=0;async function mostrarSessao(u){const token=++sessaoId;usuario=u;window.dispatchEvent(new CustomEvent('nh-sessao',{detail:u}));window.nhPreferencias?.entrar(u);$('login-painel').hidden=!!u;$('conteudo-privado').style.display=u?'block':'none';$('barra-conta').style.display=u?'flex':'none';musicaBotao.style.display=u?'flex':'none';$('botao-configuracoes').style.display=u?'flex':'none';if(!u){clearInterval(conexaoMonitorTimer);conexaoMonitorTimer=null;conexaoPedidosAnterior=null;$('janela-configuracoes').hidden=true;historiaAtual=null;historias=[];perfil=null;modoAtual=null;soloStoryId=null;atualizarInterfaceModo();mascoteDesligar();chatDesligar();vozDesligar();cinemaDesligar();$('abrir-chat').hidden=true;$('janela-chat').hidden=true;musica.pause();fecharNuvem();fotosUrls.forEach(url=>URL.revokeObjectURL(url));fotosUrls=[];nhFotosCache.clear();limpar($('galeria'));++nhFotosGeracao;nhFotosPendentes.clear();return;}$('janela-configuracoes').hidden=false;$('dados-conta').textContent=u.email||'Conectado';aviso('');try{await carregarPerfil();if(token!==sessaoId)return;await carregarPedidos();if(token!==sessaoId)return;iniciarMonitorConexoes();await carregarModoUsuario();await window.nhPreferencias?.prontas();if(token!==sessaoId)return;await carregarHistorias();if(modoAtual==='solo'&&soloStoryId)await selecionarHistoriaSolo(soloStoryId);if(historias.length>0)$('janela-configuracoes').hidden=true;window.nhPreferencias?.navegar()}catch(e){if(token===sessaoId)erro(e)}}
 async function iniciar(){ $('modo-seletor').hidden=true;$('login-painel').hidden=false;if(!db){$('mensagem-login').textContent='Falha ao carregar o login. Atualize a página.';return;}const {data}=await db.auth.getSession();await mostrarSessao(data?.session?.user||null);db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT')mostrarSessao(session?.user||null)});}
 iniciar();
 
@@ -1506,26 +1552,33 @@ $('chat-texto-enviar').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shi
  const falar=t=>{status.textContent=t;};
  function fotosDaGaleria(){return [...document.querySelectorAll('#galeria .item-foto img')];}
  function atualizarEscolha(){
-  const fotos=fotosDaGaleria();
-  const urls=fotos.map(img=>img.src);
-  if(!urls.includes(selecionada))selecionada=null;
-  area.replaceChildren();
-  if(!fotos.length){area.append(elemento('p','Adicione uma foto em Nossas lembranças para começar.','muted'));return;}
+  const fotos=fotosDaGaleria(),urls=fotos.map(img=>img.getAttribute('src')).filter(Boolean);
+  if(selecionada&&!urls.includes(selecionada)){selecionada=null;resultado.hidden=true;}
+  const existentes=new Map([...area.querySelectorAll('button[data-foto]')].map(b=>[b.dataset.foto,b]));
+  if(!fotos.length){area.replaceChildren(elemento('p','Adicione uma foto em Nossas lembranças para começar.','muted'));return;}
+  area.querySelectorAll(':scope > p').forEach(e=>e.remove());
+  const ativos=new Set();
   fotos.forEach((img,i)=>{
-   const b=elemento('button',undefined,'memoria-foto-opcao');
-   b.type='button';b.setAttribute('aria-label','Escolher foto '+(i+1));
-   b.setAttribute('aria-pressed',String(img.src===selecionada));
-   if(img.src===selecionada)b.classList.add('selecionada');
-   const mini=elemento('img');mini.src=img.src;mini.alt='Foto '+(i+1);b.append(mini);
-   b.onclick=()=>{selecionada=img.src;resultado.hidden=true;atualizarEscolha();};
-   area.append(b);
+   const chave=img.dataset.fotoPath||String(i),src=img.getAttribute('src')||'';
+   ativos.add(chave);let b=existentes.get(chave);
+   if(!b){b=elemento('button',undefined,'memoria-foto-opcao');b.type='button';b.dataset.foto=chave;area.append(b);}
+   b.setAttribute('aria-label','Escolher foto '+(i+1));b.disabled=!src;
+   b.setAttribute('aria-pressed',String(!!src&&src===selecionada));b.classList.toggle('selecionada',!!src&&src===selecionada);
+   if(src){
+    let mini=b.querySelector('img');
+    if(!mini){mini=elemento('img');mini.decoding='async';mini.loading='eager';mini.alt='Foto '+(i+1);b.replaceChildren(mini);}
+    mini.alt='Foto '+(i+1);if(mini.getAttribute('src')!==src)mini.src=src;
+   }else if(!b.querySelector('span')){
+    const aviso=elemento('span',img.alt==='Não foi possível abrir esta foto'?'Não foi possível carregar':'Carregando foto…');b.replaceChildren(aviso);
+   }else b.querySelector('span').textContent=img.alt==='Não foi possível abrir esta foto'?'Não foi possível carregar':'Carregando foto…';
+   b.onclick=()=>{if(!src)return;selecionada=src;resultado.hidden=true;atualizarEscolha();};
   });
+  for(const [chave,b] of existentes)if(!ativos.has(chave))b.remove();window.nhPreferencias?.restaurarFoto();
  }
- const observador=new MutationObserver(()=>{
-  // A galeria é reconstruída ao trocar de história, enviar ou excluir fotos.
-  atualizarEscolha();resultado.hidden=true;
- });
- observador.observe($('galeria'),{childList:true});
+ // O src chega depois do download: observar só childList deixava as miniaturas vazias.
+ const observador=new MutationObserver(atualizarEscolha);
+ observador.observe($('galeria'),{childList:true,subtree:true,attributes:true,attributeFilter:['src','alt']});
+ atualizarEscolha();
  function carregarImagem(src){return new Promise((resolve,reject)=>{
   const im=new Image();im.onload=()=>resolve(im);im.onerror=()=>reject(new Error('Não foi possível abrir a imagem: '+src));im.src=src;
  });}
@@ -1568,15 +1621,13 @@ $('chat-texto-enviar').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shi
   const bot=$('memorias-gerar');bot.disabled=true;falar('Gerando sua memória...');
   try{
    const foto=await carregarImagem(selecionada);
-   const arquivosPorTema={claro:['template_hello_kitty.png','template_hello_kit.png'],escuro:['template_kuromi.png'],melody:['mymelodytemplate.png'],cinnamoroll:['cinnamorolltemplate.png']};
+   const arquivosPorTema={claro:['template_hello_kitty.webp','template_hello_kitty.png'],escuro:['template_kuromi.webp','template_kuromi.png'],melody:['mymelodytemplate.webp','mymelodytemplate.png'],cinnamoroll:['cinnamorolltemplate.webp','cinnamorolltemplate.png']};
    const arquivos=arquivosPorTema[tema]||arquivosPorTema.claro;
    const estilosPorTema={claro:{fundo:'#fff5f7',cor:'#77364e',destaque:'#bd3267'},escuro:{fundo:'#171321',cor:'#f4eaff',destaque:'#e0b5ff'},melody:{fundo:'#fff5f7',cor:'#77364e',destaque:'#bd3267'},cinnamoroll:{fundo:'#f2f8ff',cor:'#3d5878',destaque:'#2f7fd1'}};
    const estilo=estilosPorTema[tema]||estilosPorTema.claro;
    let moldura=null;
    for(const arquivo of arquivos){
     try{moldura=await carregarImagem(arquivo);break;}catch(e){}
-    // Nova tentativa com parâmetro de versão: contorna um "não encontrado" guardado em cache pelo navegador ou pelo GitHub Pages.
-    try{moldura=await carregarImagem(arquivo+'?v='+Date.now());break;}catch(e){}
    }
    if(!moldura)throw new Error('Moldura não encontrada no GitHub: '+arquivos.join(' ou ')+'. Confira o nome do PNG enviado e aguarde alguns minutos após o envio, para o GitHub Pages publicar.');
    const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;
@@ -1627,64 +1678,122 @@ $('chat-texto-enviar').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shi
 })();
 
 
-/* Ligação de voz: WebRTC com sinalização protegida por RLS no Supabase. */
-let vozStory=null,vozCanal=null,vozChamada=null,vozPc=null,vozLocal=null,vozRemoto=null,vozPoll=null,vozRelogio=null,vozInicio=null,vozOcupado=false,vozUltimoSinal=0,vozSinaisPendentes=[],vozProcessados=new Set(),vozCriando=false;
-const vozEl=id=>document.getElementById(id);
-const vozAvisar=t=>vozEl('voz-status').textContent=t;
-function vozTela(mostrar){vozEl('voz-tela').hidden=!mostrar;}
-function vozBotoes(estado){vozEl('voz-atender').hidden=estado!=='tocando';vozEl('voz-recusar').hidden=estado!=='tocando';vozEl('voz-microfone').hidden=estado==='tocando';vozEl('voz-altofalante').hidden=estado==='tocando';vozEl('voz-encerrar').hidden=estado==='tocando';}
-function vozParceiro(){const ids=Object.keys(chatPerfis).filter(id=>id!==usuario?.id);const id=ids[0];vozEl('voz-nome').textContent=id?chatNomeUsuario(id):'Meu amor 💕';vozEl('voz-avatar').src=encodeURI(id?chatAvatarUsuario(id):'Cinnamoroll.png');}
+/* Áudio e vídeo: WebRTC; sinalização e permissões da história continuam no Supabase. */
+let vozStory=null,vozCanal=null,vozChamada=null,vozPc=null,vozLocal=null,vozRemoto=null,vozPoll=null,vozRelogio=null,vozInicio=null,vozOcupado=false,vozSinaisPendentes=[],vozProcessados=new Set(),vozCriando=false;
+let vozAceita=false,vozVersao=0,vozLendo=false,vozTipo='audio',vozFrontal=true,vozMidiaPromessa=null,vozOfertaEnviada=false,vozLimite=null;
+const vozEl=id=>document.getElementById(id),vozAvisar=t=>vozEl('voz-status').textContent=t;
+const vozToques={entrada:new Audio('toque-ligacao.mp3'),saida:new Audio('chamando-ligacao.mp3')};let vozToqueAtual=null;
+Object.values(vozToques).forEach(a=>{a.loop=true;a.preload='none'});
+function vozTocar(tipo){
+ if(vozToqueAtual===tipo)return;
+ for(const a of Object.values(vozToques)){a.pause();a.currentTime=0;}
+ vozToqueAtual=tipo;
+ if(tipo&&vozEl('nh-sons-avisos')?.checked!==false){const a=vozToques[tipo];a.volume=Number(vozEl('nh-volume-avisos')?.value??.5);a.play().catch(()=>{});}
+}
+document.addEventListener('pointerdown',()=>{if(vozToqueAtual&&vozEl('nh-sons-avisos')?.checked!==false)vozToques[vozToqueAtual].play().catch(()=>{})},{passive:true});
+function vozTela(mostrar){vozEl('voz-tela').hidden=!mostrar;if(mostrar){vozEl('voz-tela').dataset.minimizada='false';vozEl('voz-minimizar').setAttribute('aria-expanded','true');vozEl('voz-minimizar').setAttribute('aria-label','Minimizar chamada');}else vozEl('voz-tela').classList.remove('nh-fullscreen');}
+function vozBotoes(estado){
+ const receber=estado==='tocando';vozEl('voz-atender').hidden=!receber;vozEl('voz-recusar').hidden=!receber;
+ for(const id of ['voz-microfone','voz-encerrar'])vozEl(id).hidden=receber;
+ for(const id of ['voz-camera','voz-trocar-camera'])vozEl(id).hidden=receber||vozTipo!=='video';
+ vozEl('voz-video-local').hidden=vozTipo!=='video';vozEl('voz-altofalante').hidden=receber;
+}
+function vozParceiro(){const id=Object.keys(chatPerfis).find(id=>id!==usuario?.id);vozEl('voz-nome').textContent=id?chatNomeUsuario(id):'Meu amor ♡';vozEl('voz-avatar').src=encodeURI(id?chatAvatarUsuario(id):'Cinnamoroll.png');}
 function vozCronometro(){if(!vozInicio)return;const t=Math.floor((Date.now()-vozInicio)/1000);vozEl('voz-tempo').textContent=String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');}
-function vozLimparMidia(){if(vozRelogio)clearInterval(vozRelogio);vozRelogio=null;vozInicio=null;if(vozPc){vozPc.onicecandidate=null;vozPc.ontrack=null;vozPc.close();vozPc=null;}if(vozLocal){vozLocal.getTracks().forEach(t=>t.stop());vozLocal=null;}vozEl('voz-audio-remoto').srcObject=null;vozRemoto=null;vozSinaisPendentes=[];vozProcessados.clear();vozEl('voz-tempo').textContent='00:00';}
+function vozLimparMidia(){
+ ++vozVersao;clearTimeout(vozLimite);vozLimite=null;vozTocar(null);window.nhOcultarLigacao?.();clearInterval(vozRelogio);vozRelogio=null;vozInicio=null;vozAceita=false;vozOfertaEnviada=false;
+ if(vozPc){vozPc.onicecandidate=null;vozPc.ontrack=null;vozPc.onconnectionstatechange=null;vozPc.close();vozPc=null;}
+ if(vozLocal){vozLocal.getTracks().forEach(t=>t.stop());vozLocal=null;}
+ for(const id of ['voz-audio-remoto','voz-video-local','voz-video-remoto'])vozEl(id).srcObject=null;
+ vozRemoto=null;vozSinaisPendentes=[];vozProcessados.clear();vozEl('voz-tempo').textContent='00:00';vozEl('voz-sem-video').hidden=false;
+ vozEl('voz-microfone').setAttribute('aria-pressed','false');vozEl('voz-camera').setAttribute('aria-pressed','true');
+}
 async function vozSinal(tipo,conteudo={}){if(!vozChamada||!usuario)return;const {error}=await db.from('voz_sinais').insert({call_id:vozChamada.id,story_id:vozChamada.story_id,sender_id:usuario.id,kind:tipo,payload:conteudo});if(error)throw error;}
+async function vozObterMidia(){
+ if(vozLocal)return vozLocal;
+ if(vozMidiaPromessa)return vozMidiaPromessa;
+ if(!navigator.mediaDevices?.getUserMedia)throw new Error('Câmera e microfone exigem HTTPS e um navegador compatível.');
+ const versao=vozVersao;
+ const tarefa=navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true},video:vozTipo==='video'?{facingMode:'user',width:{ideal:1280},height:{ideal:720}}:false});
+ vozMidiaPromessa=tarefa;
+ try{const stream=await tarefa;if(versao!==vozVersao){stream.getTracks().forEach(t=>t.stop());throw new Error('Chamada cancelada.');}vozLocal=stream;vozEl('voz-video-local').srcObject=stream;vozEl('voz-video-local').muted=true;return stream;}finally{if(vozMidiaPromessa===tarefa)vozMidiaPromessa=null;}
+}
 async function vozCriarPeer(){
  if(vozPc)return;
- vozLocal=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true},video:false});
- vozPc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]});
- vozLocal.getTracks().forEach(t=>vozPc.addTrack(t,vozLocal));
- vozPc.onicecandidate=e=>{if(e.candidate)vozSinal('ice',e.candidate.toJSON()).catch(console.error)};
- vozPc.ontrack=e=>{vozRemoto=e.streams[0];vozEl('voz-audio-remoto').srcObject=vozRemoto;vozEl('voz-audio-remoto').play().catch(()=>vozAvisar('Toque em Áudio para ouvir seu amor.'))};
- vozPc.onconnectionstatechange=()=>{if(vozPc?.connectionState==='connected'){vozAvisar('Conectados 💗');if(!vozInicio){vozInicio=Date.now();vozRelogio=setInterval(vozCronometro,1000);}}else if(vozPc?.connectionState==='failed')vozAvisar('Falha de conexão. Algumas redes exigem servidor TURN.')};
+ const versao=vozVersao,stream=await vozObterMidia();if(versao!==vozVersao)return;
+ const peer=new RTCPeerConnection({iceServers:window.NH_ICE_SERVERS||[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]});vozPc=peer;
+ stream.getTracks().forEach(t=>peer.addTrack(t,stream));
+ peer.onicecandidate=e=>{if(e.candidate&&vozPc===peer)vozSinal('ice',e.candidate.toJSON()).catch(console.warn)};
+ peer.ontrack=e=>{
+  if(vozPc!==peer)return;vozRemoto=e.streams[0]||vozRemoto||new MediaStream();if(!vozRemoto.getTracks().includes(e.track))vozRemoto.addTrack(e.track);
+  const video=vozTipo==='video',media=vozEl(video?'voz-video-remoto':'voz-audio-remoto');media.srcObject=vozRemoto;
+  if(video&&e.track.kind==='video')vozEl('voz-sem-video').hidden=false;
+  media.onloadeddata=()=>{if(video&&media.videoWidth)vozEl('voz-sem-video').hidden=true;};
+  media.play().catch(()=>vozAvisar('Toque em Ativar áudio para ouvir.'));
+ };
+ peer.onconnectionstatechange=()=>{if(vozPc!==peer)return;if(peer.connectionState==='connected'){vozTocar(null);clearTimeout(vozLimite);window.nhOcultarLigacao?.();vozAvisar('Conectados ♡');if(!vozInicio){vozInicio=Date.now();vozRelogio=setInterval(vozCronometro,1000)}}else if(peer.connectionState==='failed'){vozTocar(null);vozAvisar('Não foi possível atravessar esta rede. Tente outra conexão.');}else if(peer.connectionState==='disconnected')vozAvisar('Tentando reconectar…');};
 }
 async function vozProcessarSinal(s){
- if(!vozChamada||s.call_id!==vozChamada.id||s.sender_id===usuario?.id||vozProcessados.has(s.id))return;
- vozProcessados.add(s.id);
+ if(!vozChamada||s.call_id!==vozChamada.id||s.sender_id===usuario?.id||vozProcessados.has(s.id)||!vozAceita)return;
+ vozProcessados.add(s.id);const callId=vozChamada.id,versao=vozVersao;
  try{
   if(s.kind==='offer'){
-   await vozCriarPeer();await vozPc.setRemoteDescription(new RTCSessionDescription(s.payload));
-   const resposta=await vozPc.createAnswer();await vozPc.setLocalDescription(resposta);await vozSinal('answer',vozPc.localDescription.toJSON());
-  }else if(s.kind==='answer'&&vozPc?.signalingState==='have-local-offer'){
-   await vozPc.setRemoteDescription(new RTCSessionDescription(s.payload));
-  }else if(s.kind==='ice'){
-   if(!vozPc||!vozPc.remoteDescription){vozSinaisPendentes.push(s.payload);return;}
-   await vozPc.addIceCandidate(new RTCIceCandidate(s.payload));
+   await vozCriarPeer();if(!vozPc||vozChamada?.id!==callId||versao!==vozVersao)return;const peer=vozPc;await peer.setRemoteDescription(new RTCSessionDescription(s.payload));if(vozPc!==peer||vozChamada?.id!==callId)return;const answer=await peer.createAnswer();await peer.setLocalDescription(answer);if(vozPc===peer&&vozChamada?.id===callId)await vozSinal('answer',peer.localDescription.toJSON());
+  }else if(s.kind==='answer'&&vozPc?.signalingState==='have-local-offer')await vozPc.setRemoteDescription(new RTCSessionDescription(s.payload));
+  else if(s.kind==='ice'){if(!vozPc?.remoteDescription){vozSinaisPendentes.push(s.payload);return;}await vozPc.addIceCandidate(new RTCIceCandidate(s.payload));}
+  if(vozPc?.remoteDescription&&vozSinaisPendentes.length){for(const c of vozSinaisPendentes.splice(0))await vozPc.addIceCandidate(new RTCIceCandidate(c));}
+ }catch(e){if(vozChamada?.id===callId)vozAvisar('Não foi possível conectar: '+e.message);}
+}
+async function vozLerSinais(){if(!vozChamada||!vozAceita)return;const id=vozChamada.id;const {data,error}=await db.from('voz_sinais').select('*').eq('call_id',id).order('created_at',{ascending:true}).limit(200);if(error)return;for(const s of data||[]){if(vozChamada?.id!==id)return;await vozProcessarSinal(s);}}
+async function vozOferecer(){if(!vozAceita||vozOfertaEnviada||vozOcupado)return;vozOcupado=true;try{await vozCriarPeer();if(!vozPc||!vozChamada)return;const offer=await vozPc.createOffer();await vozPc.setLocalDescription(offer);await vozSinal('offer',vozPc.localDescription.toJSON());vozOfertaEnviada=true;vozAvisar('Conectando…');}catch(e){vozAvisar('Não foi possível conectar: '+e.message);}finally{vozOcupado=false;}}
+async function vozLerChamada(){
+ if(!vozStory||!usuario||vozCriando||vozLendo)return;vozLendo=true;const story=vozStory;
+ try{
+  const {data,error}=await db.from('voz_chamadas').select('*').eq('story_id',story).in('status',['tocando','ativa']).order('created_at',{ascending:false}).limit(1);
+  if(error||story!==vozStory||!usuario)return;const c=data?.[0];
+  if(!c){if(vozChamada){vozLimparMidia();vozChamada=null;vozTela(false);}return;}
+  if(vozChamada&&vozChamada.id!==c.id){vozLimparMidia();vozChamada=null;}
+  const nova=!vozChamada;
+  if(nova){vozChamada=c;vozTipo=c.media_type==='video'?'video':'audio';vozParceiro();vozTela(true);vozBotoes('tocando');if(c.status==='tocando')vozLimite=setTimeout(()=>vozEncerrar(),Math.max(0,60000-(Date.now()-Date.parse(c.created_at))));}
+  vozChamada=c;
+  if(c.status==='tocando'){
+   if(Date.now()-Date.parse(c.created_at)>60000){await vozEncerrar();return;}
+   if(c.caller_id!==usuario.id){vozBotoes('tocando');vozAvisar(vozTipo==='video'?'Videochamada recebida':'Seu amor está ligando ♡');vozTocar('entrada');window.nhNotificarLigacao?.(c);}
+   else{vozBotoes('ligando');vozTocar('saida');}
+  }else{
+   vozTocar(null);window.nhOcultarLigacao?.();clearTimeout(vozLimite);
+   if(!vozAceita){vozBotoes('tocando');vozEl('voz-atender').textContent='Retomar';vozAvisar('Toque para retomar esta chamada.');return;}
+   vozBotoes('ligando');if(c.caller_id===usuario.id)await vozOferecer();await vozLerSinais();
   }
-  if(vozPc?.remoteDescription&&vozSinaisPendentes.length){const lista=vozSinaisPendentes.splice(0);for(const c of lista)await vozPc.addIceCandidate(new RTCIceCandidate(c));}
- }catch(e){console.warn('Sinal de voz:',e);vozAvisar('Não foi possível conectar: '+e.message);}
+ }finally{vozLendo=false;}
 }
-async function vozLerSinais(){if(!vozChamada)return;const id=vozChamada.id;const {data,error}=await db.from('voz_sinais').select('*').eq('call_id',id).order('created_at',{ascending:true}).limit(200);if(error)return;for(const s of data||[]){if(vozChamada?.id!==id)return;await vozProcessarSinal(s);}}
-async function vozLerChamada(){if(!vozStory||!usuario||vozCriando)return;const story=vozStory;const {data,error}=await db.from('voz_chamadas').select('*').eq('story_id',story).in('status',['tocando','ativa']).order('created_at',{ascending:false}).limit(1);if(error)return;const c=data?.[0];if(!c){if(vozChamada){vozLimparMidia();vozChamada=null;vozTela(false);}return;}
- if(!vozChamada){vozChamada=c;vozParceiro();vozTela(true);if(c.caller_id!==usuario.id&&c.status==='tocando'){vozBotoes('tocando');vozAvisar('Seu amor está ligando 💗');}else if(c.caller_id===usuario.id){vozBotoes('ligando');vozAvisar('Chamando seu amor...');}else{vozBotoes('ligando');vozAvisar('Conectando...');}}
- if(vozChamada?.id!==c.id)return;
- if(c.status==='ativa'&&c.caller_id===usuario.id&&!vozPc&&!vozOcupado){vozOcupado=true;try{await vozCriarPeer();const offer=await vozPc.createOffer();await vozPc.setLocalDescription(offer);await vozSinal('offer',vozPc.localDescription.toJSON());vozAvisar('Conectando áudio...');}catch(e){vozAvisar('Erro no microfone: '+e.message);}finally{vozOcupado=false;}}
- if(c.status==='ativa'&&c.caller_id!==usuario.id&&vozPc)vozAvisar(vozInicio?'Conectados 💗':'Conectando áudio...');
- if(c.status==='ativa')await vozLerSinais();
+async function vozIniciar(tipo='audio'){
+ if(!vozStory||!usuario||vozCriando)return;if(vozChamada){vozTela(true);return;}
+ vozCriando=true;vozTipo=tipo==='video'?'video':'audio';const story=vozStory;
+ try{
+  const {data:existente,error:consulta}=await db.from('voz_chamadas').select('id').eq('story_id',story).in('status',['tocando','ativa']).limit(1);if(consulta)throw consulta;if(existente?.length)throw new Error('Já existe uma chamada em andamento.');
+  await vozObterMidia();if(story!==vozStory||!usuario)return;
+  const {data,error}=await db.from('voz_chamadas').insert({story_id:story,caller_id:usuario.id,status:'tocando',media_type:vozTipo}).select().single();if(error)throw error;
+  if(story!==vozStory||!usuario){await db.from('voz_chamadas').update({status:'encerrada',ended_at:new Date().toISOString()}).eq('id',data.id);return;}
+  vozChamada=data;vozAceita=true;vozParceiro();vozTela(true);vozBotoes('ligando');vozAvisar('Chamando seu amor…');vozTocar('saida');vozLimite=setTimeout(()=>vozEncerrar(),60000);
+ }catch(e){if(story===vozStory&&usuario){vozLimparMidia();vozTela(true);vozBotoes('ligando');vozAvisar('Não foi possível ligar: '+e.message);}}finally{vozCriando=false;}
 }
-async function vozIniciar(){if(!vozStory||!usuario)return;vozCriando=true;try{
- const {data:existente}=await db.from('voz_chamadas').select('id').eq('story_id',vozStory).in('status',['tocando','ativa']).limit(1);
- if(existente?.length){vozAvisar('Já existe uma chamada.');return;}
- const {data,error}=await db.from('voz_chamadas').insert({story_id:vozStory,caller_id:usuario.id,status:'tocando'}).select().single();if(error)throw error;
- vozChamada=data;vozParceiro();vozTela(true);vozBotoes('ligando');vozAvisar('Chamando seu amor...');
- }catch(e){vozTela(true);vozAvisar('Erro ao ligar: '+e.message);}finally{vozCriando=false;}}
-async function vozAtender(){if(!vozChamada)return;try{await vozCriarPeer();const {error}=await db.from('voz_chamadas').update({status:'ativa'}).eq('id',vozChamada.id).eq('status','tocando');if(error)throw error;vozBotoes('ligando');vozAvisar('Conectando áudio...');}catch(e){vozAvisar('Não foi possível atender: '+e.message);}}
-async function vozEncerrar(){const c=vozChamada;vozChamada=null;vozLimparMidia();vozTela(false);if(c){const {error}=await db.from('voz_chamadas').update({status:'encerrada',ended_at:new Date().toISOString()}).eq('id',c.id);if(error)console.warn(error);}}
-function vozDesligar(){if(vozPoll)clearInterval(vozPoll);vozPoll=null;if(vozCanal&&db)db.removeChannel(vozCanal);vozCanal=null;vozStory=null;if(vozChamada)vozEncerrar().catch(console.warn);else{vozLimparMidia();vozTela(false);}}
-async function vozConectarHistoria(){const story=historiaAtual?.historia_id;if(!story){vozDesligar();return;}if(vozStory===story)return;vozDesligar();vozStory=story;
- vozCanal=db.channel('voz-notificacoes-'+story).on('postgres_changes',{event:'*',schema:'public',table:'voz_chamadas',filter:'story_id=eq.'+story},()=>vozLerChamada()).on('postgres_changes',{event:'INSERT',schema:'public',table:'voz_sinais',filter:'story_id=eq.'+story},e=>vozProcessarSinal(e.new)).subscribe();
- vozPoll=setInterval(()=>vozLerChamada(),1800);await vozLerChamada();}
-vozEl('chat-ligar').onclick=()=>vozIniciar();vozEl('voz-atender').onclick=()=>vozAtender();vozEl('voz-recusar').onclick=()=>vozEncerrar();vozEl('voz-encerrar').onclick=()=>vozEncerrar();
-vozEl('voz-microfone').onclick=()=>{if(!vozLocal)return;const track=vozLocal.getAudioTracks()[0];track.enabled=!track.enabled;vozEl('voz-microfone').textContent=track.enabled?'🎙️ Silenciar':'🔇 Ativar mic';};
-vozEl('voz-altofalante').onclick=async()=>{const a=vozEl('voz-audio-remoto');try{await a.play();vozAvisar('Áudio ativado. Use os controles de volume do celular.');}catch(e){vozAvisar('Toque novamente para permitir o áudio.');}};
+async function vozAtender(){
+ if(!vozChamada||vozOcupado)return;vozOcupado=true;const c=vozChamada;
+ try{vozTipo=c.media_type==='video'?'video':'audio';await vozCriarPeer();if(vozChamada?.id!==c.id)return;
+  const {error}=await db.from('voz_chamadas').update({status:'ativa'}).eq('id',c.id).eq('status','tocando');if(error)throw error;if(vozChamada?.id!==c.id||!usuario||vozStory!==c.story_id)return;
+  vozAceita=true;vozChamada={...c,status:'ativa'};vozTocar(null);window.nhOcultarLigacao?.();vozBotoes('ligando');vozAvisar('Conectando…');
+ }catch(e){vozAvisar('Não foi possível atender: '+e.message);}finally{vozOcupado=false;}
+ if(vozAceita){if(c.caller_id===usuario?.id)await vozOferecer();else await vozLerSinais();}
+}
+async function vozEncerrar(){const c=vozChamada;vozChamada=null;vozLimparMidia();vozTela(false);if(document.fullscreenElement===vozEl('voz-tela'))document.exitFullscreen().catch(()=>{});if(c){const {error}=await db.from('voz_chamadas').update({status:'encerrada',ended_at:new Date().toISOString()}).eq('id',c.id);if(error)console.warn('Não foi possível finalizar a sinalização:',error.message);}}
+function vozDesligar(){clearInterval(vozPoll);vozPoll=null;if(vozCanal&&db)db.removeChannel(vozCanal);vozCanal=null;vozStory=null;if(vozChamada)vozEncerrar().catch(console.warn);else{vozLimparMidia();vozTela(false);}}
+async function vozConectarHistoria(){const story=historiaAtual?.historia_id;if(!story){vozDesligar();return;}if(vozStory===story)return;vozDesligar();vozStory=story;vozCanal=db.channel('voz-notificacoes-'+story).on('postgres_changes',{event:'*',schema:'public',table:'voz_chamadas',filter:'story_id=eq.'+story},()=>vozLerChamada()).on('postgres_changes',{event:'INSERT',schema:'public',table:'voz_sinais',filter:'story_id=eq.'+story},e=>vozProcessarSinal(e.new)).subscribe();vozPoll=setInterval(()=>vozLerChamada(),1800);await vozLerChamada();}
+vozEl('chat-ligar').onclick=()=>vozIniciar('audio');vozEl('chat-video').onclick=()=>vozIniciar('video');vozEl('voz-atender').onclick=()=>vozAtender();vozEl('voz-recusar').onclick=vozEl('voz-encerrar').onclick=()=>vozEncerrar();
+vozEl('voz-microfone').onclick=()=>{const t=vozLocal?.getAudioTracks()[0];if(!t)return;t.enabled=!t.enabled;vozEl('voz-microfone').setAttribute('aria-pressed',String(!t.enabled));vozEl('voz-microfone').setAttribute('aria-label',t.enabled?'Silenciar microfone':'Ativar microfone');};
+vozEl('voz-camera').onclick=()=>{const t=vozLocal?.getVideoTracks()[0];if(!t)return;t.enabled=!t.enabled;vozEl('voz-camera').setAttribute('aria-pressed',String(t.enabled));vozEl('voz-camera').setAttribute('aria-label',t.enabled?'Desativar câmera':'Ativar câmera');};
+vozEl('voz-trocar-camera').onclick=async()=>{if(!vozLocal?.getVideoTracks().length)return;const versao=vozVersao;vozFrontal=!vozFrontal;let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:vozFrontal?'user':'environment'}}});if(versao!==vozVersao){stream.getTracks().forEach(t=>t.stop());return;}const novo=stream.getVideoTracks()[0],antigo=vozLocal.getVideoTracks()[0];novo.enabled=antigo.enabled;const sender=vozPc?.getSenders().find(s=>s.track?.kind==='video');if(sender)await sender.replaceTrack(novo);vozLocal.removeTrack(antigo);antigo.stop();vozLocal.addTrack(novo);vozEl('voz-video-local').srcObject=new MediaStream(vozLocal.getTracks());vozEl('voz-video-local').style.transform=vozFrontal?'scaleX(-1)':'none';}catch(e){stream?.getTracks().forEach(t=>t.stop());vozAvisar('Não foi possível trocar a câmera.');}};
+vozEl('voz-altofalante').onclick=async()=>{try{await vozEl(vozTipo==='video'?'voz-video-remoto':'voz-audio-remoto').play();vozAvisar('Áudio ativado ♡');}catch{vozAvisar('Toque novamente para permitir o áudio.');}};
 
 /* Nosso Cineminha: estado persistente e sincronização entre parceiros pelo Supabase. */
 let cinemaHistoriaId=null,cinemaCanal=null,cinemaEstado=null,cinemaPlayer=null,cinemaPronto=false;
@@ -1898,7 +2007,7 @@ function mascoteGif(acao,temporaria=false){
  img.onerror=()=>{
   tentativa++;
   if(tentativa<caminhos.length){
-   img.src=caminhos[tentativa]+(temporaria?'?replay='+Date.now():'');
+   nhDefinirImagem(img,caminhos[tentativa],temporaria);
   }else{
    img.onerror=null;
    img.style.display='none';
@@ -1906,7 +2015,8 @@ function mascoteGif(acao,temporaria=false){
   }
  };
  img.onload=()=>{img.style.display='block';};
- img.src=caminhos[0]+(temporaria?'?replay='+Date.now():'');
+ nhDefinirImagem(img,caminhos[0],temporaria);
+ nhPrepararImagens(Object.keys(mascoteGifs).map(acao=>mascoteArquivo(acao)));
  figura.replaceChildren(img);
  mascoteAnimacaoAtiva=temporaria;
  if(temporaria){
@@ -1945,7 +2055,7 @@ function atualizarInterfaceMascote(){
  if(!mascoteAnimacaoAtiva){
   const img=figura.querySelector('img');
   const alvo=mascoteArquivo(estadoGif);
-  if(!img||!img.getAttribute('src')?.split('?')[0].endsWith('/'+alvo)&&!img.getAttribute('src')?.split('?')[0].endsWith(alvo))mascoteGif(estadoGif);
+  if(!img||img.dataset.nhSource!==alvo)mascoteGif(estadoGif);
  }
  $('mascote-balao-mensagem').textContent=dormindo?'Zzz... Que soninho bom! 😴':problemasMascote.length
   ? problemasMascote[Math.floor(Date.now()/4000)%problemasMascote.length]
@@ -2337,136 +2447,25 @@ $('compat-compartilhar').onclick=async()=>{
   </div>
 </div>
 
-<script>
-(function () {
-  let canal = null;
-  let historiaConectada = null;
-  let timeout = null;
-  let ultimaLigacao = null;
-
-  const caixa = document.getElementById("nh-notificacao");
-  const icone = document.getElementById("nh-notificacao-icone");
-  const titulo = document.getElementById("nh-notificacao-titulo");
-  const conteudo = document.getElementById("nh-notificacao-conteudo");
-
-  function mostrar(tipo, nome, texto, acao) {
-    clearTimeout(timeout);
-
-    icone.textContent = tipo === "ligacao" ? "📞" : "💌";
-
-    titulo.textContent = tipo === "ligacao"
-      ? nome + " está ligando..."
-      : "Nova mensagem de " + nome;
-
-    conteudo.textContent = texto;
-
-    caixa.classList.add("ativa");
-
-    caixa.onclick = function () {
-      caixa.classList.remove("ativa");
-
-      if (acao === "chat") {
-        document.getElementById("abrir-chat")?.click();
-      }
-
-      if (acao === "ligacao") {
-        const tela = document.getElementById("voz-tela");
-        if (tela) tela.hidden = false;
-      }
-    };
-
-    
-timeout = setTimeout(function () {
-  caixa.classList.remove("ativa");
-}, 2000);
-
-  }
-
-  function conectar() {
-    if (
-      typeof db === "undefined" ||
-      !db ||
-      typeof usuario === "undefined" ||
-      !usuario ||
-      typeof historiaAtual === "undefined"
-    ) return;
-
-    const id = historiaAtual?.historia_id;
-    if (!id) {
-      if (canal) db.removeChannel(canal);
-      canal = null;
-      historiaConectada = null;
-      ultimaLigacao = null;
-      return;
-    }
-
-    if (historiaConectada === id) return;
-
-    if (canal) db.removeChannel(canal);
-
-    historiaConectada = id;
-    ultimaLigacao = null;
-
-    canal = db.channel("avisos-site-" + id)
-
-      .on("postgres_changes", {
-        event: "INSERT",
-        schema: "public",
-        table: "chat_messages",
-        filter: "story_id=eq." + id
-      }, function (evento) {
-        const mensagem = evento.new;
-
-        if (
-          historiaConectada !== id ||
-          !usuario ||
-          mensagem.sender_id === usuario.id
-        ) return;
-
-        const nome =
-          typeof chatNomeUsuario === "function"
-            ? chatNomeUsuario(mensagem.sender_id)
-            : "Seu amor";
-
-        mostrar(
-          "mensagem",
-          nome,
-          mensagem.content || "Nova mensagem recebida",
-          "chat"
-        );
-      })
-
-      .on("postgres_changes", {
-        event: "INSERT",
-        schema: "public",
-        table: "voz_chamadas",
-        filter: "story_id=eq." + id
-      }, function (evento) {
-        const chamada = evento.new;
-
-        if (
-          historiaConectada !== id ||
-          !usuario ||
-          chamada.caller_id === usuario.id ||
-          chamada.status !== "tocando" ||
-          chamada.id === ultimaLigacao
-        ) return;
-
-        ultimaLigacao = chamada.id;
-
-        mostrar(
-          "ligacao",
-          "Seu amor",
-          "📞 Ligação de voz recebida. Toque para atender.",
-          "ligacao"
-        );
-      })
-
-      .subscribe();
-  }
-
-  setInterval(conectar, 2000);
-  conectar();
+<script id="nh-notificacoes-v2">(()=>{
+ const get=id=>document.getElementById(id),box=get('nh-notificacao');let canal=null,story=null,timer=null,chamada=null;
+ const som=new Audio('notificacao-mensagem.mp3');som.preload='none';
+ const acoes=document.createElement('div');acoes.id='nh-aviso-acoes';acoes.hidden=true;
+ const aceitar=document.createElement('button'),recusar=document.createElement('button');aceitar.type=recusar.type='button';aceitar.textContent='Atender';recusar.textContent='Recusar';acoes.append(aceitar,recusar);get('nh-notificacao-texto').append(acoes);
+ aceitar.onclick=e=>{e.stopPropagation();vozTela(true);vozAtender()};recusar.onclick=e=>{e.stopPropagation();vozEncerrar()};
+ function esconder(){clearTimeout(timer);box.classList.remove('ativa');}
+ window.nhOcultarLigacao=()=>{if(chamada){chamada=null;acoes.hidden=true;esconder();}};
+ window.nhNotificarLigacao=c=>{if(c.caller_id===usuario?.id||c.status!=='tocando')return;if(chamada===c.id)return;chamada=c.id;clearTimeout(timer);acoes.hidden=false;get('nh-notificacao-icone').textContent=c.media_type==='video'?'▣':'☎';get('nh-notificacao-titulo').textContent='Seu amor está ligando…';get('nh-notificacao-conteudo').textContent=c.media_type==='video'?'Videochamada recebida':'Ligação de áudio recebida';box.classList.add('ativa');};
+ window.nhNotificarMensagem=mensagem=>{
+  if(!usuario||mensagem.sender_id===usuario.id)return;
+  if(get('nh-sons-avisos')?.checked!==false){som.volume=Number(get('nh-volume-avisos')?.value??.5);som.currentTime=0;som.play().catch(()=>{});}
+  if(chamada)return;
+  get('nh-notificacao-icone').textContent='💌';get('nh-notificacao-titulo').textContent='Nova mensagem de '+chatNomeUsuario(mensagem.sender_id);get('nh-notificacao-conteudo').textContent=mensagem.content||'Nova mensagem recebida';acoes.hidden=true;box.classList.add('ativa');clearTimeout(timer);timer=setTimeout(esconder,4000);
+ };
+ box.onclick=()=>{if(chamada){vozTela(true);return;}esconder();if(get('janela-chat').hidden)get('abrir-chat').click();};
+ function desligar(){if(canal&&db)db.removeChannel(canal);canal=null;story=null;chamada=null;acoes.hidden=true;esconder();som.pause();}
+ function conectar(){const id=usuario&&modoAtual==='casal'?historiaAtual?.historia_id:null;if(!id){desligar();return;}if(story===id)return;desligar();story=id;canal=db.channel('avisos-site-'+id).on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages',filter:'story_id=eq.'+id},e=>{if(story===id&&usuario)window.nhNotificarMensagem(e.new)}).subscribe();}
+ window.addEventListener('nh-sessao',e=>{if(!e.detail)desligar();else conectar()});setInterval(conectar,2000);conectar();
 })();
 </script>
 
@@ -2527,7 +2526,7 @@ timeout = setTimeout(function () {
    abrir.setAttribute('aria-expanded','true');
    fechar.focus();
    limparEfeitos();gifMascote('idle');
-   atualizarSaldo();
+   if(musicaLigada)music.play().catch(()=>{});atualizarSaldo();
  }
  function fecharCassino(){
    clearTimeout(temporizadorRepouso);limparEfeitos();gifMascote('idle');
@@ -2562,6 +2561,8 @@ timeout = setTimeout(function () {
  const music=new Audio(audioBase+audios.musica);
  music.loop=true;music.volume=.15;
  let somLigado=true,musicaLigada=false,ocupado=false,temporizador=null;
+ const audioPrefs=()=>{$c('cassino-som').dataset.ativo=String(somLigado);$c('cassino-musica').dataset.ativo=String(musicaLigada);$c('cassino-som').textContent=somLigado?'🔊 Som ligado':'🔇 Som desligado';$c('cassino-musica').textContent=musicaLigada?'🎵 Música ligada':'🎵 Música desligada';};
+ window.addEventListener('nh-preferencias-aplicar',e=>{somLigado=e.detail.cassinoSom!==false;musicaLigada=e.detail.cassinoMusica===true;if(!musicaLigada)music.pause();audioPrefs()});audioPrefs();
  const grade=$c('cassino-grade');
  const celulas=Array.from({length:15},()=>{
    const el=document.createElement('div');el.className='cassino-celula';
@@ -2641,7 +2642,7 @@ timeout = setTimeout(function () {
      clearInterval(anim);grade.classList.remove('girando');
      mostrarGrade(data.simbolos);tocar('parar');
      window.nhSaldoIndividual=Number(data.saldo);$c('cassino-saldo').textContent='🪙 Saldo: '+data.saldo;
-      
+
      if(!root.hidden&&data.premio>0){
        const grande=data.premio>=aposta*7;
        gifMascote(grande?'grande_vitoria':'vitoria');
@@ -2669,14 +2670,14 @@ timeout = setTimeout(function () {
  $c('cassino-som').addEventListener('click',()=>{
    somLigado=!somLigado;
    $c('cassino-som').textContent=somLigado?'🔊 Som ligado':'🔇 Som desligado';
-   if(somLigado)tocar('click');
+   if(somLigado)tocar('click');audioPrefs();window.dispatchEvent(new Event('nh-config-alterada'));
  });
  $c('cassino-musica').addEventListener('click',async()=>{
    musicaLigada=!musicaLigada;
    if(musicaLigada){
      try{await music.play()}catch(e){musicaLigada=false;mensagem('Toque novamente para ativar a música.')}
    }else music.pause();
-   $c('cassino-musica').textContent=musicaLigada?'🎵 Música ligada':'🎵 Música desligada';
+   $c('cassino-musica').textContent=musicaLigada?'🎵 Música ligada':'🎵 Música desligada';audioPrefs();window.dispatchEvent(new Event('nh-config-alterada'));
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden)music.pause();else if(musicaLigada)music.play().catch(()=>{})});
  const obs=new MutationObserver(()=>{
@@ -2762,7 +2763,8 @@ paint(result.data.simbolos);window.nhSaldoIndividual=Number(result.data.saldo);s
 if(result.data.premio>0){const big=result.data.premio>=bet*7;pose(big?'super':'feliz');showPrize(big,result.data.premio);play(big?'big':'win');message.textContent='🎉 Você ganhou '+result.data.premio+' moedas!'}else{pose('triste');play('lose');message.textContent='Sem prêmio desta vez.'}
 restPoseLater();
 }catch(e){resetPrize();pose('parado');message.textContent='Não foi possível girar: '+e.message;}finally{clearInterval(spinTimer);grid.classList.remove('gi-spinning');busy=false;$('girininho-spin').disabled=false;}}
-$('girininho-close').addEventListener('click',close);$('girininho-spin').addEventListener('click',spin);$('girininho-mute').addEventListener('click',()=>{sound=!sound;$('girininho-mute').textContent=sound?'🔊 Som':'🔇 Mudo'});
+$('girininho-close').addEventListener('click',close);$('girininho-spin').addEventListener('click',spin);$('girininho-mute').addEventListener('click',()=>{sound=!sound;$('girininho-mute').textContent=sound?'🔊 Som':'🔇 Mudo';$('girininho-mute').dataset.ativo=String(sound);window.dispatchEvent(new Event('nh-config-alterada'))});
+window.addEventListener('nh-preferencias-aplicar',e=>{sound=e.detail.girinnhoSom!==false;$('girininho-mute').dataset.ativo=String(sound);$('girininho-mute').textContent=sound?'🔊 Som':'🔇 Mudo'});
 document.addEventListener('keydown',e=>{if(!modal.hidden&&e.key==='Escape'){e.preventDefault();close()}});
 // Captura o comando ANTES do onsubmit existente, sem gravá-lo nem enviá-lo ao Supabase.
 // O chat normal continua funcionando para todas as outras mensagens.
@@ -3006,8 +3008,8 @@ window.abrirGirininhoSecreto=open;
  const frames={vitoria:[0,1,2,3],derrota:[4,5,6,7],grande_vitoria:[8,9,10,11]};
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const configs=[
-  {root:'cassino-amor',header:'.ft-cabecalho',asset:'coelho-expressoes.png',mask:[334,132,89,58],offsets:[[1,16],[2,16],[1,21],[2,18],[6,24],[7,8],[7,-5],[3,30],[1,14],[2,22],[0,42],[3,14]]},
-  {root:'girininho-modal',header:'.nh-girinnho-cabecalho',asset:'girinnho-expressoes.png',mask:[391,82,46,59],offsets:[[-5,-6],[-2,-4],[-4,-6],[-2,-4],[-4,1],[-3,-10],[-6,-12],[-3,-3],[-4,1],[-3,-6],[-4,1],[-2,1]]}
+  {root:'cassino-amor',header:'.ft-cabecalho',asset:'coelho-expressoes.webp',mask:[334,132,89,58],offsets:[[1,16],[2,16],[1,21],[2,18],[6,24],[7,8],[7,-5],[3,30],[1,14],[2,22],[0,42],[3,14]]},
+  {root:'girininho-modal',header:'.nh-girinnho-cabecalho',asset:'girinnho-expressoes.webp',mask:[391,82,46,59],offsets:[[-5,-6],[-2,-4],[-4,-6],[-2,-4],[-4,1],[-3,-10],[-6,-12],[-3,-3],[-4,1],[-3,-6],[-4,1],[-2,1]]}
  ];
  const preloaders=[];
  for(const config of configs){
@@ -3342,7 +3344,7 @@ body[data-interface="vidro"] #abrir-chat{transform-origin:bottom left}
   for(const mode of ['casal','solo']){const original=get('modo-btn-'+mode),button=get('nh-modo-'+mode);button.setAttribute('aria-pressed',String(original.classList.contains('ativo')));button.disabled=original.disabled;}
   const couple=modoAtual==='casal';get('nh-atalho-chat').hidden=!couple;get('nh-atalho-momentos').hidden=!couple;
  }
- function floating(){const card=get('nh-cassinos-inicio');const atTop=!!usuario&&!get('historia-painel').hidden&&document.body.dataset.aba==='inicio'&&card.getBoundingClientRect().bottom>120;document.body.classList.toggle('nh-dashboard-no-topo',atTop);}
+ function floating(){document.body.classList.remove('nh-dashboard-no-topo');}
  get('nh-config-tema').addEventListener('click',()=>get('botao-tema').click());
  get('nh-config-musica').addEventListener('click',()=>{fecharConfiguracoes();get('botao-musica').click()});
  get('nh-config-chat').addEventListener('click',()=>{if(modoAtual!=='casal')return;fecharConfiguracoes();get('abrir-chat').click()});
@@ -3359,7 +3361,90 @@ body[data-interface="vidro"] #contador .numero,body[data-interface="vidro"] #con
 body[data-interface="vidro"] #conteudo-privado .nh-cassino-copy strong{white-space:nowrap;font-size:clamp(12px,3.6vw,25px)}
 @media(max-width:599px){body[data-interface="vidro"] .nh-introducao{margin-top:100px!important}}
 .nh-play-triangulo{width:0;height:0;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:6px solid currentColor}
-body[data-interface="vidro"].nh-dashboard-no-topo :is(#botao-musica,#botao-tema,#abrir-chat,#nh-visualizador){visibility:hidden!important;pointer-events:none!important}
+
 body[data-interface="vidro"] #conteudo-privado button#modo-abrir-opcoes{border:0!important;background:transparent!important;color:#fff4fb!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 </style>
-</body></html>
+<style>.memoria-foto-opcao:disabled{min-height:90px;cursor:progress;opacity:.8}.memoria-foto-opcao>span{display:block;padding:12px;font-size:12px;color:var(--ui-ink,#541c37)}</style><style id="nh-chamada-popup">#voz-tela{position:fixed!important;inset:auto 14px 95px auto;width:min(370px,calc(100vw - 24px));height:min(570px,calc(100dvh - 125px));min-height:260px;background:#121212!important;color:#fff!important;border:1px solid #ffffff38!important;border-radius:22px!important;box-shadow:0 16px 65px #0008;overflow:hidden!important;z-index:10020!important;display:flex!important;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0!important;padding:0!important;touch-action:auto;isolation:isolate}
+#voz-tela[hidden]{display:none!important}#voz-arrastar{display:flex;align-items:center;gap:8px;flex-shrink:0;padding:11px 12px;background:#202020;cursor:grab;touch-action:none;user-select:none}#voz-arrastar>div{min-width:0;flex:1;text-align:left}#voz-arrastar strong{display:block;font-size:13px;color:#fff!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#voz-status{display:block;font-size:10px;color:#ddd;margin-top:3px}#voz-tempo{font-size:11px;color:#ddd}#voz-arrastar button{flex-shrink:0;border:0;background:#ffffff15;color:#fff;border-radius:9px;width:32px;height:34px;padding:0;font-size:20px;min-height:0;box-shadow:none}
+#voz-palco{position:relative;flex:1;min-height:0;background:#080808}#voz-video-remoto{width:100%;height:100%;object-fit:cover;display:block}#voz-sem-video{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#ddd;pointer-events:none}#voz-sem-video[hidden]{display:none}#voz-tela #voz-avatar{position:static;width:95px;height:95px;max-width:40%;object-fit:contain;border-radius:50%;border:0;margin:0}#voz-sem-video>span{font-size:12px}#voz-video-local{position:absolute;top:12px;right:12px;width:26%;height:36%;object-fit:cover;border-radius:10px;border:1px solid #fff5;background:#111;transform:scaleX(-1)}#voz-video-local[hidden]{display:none}
+#voz-tela #voz-botoes{position:relative;flex-shrink:0;display:flex;justify-content:center;align-items:center;gap:14px;padding:25px 12px 16px!important;background:#202020;margin:0!important;min-height:94px}#voz-barra-alca{position:absolute;top:8px;left:calc(50% - 20px);width:40px;height:4px;background:#555;border-radius:5px}#voz-tela #voz-botoes>button{width:54px;height:54px;min-height:54px;padding:0;border:0;border-radius:50%;background:#4a4a4a;color:#fff;font:700 24px/1 system-ui;box-shadow:none}#voz-tela #voz-botoes>button[hidden]{display:none}#voz-tela #voz-botoes>button svg{width:25px;height:25px;vertical-align:middle}#voz-tela #voz-botoes>button[aria-pressed="false"]#voz-camera,#voz-tela #voz-botoes>button[aria-pressed="true"]#voz-microfone{background:#eee;color:#242424}#voz-tela #voz-botoes>#voz-encerrar,#voz-tela #voz-botoes>#voz-recusar{background:#ff3935}#voz-tela #voz-botoes>#voz-atender{background:#2db873;font-size:12px;width:72px;border-radius:30px}#voz-tela #voz-botoes>#voz-recusar{font-size:12px;width:72px;border-radius:30px}#voz-tela #voz-altofalante{position:absolute;right:8px;bottom:105px;border:1px solid #fff4;background:#161616bb;color:#fff;border-radius:16px;padding:6px 10px;font-size:10px;box-shadow:none}#voz-tela #voz-altofalante[hidden]{display:none}
+#voz-tela[data-minimizada="true"]{height:auto!important;min-height:0;width:min(275px,calc(100vw - 24px))}#voz-tela[data-minimizada="true"] #voz-palco,#voz-tela[data-minimizada="true"] #voz-botoes,#voz-tela[data-minimizada="true"] #voz-altofalante{display:none!important}#voz-tela.nh-fullscreen,#voz-tela:fullscreen{inset:0!important;width:100%!important;height:100dvh!important;max-width:none!important;border-radius:0!important;border:0!important}#voz-tela.nh-fullscreen #voz-botoes,#voz-tela:fullscreen #voz-botoes{padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))!important}
+#chat-video{border:0;background:transparent;color:inherit;min-width:36px;min-height:36px;font-size:20px;box-shadow:none}
+#nh-notificacao{display:flex!important;gap:12px;align-items:center;top:calc(12px + env(safe-area-inset-top,0px));opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,-140%);transition:transform .3s ease,opacity .3s ease,visibility 0s .3s;animation:none!important}#nh-notificacao.ativa{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,0);transition:transform .3s ease,opacity .3s ease,visibility 0s}#nh-aviso-acoes{display:flex;gap:6px;margin-top:8px}#nh-aviso-acoes button{border:0;border-radius:14px;padding:7px 12px;background:#2c9859;color:#fff;font-size:12px}#nh-aviso-acoes button:last-child{background:#c84155}#nh-aviso-acoes[hidden]{display:none}
+@media(max-width:350px){#voz-tela #voz-botoes{gap:10px}#voz-tela #voz-botoes>button{width:48px;height:48px;min-height:48px}}
+@media(prefers-reduced-motion:reduce){#nh-notificacao{transition:none!important}}
+</style><script id="nh-chamada-janela">(()=>{
+ const tela=document.getElementById('voz-tela'),bar=document.getElementById('voz-arrastar');let drag=null;
+ const svg=(path)=>'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'+path+'</svg>';
+ document.getElementById('voz-camera').innerHTML=svg('<path d="M3 5h12a2 2 0 0 1 2 2v2l5-3v12l-5-3v2a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/>');
+ document.getElementById('voz-trocar-camera').innerHTML=svg('<path d="M6 4 8 2h8l2 2h3v17H3V4h3Zm5 3a5 5 0 0 0-4 8l-2 1h6v-6l-2 2a3 3 0 0 1 2-3V7Zm2 1v6l2-2a3 3 0 0 1-2 3v2a5 5 0 0 0 4-8l2-1h-6Z"/>');
+ document.getElementById('voz-microfone').innerHTML=svg('<path d="M12 15a4 4 0 0 0 4-4V5a4 4 0 0 0-8 0v6a4 4 0 0 0 4 4Zm-7-4h2a5 5 0 0 0 10 0h2a7 7 0 0 1-6 7v3h4v2H7v-2h4v-3a7 7 0 0 1-6-7Z"/>');
+ document.getElementById('voz-encerrar').innerHTML=svg('<path d="M2 10c6-5 14-5 20 0v6h-6v-4a13 13 0 0 0-8 0v4H2v-6Z"/>');
+ function salvar(){const r=tela.getBoundingClientRect();window.dispatchEvent(new CustomEvent('nh-ajuste-chamada',{detail:{x:r.x/innerWidth,y:r.y/innerHeight}}));}
+ document.getElementById('voz-minimizar').onclick=async()=>{const mini=tela.dataset.minimizada!=='true';if(mini){if(document.fullscreenElement===tela)await document.exitFullscreen().catch(()=>{});tela.classList.remove('nh-fullscreen');}tela.dataset.minimizada=String(mini);document.getElementById('voz-minimizar').setAttribute('aria-expanded',String(!mini));document.getElementById('voz-minimizar').setAttribute('aria-label',mini?'Restaurar chamada':'Minimizar chamada');};
+ document.getElementById('voz-tela-cheia').onclick=async()=>{tela.dataset.minimizada='false';if(document.fullscreenElement===tela){await document.exitFullscreen();return;}if(tela.classList.contains('nh-fullscreen')){tela.classList.remove('nh-fullscreen');return;}try{if(!tela.requestFullscreen)throw new Error();await tela.requestFullscreen();}catch{tela.classList.add('nh-fullscreen');}};
+ bar.addEventListener('pointerdown',e=>{if(e.target.closest('button')||document.fullscreenElement===tela||tela.classList.contains('nh-fullscreen'))return;const r=tela.getBoundingClientRect();drag={x:e.clientX,y:e.clientY,left:r.left,top:r.top};bar.setPointerCapture(e.pointerId)});
+ bar.addEventListener('pointermove',e=>{if(!drag)return;const r=tela.getBoundingClientRect();tela.style.left=Math.max(4,Math.min(innerWidth-r.width-4,drag.left+e.clientX-drag.x))+'px';tela.style.top=Math.max(4,Math.min(innerHeight-r.height-4,drag.top+e.clientY-drag.y))+'px';tela.style.right=tela.style.bottom='auto';});
+ const fim=()=>{if(drag){drag=null;salvar()}};bar.addEventListener('pointerup',fim);bar.addEventListener('pointercancel',fim);
+ document.addEventListener('fullscreenchange',()=>{const aviso=document.getElementById('nh-notificacao');if(aviso)(document.fullscreenElement===tela?tela:document.body).append(aviso);});
+ window.nhPosicaoChamada=pos=>{if(!pos||!Number.isFinite(pos.x)||!Number.isFinite(pos.y))return;const w=Math.min(370,innerWidth-24),h=Math.min(570,innerHeight-125);tela.style.left=Math.max(4,Math.min(innerWidth-w-4,pos.x*innerWidth))+'px';tela.style.top=Math.max(4,Math.min(innerHeight-h-4,pos.y*innerHeight))+'px';tela.style.right=tela.style.bottom='auto';};
+ window.addEventListener('resize',()=>{if(!tela.hidden&&!document.fullscreenElement){const r=tela.getBoundingClientRect();window.nhPosicaoChamada({x:r.x/innerWidth,y:r.y/innerHeight});}});
+})();
+</script><script id="nh-preferencias-conta">(()=>{
+ const get=id=>document.getElementById(id),details=['nh-data-detalhes','nh-tempo-detalhes','nh-mascote-detalhes','mascote-progresso'];
+ const defaults={tema:'dia',faixa:-1,volume:.35,musicaTocando:false,musicaTempo:0,sonsAvisos:true,volumeAvisos:.5,temaMemoria:'claro',fotoMemoria:'',aba:'inicio',historiaId:'',cassinoSom:true,cassinoMusica:false,girinnhoSom:true,apostaAmor:'1',apostaGirinnho:'1',detalhes:{},posicaoChamada:null};
+ let owner=null,state={...defaults},patch={},epoch=0,timer=null,loading=false,applying=false,writing=false,wanted=false,seek=null,ready=Promise.resolve();
+ function sane(value){const v=value&&typeof value==='object'&&!Array.isArray(value)?value:{};const r={...defaults};
+  for(const k of ['musicaTocando','sonsAvisos','cassinoSom','cassinoMusica','girinnhoSom'])if(typeof v[k]==='boolean')r[k]=v[k];
+  if(['dia','noite'].includes(v.tema))r.tema=v.tema;if(['claro','escuro','melody','cinnamoroll'].includes(v.temaMemoria))r.temaMemoria=v.temaMemoria;
+  if(['inicio','galeria','mensagem','jogos','conexao'].includes(v.aba))r.aba=v.aba;
+  for(const k of ['volume','volumeAvisos'])if(Number.isFinite(v[k]))r[k]=Math.max(0,Math.min(1,v[k]));
+  if(Number.isInteger(v.faixa)&&v.faixa>=-1&&v.faixa<faixasMusicais.length)r.faixa=v.faixa;
+  if(Number.isFinite(v.musicaTempo))r.musicaTempo=Math.max(0,Math.min(86400,v.musicaTempo));
+  for(const k of ['historiaId','fotoMemoria'])if(typeof v[k]==='string')r[k]=v[k].slice(0,300);
+  for(const k of ['apostaAmor','apostaGirinnho'])if(['1','2','3'].includes(String(v[k])))r[k]=String(v[k]);
+  r.detalhes={};for(const id of details)if(typeof v.detalhes?.[id]==='boolean')r.detalhes[id]=v.detalhes[id];
+  if(Number.isFinite(v.posicaoChamada?.x)&&Number.isFinite(v.posicaoChamada?.y))r.posicaoChamada={x:Math.max(0,Math.min(1,v.posicaoChamada.x)),y:Math.max(0,Math.min(1,v.posicaoChamada.y))};return r;
+ }
+ const status=t=>{const e=get('nh-preferencias-status');if(e)e.textContent=t};
+ function local(){if(!owner)return;try{localStorage.setItem('nh-preferencias:'+owner,JSON.stringify({config:state,patch}))}catch{}}
+ function aplicar(){applying=true;try{
+  const noite=state.tema==='noite';document.body.classList.toggle('tema-escuro',noite);if(temaEscuro!==noite)trocarAnimacaoDoTema(noite);temaBotao.textContent=noite?'☀️':'🌙';temaBotao.setAttribute('aria-label',noite?'Ativar tema claro':'Ativar tema escuro');document.querySelector('meta[name="theme-color"]').content=noite?'#171321':'#b37a9f';
+  musica.pause();musica.volume=state.volume;wanted=state.musicaTocando;faixaAtual=state.faixa;seek=null;
+  if(faixaAtual>=0){musica.src=encodeURI(faixasMusicais[faixaAtual].arquivo);seek={owner,faixa:faixaAtual,tempo:state.musicaTempo};get('musica-atual').textContent='♫ '+faixasMusicais[faixaAtual].nome+(wanted?' — toque em ▶ para retomar':'');}else{musica.removeAttribute('src');get('musica-atual').textContent='Escolha uma música para começar ♫';}
+  get('nh-volume-musica').value=state.volume;get('nh-sons-avisos').checked=state.sonsAvisos;get('nh-volume-avisos').value=state.volumeAvisos;
+  const radio=document.querySelector('input[name="memorias-tema"][value="'+state.temaMemoria+'"]');if(radio)radio.checked=true;
+  for(const [id,key] of [['cassino-aposta','apostaAmor'],['girininho-bet','apostaGirinnho']])get(id).value=state[key];
+  for(const id of details)get(id).open=!!state.detalhes[id];
+  window.dispatchEvent(new CustomEvent('nh-preferencias-aplicar',{detail:state}));window.nhPosicaoChamada?.(state.posicaoChamada);atualizarMusica();
+ }finally{applying=false;}}
+ function snapshot(){return sane({...state,tema:document.body.classList.contains('tema-escuro')?'noite':'dia',faixa:faixaAtual,volume:musica.volume,musicaTocando:wanted,musicaTempo:musica.currentTime||state.musicaTempo,sonsAvisos:get('nh-sons-avisos').checked,volumeAvisos:Number(get('nh-volume-avisos').value),temaMemoria:document.querySelector('input[name="memorias-tema"]:checked')?.value,fotoMemoria:document.querySelector('#memorias-fotos button[aria-pressed="true"]')?.dataset.foto||state.fotoMemoria,aba:modoAtual==='solo'&&document.body.dataset.aba==='mensagem'?'inicio':document.body.dataset.aba,historiaId:historiaAtual?.historia_id||state.historiaId,cassinoSom:get('cassino-som').dataset.ativo!=='false',cassinoMusica:get('cassino-musica').dataset.ativo==='true',girinnhoSom:get('girininho-mute').dataset.ativo!=='false',apostaAmor:get('cassino-aposta').value,apostaGirinnho:get('girininho-bet').value,detalhes:Object.fromEntries(details.map(id=>[id,get(id).open]))});}
+ function capturar(){if(!owner||owner!==usuario?.id||applying)return;const next=snapshot();let changed=false;for(const key of Object.keys(next))if(JSON.stringify(next[key])!==JSON.stringify(state[key])){patch[key]=next[key];changed=true;}state=next;if(!changed)return;local();status('Salvo neste aparelho. Sincronizando…');clearTimeout(timer);timer=setTimeout(salvar,650);}
+ async function salvar(){clearTimeout(timer);if(!owner||owner!==usuario?.id||loading||writing||!Object.keys(patch).length)return;writing=true;const id=owner,versao=epoch,aplicado={...patch},config={...state};
+  try{const {error}=await db.from('nh_preferencias_usuario').upsert({user_id:id,config,updated_at:new Date().toISOString()},{onConflict:'user_id'});if(error)throw error;if(id===owner&&versao===epoch){for(const key of Object.keys(aplicado))if(JSON.stringify(patch[key])===JSON.stringify(aplicado[key]))delete patch[key];local();status(Object.keys(patch).length?'Sincronizando…':'Preferências salvas na sua conta.');}}
+  catch{if(id===owner)status('Salvo neste aparelho; sincronização pendente.');}
+  finally{if(versao===epoch){writing=false;if(id===owner&&Object.keys(patch).length&&Object.keys(aplicado).some(k=>JSON.stringify(aplicado[k])!==JSON.stringify(patch[k])))timer=setTimeout(salvar,650);}}
+ }
+ async function entrar(user){const versao=++epoch;clearTimeout(timer);owner=user?.id||null;patch={};state={...defaults};loading=!!owner;writing=false;if(!owner){aplicar();status('Entre para sincronizar suas preferências.');return;}
+  const id=owner;try{const cache=JSON.parse(localStorage.getItem('nh-preferencias:'+id)||'null');if(cache){state=sane(cache.config);patch=cache.patch&&typeof cache.patch==='object'?Object.fromEntries(Object.keys(defaults).filter(k=>k in cache.patch).map(k=>[k,sane({...state,[k]:cache.patch[k]})[k]])):{};}}catch{}
+  aplicar();status('Carregando preferências da conta…');
+  try{const {data,error}=await db.from('nh_preferencias_usuario').select('config,updated_at').eq('user_id',id).maybeSingle();if(error)throw error;if(versao!==epoch||id!==owner)return;state=sane({...((data?.config&&typeof data.config==='object')?data.config:state),...patch});aplicar();local();status(Object.keys(patch).length?'Sincronizando…':'Preferências da conta restauradas.');}
+  catch{if(versao===epoch)status('Preferências locais restauradas; sincronização pendente.');}
+  finally{if(versao===epoch){loading=false;if(Object.keys(patch).length)salvar();}}
+ }
+ function restaurarFoto(){if(!owner||!state.fotoMemoria)return;const b=[...document.querySelectorAll('#memorias-fotos button[data-foto]')].find(b=>b.dataset.foto===state.fotoMemoria);if(b&&!b.disabled&&b.getAttribute('aria-pressed')!=='true')b.click();}
+ function navegar(){if(!owner)return;let b=get('aba-btn-'+state.aba);if(!b||b.hidden||b.disabled||(modoAtual==='solo'&&state.aba==='mensagem'))b=get('aba-btn-inicio');b.click();restaurarFoto();}
+ window.nhPreferencias={entrar:(u,forcar=false)=>{if(!forcar&&u?.id&&u.id===owner)return ready;return ready=entrar(u)},prontas:()=>ready,valor:k=>state[k],capturar,salvar,restaurarFoto,navegar,historia:id=>{if(owner&&id&&state.historiaId!==id){state.historiaId=id;patch.historiaId=id;local();clearTimeout(timer);timer=setTimeout(salvar,650)}}};
+ document.addEventListener('click',e=>{const b=e.target.closest('button,summary');if(!b||!e.isTrusted||applying)return;if(b.matches('summary')){if(details.includes(b.parentElement.id))setTimeout(capturar,0);return;}
+  if(b.id==='sair-conta'){capturar();salvar();return;}
+  if(b.classList.contains('faixa-musica')||b.id==='proxima-musica'){wanted=true;seek=null;}else if(b.id==='alternar-musica')wanted=musica.paused;
+  if(b.closest('#janela-musicas,#memorias-fotos,#abas-nav')||['botao-tema','nh-config-tema','cassino-som','cassino-musica','girininho-mute'].includes(b.id))setTimeout(capturar,0);
+ },true);
+ document.addEventListener('change',e=>{if(!e.isTrusted)return;if(e.target.id==='nh-volume-musica')musica.volume=Number(e.target.value);if(e.target.id==='nh-sons-avisos'&&!e.target.checked)vozTocar(null);if(e.target.matches('#nh-volume-musica,#nh-volume-avisos,#nh-sons-avisos,#cassino-aposta,#girininho-bet,input[name="memorias-tema"]'))capturar();});
+ window.addEventListener('nh-config-alterada',capturar);window.addEventListener('nh-ajuste-chamada',e=>{if(!owner)return;state.posicaoChamada=e.detail;patch.posicaoChamada=e.detail;local();clearTimeout(timer);timer=setTimeout(salvar,650)});
+ window.addEventListener('online',salvar);window.addEventListener('pagehide',()=>{if(!loading)capturar();salvar()});document.addEventListener('visibilitychange',()=>{if(document.hidden&&!loading){capturar();salvar()}});
+ musica.addEventListener('loadedmetadata',()=>{if(seek&&seek.owner===owner&&seek.faixa===faixaAtual){try{musica.currentTime=Math.min(seek.tempo,Number.isFinite(musica.duration)?Math.max(0,musica.duration-.1):seek.tempo)}catch{}seek=null;}});
+ document.addEventListener('pointerdown',e=>{if(owner&&wanted&&musica.paused&&faixaAtual>=0&&!e.target.closest('#alternar-musica,.faixa-musica,#proxima-musica,#chat-ligar,#chat-video,#voz-tela'))musica.play().catch(()=>{});},{passive:true});
+ if(typeof usuario!=='undefined')window.nhPreferencias.entrar(usuario);
+})();
+</script></body></html>
