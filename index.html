@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<link rel="preload" as="image" href="imagens/wallpaper_dia.png" fetchpriority="high">
-<link rel="prefetch" as="image" href="imagens/wallpaper_noite.png">
-<link rel="prefetch" as="image" href="imagens/quarto_acordado.png">
-<link rel="prefetch" as="image" href="imagens/quarto_dormindo.png">
+<link rel="preload" as="image" href="wallpaper_dia.png" fetchpriority="high">
+<link rel="prefetch" as="image" href="wallpaper_noite.png">
+<link rel="prefetch" as="image" href="quarto_acordado.png">
+<link rel="prefetch" as="image" href="quarto_dormindo.png">
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#fff5f7"><title>Nossa História ❤️</title>
 <style>
 *{box-sizing:border-box}
@@ -416,10 +416,10 @@ body.tema-escuro .quiz-opcoes label:has(input:checked){background:#60416c}
 
 
 /* Cenário dinâmico: mesmas posições de objetos de dia e de noite */
-#mascote-cenario{background-image:url("imagens/quarto_acordado.png")!important;background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important;min-height:350px!important;overflow:hidden;border:1px solid #e6c1d3!important;isolation:isolate}
-#mascote-cenario.nh-noite{background-image:url("imagens/quarto_dormindo.png")!important;border-color:#8f6da9!important}
-body.tema-escuro #mascote-cenario:not(.nh-noite){background-image:url("imagens/quarto_acordado.png")!important}
-body.tema-escuro #mascote-cenario.nh-noite{background-image:url("imagens/quarto_dormindo.png")!important}
+#mascote-cenario{background-image:url("quarto_acordado.png")!important;background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important;min-height:350px!important;overflow:hidden;border:1px solid #e6c1d3!important;isolation:isolate}
+#mascote-cenario.nh-noite{background-image:url("quarto_dormindo.png")!important;border-color:#8f6da9!important}
+body.tema-escuro #mascote-cenario:not(.nh-noite){background-image:url("quarto_acordado.png")!important}
+body.tema-escuro #mascote-cenario.nh-noite{background-image:url("quarto_dormindo.png")!important}
 #mascote-figura{position:relative;z-index:2;min-height:225px!important;display:flex!important;align-items:flex-end!important;justify-content:center!important;filter:drop-shadow(0 8px 6px #492b4933)}
 #mascote-figura img{max-height:215px;object-fit:contain}
 #mascote-balao-mensagem{position:relative;z-index:3;background:rgba(255,255,255,.94)!important;box-shadow:0 3px 14px #532f5322}
@@ -453,12 +453,12 @@ body.tema-escuro #modo-seletor button.ativo{background:#a65391;border-color:#a65
 :root{--vidro:rgba(255,246,252,.23);--vidro-borda:rgba(255,255,255,.68);--vidro-sombra:0 14px 38px rgba(74,26,62,.17);--vidro-texto:#4e2940}
 html{min-height:100%;background:#f7dbe9}
 body,body:not(.tema-escuro),body.tema-escuro{
-  background-image:linear-gradient(180deg,rgba(255,244,252,.22),rgba(255,235,249,.12)),url('imagens/wallpaper_dia.png')!important;
+  background-image:linear-gradient(180deg,rgba(255,244,252,.22),rgba(255,235,249,.12)),url('wallpaper_dia.png')!important;
   background-position:center center!important;background-repeat:no-repeat!important;background-size:cover!important;
   background-attachment:fixed!important;min-height:100vh;color:var(--vidro-texto)
 }
 body.tema-escuro{--vidro:rgba(31,24,58,.33);--vidro-borda:rgba(240,218,255,.4);--vidro-sombra:0 16px 40px rgba(10,5,30,.35);--vidro-texto:#fff3ff;
-  background-image:linear-gradient(180deg,rgba(22,13,49,.32),rgba(20,11,41,.22)),url('imagens/wallpaper_noite.png')!important;color:var(--vidro-texto)}
+  background-image:linear-gradient(180deg,rgba(22,13,49,.32),rgba(20,11,41,.22)),url('wallpaper_noite.png')!important;color:var(--vidro-texto)}
 /* cartões de vidro com contorno luminoso, flutuação sutil */
 section,body.tema-escuro section,#login-painel,body.tema-escuro #login-painel,
 #modo-seletor,body.tema-escuro #modo-seletor,#conteudo-configuracoes,body.tema-escuro #conteudo-configuracoes,
@@ -564,7 +564,7 @@ body.tema-escuro #recado-personagem{background:rgba(34,24,60,.44)!important}
 <style id="cassino-estilos">
 #cassino-amor{grid-column:1/-1;background:linear-gradient(145deg,#fff3fa,#ffe8f4);border:1px solid #f3cfe0;border-radius:25px;padding:20px 14px;text-align:center;overflow:hidden}
 #cassino-amor h2{color:#a92e68;text-align:center}
-#cassino-amor .cassino-cena{background:linear-gradient(#a72779aa,#7a2b81aa),url('cassino/maquina/fundo_cassino.png') center/cover;border-radius:24px;padding:16px 8px;color:white}
+#cassino-amor .cassino-cena{background:linear-gradient(#a72779aa,#7a2b81aa),url('fundo_cassino.png') center/cover;border-radius:24px;padding:16px 8px;color:white}
 #cassino-amor .cassino-mascote{width:min(320px,85%);height:260px;object-fit:contain;display:block;margin:12px auto 34px;transform:scale(2.35);transform-origin:center center;filter:drop-shadow(0 6px 7px #3b103a77);pointer-events:none;position:relative;z-index:1}
 #cassino-amor .cassino-tela{width:min(560px,100%);margin:10px auto;background:linear-gradient(135deg,#e7318e,#8e165a);padding:12px;border:5px solid #f5bf4c;border-radius:25px;box-shadow:0 9px 18px #4d123b66}
 #cassino-amor .cassino-grade{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;background:#fff6fb;padding:8px;border-radius:15px}
@@ -860,7 +860,77 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
 }
 @media(max-width:600px){#cassino-amor .cassino-grade{aspect-ratio:5/3!important}}
 </style>
-<link rel="stylesheet" href="cassinos.css">
+<style id="nh-cassinos-estilos-completos">
+/* Scoped to the casino view. All navigation and controls are real HTML buttons. */
+.nh-casino-entry{display:flex;align-items:center;gap:14px;width:min(100%,420px);margin:18px auto;padding:9px 18px 9px 9px;border:2px solid #69fc83;border-radius:28px;background:linear-gradient(115deg,#051109,#17392c);color:#caffc9;text-align:left;font-size:19px;font-weight:900}.nh-casino-entry img{width:68px;height:68px;object-fit:contain;border-radius:16px}.nh-casino-entry small{display:block;font-size:13px;margin-top:4px}
+body.nh-casino-open{overflow:hidden!important}
+#nh-casinos[hidden],#nh-casinos [hidden]{display:none!important}
+#nh-casinos{position:fixed;inset:0;z-index:2147483100;overflow:auto;overscroll-behavior:contain;background:radial-gradient(ellipse at 25% 10%,#31051d,transparent 60%),#08060b;color:#fff4e7;font-family:Arial,sans-serif;text-align:center;isolation:isolate}
+#nh-casinos *{box-sizing:border-box}
+#nh-casinos .nh-topbar{display:flex;align-items:center;gap:16px;padding:8px 14px;padding-top:calc(8px + env(safe-area-inset-top));background:linear-gradient(#160611,#080307);border-bottom:1px solid #772747;box-shadow:0 2px 20px #e8006333;position:relative;z-index:2}
+#nh-casinos .nh-brand{margin:0;color:#fff0f5!important;text-shadow:0 0 6px #ff3988,0 0 14px #ff3988;font:italic bold clamp(22px,2.5vw,35px) Georgia,serif;white-space:nowrap}
+#nh-casinos nav{display:flex;align-items:center;justify-content:center;gap:5px;flex:1}
+#nh-casinos nav button,#nh-casinos .nh-nav-current{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:10px 13px;border:1px solid transparent;border-radius:10px;background:transparent;color:#e7dce4;font-size:15px;white-space:nowrap}
+#nh-casinos .nh-nav-current{border-color:#ff2787;background:#460524;box-shadow:inset 0 0 10px #fc167166,0 0 12px #f51973;color:#fff}
+#nh-casinos .nh-wallet{display:flex;align-items:center;gap:10px;border:1px solid #6e344f;border-radius:12px;padding:5px 7px 5px 12px;background:#170e17;font-weight:800;white-space:nowrap;font-size:20px}
+#nh-casinos .nh-wallet button{height:34px;width:34px;border:1px solid #ff80b6;border-radius:9px;background:linear-gradient(#ff5ca2,#b90051);color:#fff;font-size:28px;line-height:1}
+#nh-casinos .nh-close{flex-shrink:0;width:38px;min-height:44px;background:transparent;color:#e2b4c8;border:1px solid #6e344f;border-radius:10px;font-size:28px}
+#nh-casinos .nh-disclaimer{font-size:10px;letter-spacing:2px;color:#c99aac;margin:9px 0}
+#nh-casinos .nh-theme-tabs{display:none}
+#nh-casinos .nh-casino-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:0 10px;max-width:1440px;margin:auto}
+#nh-casinos .nh-casino{--neon:#ff258a;--dark:#360117;--light:#ffe1ed;--glow:#ff006e88;min-width:0;position:relative;border:2px solid var(--neon);border-radius:24px;background:radial-gradient(ellipse at top,#660727,#12010c 70%);box-shadow:0 0 18px var(--glow),inset 0 0 14px var(--glow);overflow:hidden;padding:0 12px 16px}
+#nh-casinos .nh-casino-girinnho{--neon:#63ff26;--dark:#041606;--light:#ddffd0;--glow:#3cff004d;background:radial-gradient(ellipse at top,#193407,#010802 70%)}
+/* The supplied reference stays intact; CSS windows reuse its header and symbol artwork. */
+#nh-casinos .nh-banner{aspect-ratio:640/286;margin:-1px -13px 0;background-image:url('cassinos-referencia.jpg');background-size:200% auto;background-position:0 11.35%;background-repeat:no-repeat}
+#nh-casinos .nh-casino-girinnho .nh-banner{background-position:100% 11.35%}
+#nh-casinos .nh-machine{position:relative;border:7px ridge #ffd36c;border-radius:13px;padding:7px;background:linear-gradient(135deg,#7f4812,#f4c558 30%,#533407 55%,#ffe9a6);box-shadow:0 0 0 2px #63380a,0 0 16px var(--glow);overflow:hidden}
+#nh-casinos .nh-reels{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:var(--dark);border:2px solid #c59435;border-radius:4px;overflow:hidden;gap:1px}
+#nh-casinos .nh-cell{min-width:0;aspect-ratio:1;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse,#540725,#1d000e);border:1px solid #8f672e80;position:relative}
+#nh-casinos .nh-casino-girinnho .nh-cell{background:radial-gradient(ellipse,#122204,#010501)}
+#nh-casinos .nh-symbol{width:100%;height:100%;display:block;background-repeat:no-repeat;filter:drop-shadow(0 0 5px #ffe25655)}
+#nh-casinos .nh-symbol.nh-symbol-file{width:88%;height:88%;background-size:contain;background-position:center}
+#nh-casinos .nh-spinning .nh-symbol{animation:nh-reel .16s linear infinite}
+#nh-casinos .nh-cell.nh-paid{box-shadow:inset 0 0 20px var(--neon);outline:3px solid #ffe36d;outline-offset:-3px;z-index:1}
+#nh-casinos .nh-controls{display:grid;grid-template-columns:1fr 1.5fr 1fr;align-items:center;gap:12px;border:4px ridge #ffc85e;border-radius:15px;padding:19px 12px 13px;margin-top:15px;background:linear-gradient(160deg,#65012d,#1f000d 65%);box-shadow:0 0 0 2px var(--neon),inset 0 0 15px var(--glow);position:relative}
+#nh-casinos .nh-controls::before{content:'♥';position:absolute;top:-24px;left:50%;transform:translateX(-50%);color:var(--neon);font-size:35px;line-height:1;text-shadow:0 0 4px #fff,0 0 10px var(--neon);pointer-events:none}
+#nh-casinos .nh-casino-girinnho .nh-controls{background:linear-gradient(160deg,#103415,#000a03 65%)}
+#nh-casinos .nh-bet-group>span,#nh-casinos .nh-auto-group>span{display:block;font-size:14px;color:#fff1df;margin-bottom:7px}
+#nh-casinos .nh-stepper{display:flex;align-items:center;justify-content:center;gap:6px}
+#nh-casinos .nh-stepper button{background:linear-gradient(#ff589e,#a90045);color:white;font-size:25px;font-weight:bold;border:1px solid #ff9ec7;border-radius:9px;min-width:34px;min-height:40px;padding:0}
+#nh-casinos .nh-casino-girinnho .nh-stepper button{background:linear-gradient(#4caa45,#155c1e);border-color:#9fcf6f}
+#nh-casinos .nh-bet{font-size:20px;font-weight:700;min-width:25px;color:white;font-variant-numeric:tabular-nums}
+#nh-casinos .nh-spin{min-height:67px;min-width:0;width:100%;border:4px ridge #ffe59c;border-radius:40px;background:linear-gradient(#ff80bb 0%,#e91374 45%,#ac0045 51%,#f43287);color:#fff6eb;font-size:clamp(22px,3.1vw,42px);font-weight:900;text-shadow:0 3px 3px #430019;box-shadow:inset 0 0 0 3px #ffb1d0,0 0 6px #ffe66e,0 0 20px var(--neon);cursor:pointer;letter-spacing:1px}
+#nh-casinos .nh-casino-girinnho .nh-spin{background:linear-gradient(#c3ff54,#5ac706 45%,#188000 51%,#7be500);color:#fffddb;text-shadow:0 3px 3px #143600;box-shadow:inset 0 0 0 3px #caff73,0 0 6px #ffe66e,0 0 20px var(--neon)}
+#nh-casinos .nh-spin:active{transform:translateY(2px)}
+#nh-casinos .nh-auto{display:block;margin:auto;width:59px;min-height:32px;padding:3px;border:2px solid #cea1b3;border-radius:24px;background:#4c1531}
+#nh-casinos .nh-auto span{display:block;width:22px;height:22px;background:#fff6ed;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px #000}
+#nh-casinos .nh-auto[aria-checked="true"]{background:var(--neon);border-color:#ffe1a9}
+#nh-casinos .nh-auto[aria-checked="true"] span{transform:translateX(25px)}
+#nh-casinos .nh-auto-count{display:block;font-size:10px;color:#d4b9ad;margin-top:5px}
+#nh-casinos .nh-feedback{display:flex;align-items:center;gap:10px;text-align:left;margin:15px 0 6px;min-height:72px;padding:8px;background:#0004;border-radius:12px}
+#nh-casinos .nh-hero{width:60px;height:60px;object-fit:contain;flex-shrink:0;border-radius:10px}
+#nh-casinos .nh-casino-amor .nh-hero[src="coelho_idle.gif"],#nh-casinos .nh-casino-amor .nh-hero[src="coelho_derrota.gif"]{transform:scale(1.6);pointer-events:none}
+#nh-casinos .nh-balance{font-size:12px;color:#e5c67f;font-weight:700}
+#nh-casinos .nh-result{font-size:13px;line-height:1.5;margin:4px 0 0;color:#fff1dd;min-height:38px;overflow-wrap:anywhere}
+#nh-casinos .nh-options{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+#nh-casinos .nh-options button{background:#0004;border:1px solid #b7905755;border-radius:9px;color:#e8d6ba;font-size:12px;padding:10px;min-height:44px}
+#nh-casinos .nh-rules{font-size:12px;line-height:1.7;text-align:left;margin-top:12px;padding:10px;color:#d9c7b5;background:#0004;border-radius:10px}
+#nh-casinos .nh-rules summary{cursor:pointer;color:var(--light);min-height:28px;font-weight:700}
+#nh-casinos .nh-win-effect{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;z-index:2}
+#nh-casinos .nh-big-win{position:absolute;inset:0;display:grid;place-items:center;color:#fff3ab;text-shadow:0 3px 5px #000,0 0 20px var(--neon);font-size:clamp(23px,3.5vw,45px);font-weight:900;pointer-events:none;z-index:3;animation:nh-prize .8s infinite alternate}
+#nh-casinos .nh-bottom-note{font-size:12px;color:#b58c9d;margin:22px 16px;padding-bottom:env(safe-area-inset-bottom)}
+#nh-casinos button:disabled{opacity:.45;cursor:default}#nh-casinos button:focus-visible,#nh-casinos summary:focus-visible{outline:3px solid #ffe89e;outline-offset:3px}
+.nh-sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+@keyframes nh-reel{from{transform:translateY(-28%);filter:blur(3px)}to{transform:translateY(28%);filter:blur(3px)}}
+@keyframes nh-prize{to{transform:scale(1.05)}}
+@media(max-width:1050px){#nh-casinos .nh-topbar{gap:8px;flex-wrap:wrap}#nh-casinos .nh-brand{flex:1;text-align:left}#nh-casinos nav{order:4;flex-basis:100%}#nh-casinos .nh-controls{gap:6px;padding:18px 6px 10px}#nh-casinos .nh-spin{min-height:58px}#nh-casinos .nh-casino{padding-left:8px;padding-right:8px}#nh-casinos .nh-banner{margin-left:-9px;margin-right:-9px}}
+@media(max-width:700px){#nh-casinos .nh-casino-pair{grid-template-columns:minmax(0,1fr);padding:0 8px}#nh-casinos .nh-brand{font-size:23px}#nh-casinos .nh-wallet{font-size:16px;padding-left:8px;gap:6px}#nh-casinos .nh-wallet button{width:28px;height:28px}#nh-casinos .nh-close{width:32px}#nh-casinos nav button,#nh-casinos .nh-nav-current{font-size:12px;padding:8px;gap:4px}#nh-casinos .nh-theme-tabs{display:flex;gap:8px;justify-content:center;margin:10px 8px 13px}#nh-casinos .nh-theme-tabs button{flex:1;max-width:250px;border:1px solid #74454c;background:#190d16;color:#ebc7d7;border-radius:10px;padding:10px 7px;min-height:44px;font-size:13px}#nh-casinos .nh-theme-tabs button[aria-pressed="true"]{border-color:#ff4b91;background:#440720;box-shadow:0 0 8px #ff277344;color:#fff}#nh-casinos .nh-theme-tabs button[data-theme="girinnho"][aria-pressed="true"]{border-color:#64ff39;background:#123010;box-shadow:0 0 8px #64ff3944}#nh-casinos .nh-spin{font-size:28px;min-height:58px}#nh-casinos .nh-machine{border-width:5px;padding:4px}#nh-casinos .nh-controls{margin-top:14px}#nh-casinos .nh-banner{aspect-ratio:640/286}#nh-casinos .nh-bet-group>span,#nh-casinos .nh-auto-group>span{font-size:12px}#nh-casinos .nh-controls{grid-template-columns:1fr 1.35fr .8fr}#nh-casinos .nh-stepper{gap:3px}#nh-casinos .nh-stepper button{min-width:28px;min-height:44px}#nh-casinos .nh-auto{min-height:36px}#nh-casinos .nh-auto-count{font-size:9px}}
+@media(prefers-reduced-motion:reduce){#nh-casinos .nh-spinning .nh-symbol,#nh-casinos .nh-big-win{animation:none}#nh-casinos .nh-win-effect{visibility:hidden}#nh-casinos .nh-auto span{transition:none}}
+@media(max-width:360px){#nh-casinos .nh-topbar{padding-left:8px;padding-right:8px;gap:6px}#nh-casinos .nh-brand{font-size:20px}#nh-casinos .nh-wallet{font-size:14px}#nh-casinos nav{gap:2px}#nh-casinos nav button,#nh-casinos .nh-nav-current{font-size:11px;padding:8px 5px;gap:3px}}
+#nh-casinos .nh-nav-status{margin:10px 14px;color:#ffdfa1;font-size:13px;line-height:1.5}
+@media(max-width:360px){#nh-casinos .nh-spin{font-size:24px;letter-spacing:0;padding:8px 4px;border-width:3px}#nh-casinos .nh-controls{grid-template-columns:.95fr 1.4fr .7fr;gap:5px}#nh-casinos .nh-bet{font-size:18px;min-width:18px}#nh-casinos .nh-stepper button{font-size:22px;min-width:27px}#nh-casinos .nh-auto{width:50px}#nh-casinos .nh-auto[aria-checked="true"] span{transform:translateX(16px)}}
+
+</style>
 </head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -971,7 +1041,7 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
  <p class="muted">Escolha uma foto da nossa galeria e crie uma lembrança para compartilhar.</p>
  <div id="memorias-fotos" aria-label="Escolha uma foto"></div>
  <div id="memorias-temas" role="group" aria-label="Tema da imagem">
-  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="claro" checked> ☀️ Hello Kitty<img class="memorias-tema-previa" src="template_hello_kitty.png" alt="Prévia do template Hello Kitty" loading="lazy" onerror="if(!this.dataset.alt){this.dataset.alt='1';this.src='template_hello_kit.png'}"></label>
+  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="claro" checked> ☀️ Hello Kitty<img class="memorias-tema-previa" src="template_hello_kitty.png" alt="Prévia do template Hello Kitty" loading="lazy" onerror="if(!this.dataset.alt){this.dataset.alt='1';this.src='template_hello_kitty.png'}"></label>
   <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="escuro"> 🌙 Kuromi<img class="memorias-tema-previa" src="template_kuromi.png" alt="Prévia do template Kuromi" loading="lazy"></label>
   <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="melody"> 🎀 My Melody<img class="memorias-tema-previa" src="mymelodytemplate.png" alt="Prévia do template My Melody" loading="lazy" onerror="if(!this.dataset.r){this.dataset.r='1';this.src=this.getAttribute('src')+'?v='+Date.now()}"></label>
   <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="cinnamoroll"> ☁️ Cinnamoroll<img class="memorias-tema-previa" src="cinnamorolltemplate.png" alt="Prévia do template Cinnamoroll" loading="lazy" onerror="if(!this.dataset.r){this.dataset.r='1';this.src=this.getAttribute('src')+'?v='+Date.now()}"></label>
@@ -1408,9 +1478,9 @@ $('alternar-musica').onclick=async()=>{
 $('proxima-musica').onclick=()=>tocarFaixa(selecionarProximaAleatoria());
 // Se o arquivo sem acentos não existir, tenta automaticamente o nome com acentos.
 const nomesComAcentos=[
- '01 - Café de Carinhos.mp3',
- '02 - Dois Corações e um Café.mp3',
- '03 - Abraço de Algodão.mp3',
+ '01 - Cafe de Carinhos.mp3',
+ '02 - Dois Coracoes e um Cafe.mp3',
+ '03 - Abraco de Algodao.mp3',
  '04 - Encontro sob as Estrelas.mp3',
  '05 - Nosso Cantinho de Paz.mp3'
 ];
@@ -1566,7 +1636,7 @@ $('chat-texto-enviar').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shi
   const bot=$('memorias-gerar');bot.disabled=true;falar('Gerando sua memória...');
   try{
    const foto=await carregarImagem(selecionada);
-   const arquivosPorTema={claro:['template_hello_kitty.png','template_hello_kit.png'],escuro:['template_kuromi.png'],melody:['mymelodytemplate.png'],cinnamoroll:['cinnamorolltemplate.png']};
+   const arquivosPorTema={claro:['template_hello_kitty.png','template_hello_kitty.png'],escuro:['template_kuromi.png'],melody:['mymelodytemplate.png'],cinnamoroll:['cinnamorolltemplate.png']};
    const arquivos=arquivosPorTema[tema]||arquivosPorTema.claro;
    const estilosPorTema={claro:{fundo:'#fff5f7',cor:'#77364e',destaque:'#bd3267'},escuro:{fundo:'#171321',cor:'#f4eaff',destaque:'#e0b5ff'},melody:{fundo:'#fff5f7',cor:'#77364e',destaque:'#bd3267'},cinnamoroll:{fundo:'#f2f8ff',cor:'#3d5878',destaque:'#2f7fd1'}};
    const estilo=estilosPorTema[tema]||estilosPorTema.claro;
@@ -1857,7 +1927,7 @@ function mascoteGif(acao,temporaria=false){
  const img=figura.querySelector('img')||document.createElement('img');
  img.alt=''; // Não exibir texto gigante caso o GIF não seja encontrado.
  const arquivo=mascoteGifs[acao]||mascoteGifs.parado;
- const caminhos=[arquivo,'imagens/'+arquivo,'cassino/animacoes/'+arquivo];
+ const caminhos=[arquivo];
  let tentativa=0;
  img.onerror=()=>{
   tentativa++;
@@ -2611,5 +2681,135 @@ async function nhAtualizarColeta(){
  </div>
  <p class="nh-bottom-note">Feito para se divertir juntos. ♡ Sua história continua a um toque de distância.</p>
 </div>
-<script src="cassinos.js"></script>
+<script id="nh-cassinos-controlador-completo">
+/* Both casino themes use the existing authenticated, server-controlled wallet. */
+(() => {
+ 'use strict';
+ const hub=document.getElementById('nh-casinos');if(!hub)return;
+ const keys=['cenoura','coracao','morango','coelho','moeda','estrela','trevo','coroa'];
+ const sounds={click:'01_clique_botao.wav',open:'18_abrir_menu.wav',start:'02_iniciar_rodada.wav',spin:'03_roleta_girando.wav',stop:'04_roleta_parando.wav',coins:'14_moeda_caindo.wav',win:'06_vitoria_pequena.wav',big:'09_super_win.wav',lose:'05_sem_premio.wav'};
+ const poses={amor:{idle:'coelho_idle.gif',win:'coelho_vitoria.gif',lose:'coelho_derrota.gif',big:'coelho_grande_vitoria.gif'},girinnho:{idle:'cucoparado.gif',win:'cucofeliz.gif',lose:'cucotriste.gif',big:'cucofeliz.gif'}};
+ // Artwork is displayed through CSS windows over the unmodified supplied JPEG.
+ // The canonical server symbol IDs and probabilities are unchanged by the theme.
+ const art={amor:{cenoura:[46,367,'Lingote dourado'],coracao:[377,367,'Cartas de amor'],morango:[157,367,'Laranja'],coelho:[266,367,'Coelhinho'],estrela:[484,576,'Fogos'],moeda:['simbolo_moeda.png','Moeda'],trevo:['simbolo_trevo.png','Trevo'],coroa:['simbolo_coracao.png','Coração']},girinnho:{cenoura:[795,367,'Serpente neon'],coracao:[906,367,'Coroa'],morango:[1014,367,'Esmeralda'],coelho:[687,367,'Girinnho'],moeda:[1125,367,'Moedas'],estrela:['ft_ouro.png','Ouro'],trevo:['ft_fogos.png','Fogos'],coroa:['ft_cartas.png','Cartas']}};
+ const states=[];const playing=new Set();const small=matchMedia('(max-width:700px)');
+ let current='amor',transaction=false,previousFocus=null,openStory=null,openUser=null,ambient=null,ambientWasPlaying=false;
+ const story=()=>typeof historiaAtual!=='undefined'?historiaAtual?.historia_id:null;
+ const user=()=>typeof usuario!=='undefined'?usuario?.id:null;
+ const connected=()=>typeof db!=='undefined'&&db&&story()&&user();
+ const sameSession=(sid,uid)=>story()===sid&&user()===uid;
+ const pauseSounds=()=>{for(const a of playing)a.pause();playing.clear()};
+ function balance(){const n=window.nhSaldoIndividual;return Number.isSafeInteger(n)&&n>=0?n:null}
+ function syncBalances(){const n=balance();states.forEach(s=>s.root.querySelector('.nh-balance').textContent='🪙 Saldo: '+(n??'--'));hub.querySelector('.nh-wallet-value').textContent='🪙 '+(n===null?'--':n.toLocaleString('pt-BR'));const pet=document.getElementById('mascote-saldo');if(pet&&n!==null)pet.textContent='🪙 '+n}
+ // Display-only verification. The browser never credits rewards to the server.
+ function lines(symbols,bet){let total=0;const paid=[];for(let row=0;row<3;row++){let count=1;while(count<5&&symbols[row*5+count]===symbols[row*5])count++;if(count>=3){total+=bet*({3:3,4:7,5:15}[count]);for(let col=0;col<count;col++)paid.push(row*5+col)}}return {total,paid}}
+ function controls(){states.forEach(s=>{s.spin.disabled=transaction;s.minus.disabled=transaction||s.bet===1||s.auto;s.plus.disabled=transaction||s.bet===3||s.auto;s.refresh.disabled=transaction;s.autoButton.disabled=transaction&&!s.auto;s.autoButton.setAttribute('aria-checked',String(s.auto));s.autoButton.setAttribute('aria-label',s.auto?'Parar giros automáticos':'Ativar até 10 giros automáticos');s.root.querySelector('.nh-auto-count').textContent=s.auto?s.remaining+' restantes':'Até 10 giros';s.root.querySelector('.nh-bet').textContent=s.bet})}
+ function stopAuto(s){s.auto=false;s.token++;clearTimeout(s.next);controls()}
+ function stopAllAuto(){states.forEach(stopAuto)}
+ function theme(name){stopAllAuto();pauseSounds();states.forEach(s=>s.stopMusic());current=name;layout();const selected=states.find(s=>s.theme===name);if(small.matches)hub.scrollTop=0;selected?.spin.focus({preventScroll:true})}
+ function layout(){states.forEach(s=>s.root.hidden=small.matches&&s.theme!==current);hub.querySelectorAll('[data-theme]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.theme===current)))}
+ function open(name){
+  if(hub.hidden){previousFocus=document.activeElement;openStory=story();openUser=user();ambient=document.getElementById('musica');ambientWasPlaying=!!ambient&&!ambient.paused;if(ambientWasPlaying)ambient.pause()}
+  current=name;hub.hidden=false;layout();document.body.classList.add('nh-casino-open');
+  states.forEach(s=>s.entry.setAttribute('aria-expanded',String(!s.root.hidden)));hub.querySelector('.nh-close').focus();syncBalances();states.find(s=>s.theme===name)?.refreshBalance();
+ }
+ function close(restore=true){
+  stopAllAuto();pauseSounds();states.forEach(s=>{s.clearEffect();s.stopMusic();s.entry.setAttribute('aria-expanded','false')});
+  hub.hidden=true;document.body.classList.remove('nh-casino-open');
+  if(restore&&previousFocus?.isConnected)previousFocus.focus();
+  if(ambientWasPlaying&&!document.hidden){ambient?.play().catch(()=>{});ambientWasPlaying=false}
+ }
+ hub.querySelectorAll('.nh-casino').forEach(root=>{
+  const themeName=root.classList.contains('nh-casino-amor')?'amor':'girinnho';
+  const q=selector=>root.querySelector(selector);
+  const s={root,theme:themeName,entry:document.getElementById(themeName==='amor'?'cassino-abrir':'girinnho-abrir'),spin:q('.nh-spin'),minus:q('.nh-minus'),plus:q('.nh-plus'),refresh:q('.nh-refresh'),autoButton:q('.nh-auto'),bet:1,auto:false,remaining:0,token:0,next:null};states.push(s);
+  const grid=q('.nh-reels'),hero=q('.nh-hero'),result=q('.nh-result'),effect=q('.nh-win-effect'),bigWin=q('.nh-big-win');
+  let sound=false,effectTimer=null;const music=new Audio('bgsound.ogg');music.loop=true;music.volume=.12;
+  const cells=Array.from({length:15},()=>{const cell=document.createElement('div');cell.className='nh-cell';cell.setAttribute('role','img');const img=document.createElement('span');img.className='nh-symbol';img.setAttribute('aria-hidden','true');cell.append(img);grid.append(cell);return cell});
+  function paint(symbols){symbols.forEach((key,i)=>{
+   const cell=cells[i],img=cell.firstElementChild,a=art[themeName][key];cell.dataset.symbol=key;
+   if(typeof a[0]==='string'){img.className='nh-symbol nh-symbol-file';img.style.backgroundImage='url("'+a[0]+'")';img.style.backgroundSize='';img.style.backgroundPosition='';cell.setAttribute('aria-label',a[1])}
+   else{img.className='nh-symbol';img.style.backgroundImage='url("cassinos-referencia.jpg")';img.style.backgroundSize=(1280/98*100)+'% '+(853/98*100)+'%';img.style.backgroundPosition=(a[0]/(1280-98)*100)+'% '+(a[1]/(853-98)*100)+'%';cell.setAttribute('aria-label',a[2])}
+  })}
+  function pose(state){hero.src=poses[themeName][state];hero.alt=(themeName==='amor'?'Coelhinho branco':'Girinnho')+' — '+({idle:'pronto para jogar',win:'vitória',lose:'sem prêmio',big:'supervitória'}[state])}
+  function audio(name,loop=false){if(!sound||hub.hidden||root.hidden||document.hidden)return null;const a=new Audio(sounds[name]);a.volume=.35;a.loop=loop;playing.add(a);a.onended=()=>playing.delete(a);a.play().catch(()=>playing.delete(a));return a}
+  s.stopMusic=()=>{music.pause();q('.nh-music').setAttribute('aria-pressed','false');q('.nh-music').textContent='♫ Música'};
+  s.clearEffect=()=>{clearTimeout(effectTimer);effect.hidden=true;bigWin.hidden=true;cells.forEach(cell=>cell.classList.remove('nh-paid'))};
+  s.refreshBalance=async()=>{
+   if(!connected()){result.textContent='Entre na sua conta e escolha o Modo Solo ou uma história do casal para jogar.';return}
+   if(transaction)return;const sid=story(),uid=user();
+   try{const {data,error}=await db.rpc('nh_meu_saldo');if(error)throw error;if(!sameSession(sid,uid)||transaction)return;const n=Number(data);if(data===null||!Number.isSafeInteger(n)||n<0)throw new Error('Saldo inválido');window.nhSaldoIndividual=n;syncBalances()}
+   catch(e){if(sameSession(sid,uid))result.textContent='Não foi possível atualizar o saldo: '+e.message}
+  };
+  async function spin(){
+   if(transaction||hub.hidden||root.hidden)return false;
+   if(!connected()){result.textContent='Entre na sua conta e escolha uma história para jogar.';return false}
+   const sid=story(),uid=user(),bet=s.bet;
+   if(balance()!==null&&balance()<bet){result.textContent='Saldo insuficiente. Abra Bônus para ver as recompensas gratuitas.';return false}
+   transaction=true;controls();s.clearEffect();pose('idle');result.textContent='Girando… boa sorte!';audio('start');audio('coins');
+   const loop=audio('spin',true);grid.classList.add('nh-spinning');
+   const anim=setInterval(()=>{if(!hub.hidden&&!root.hidden)paint(Array.from({length:15},()=>keys[Math.floor(Math.random()*keys.length)]))},95);const started=Date.now();
+   try{
+    // Never automatically retry a debit: a lost response may already have consumed it.
+    const {data,error}=await db.rpc('cassino_girar',{p_story_id:sid,p_aposta:bet});if(error)throw error;
+    await new Promise(resolve=>setTimeout(resolve,Math.max(0,1250-(Date.now()-started))));
+    clearInterval(anim);grid.classList.remove('nh-spinning');if(loop){loop.pause();playing.delete(loop)}
+    if(!sameSession(sid,uid))return false;
+    if(!data||!Array.isArray(data.simbolos)||data.simbolos.length!==15||!data.simbolos.every(n=>keys.includes(n))||!Number.isSafeInteger(data.saldo)||data.saldo<0||!Number.isSafeInteger(data.premio)||data.premio<0)throw new Error('Resposta do servidor inválida. Atualize o saldo.');
+    paint(data.simbolos);window.nhSaldoIndividual=data.saldo;syncBalances();const payout=lines(data.simbolos,bet);
+    if(payout.total!==data.premio){result.textContent='Prêmio informado pelo servidor: '+data.premio+' moedas. Ele diverge da tabela; Auto foi parado. Confira as regras com o administrador.';pose('idle');return false}
+    if(!hub.hidden&&!root.hidden){
+     audio('stop');
+     if(data.premio>0){const big=data.premio>=bet*7;pose(big?'big':'win');audio(big?'big':'win');payout.paid.forEach(i=>cells[i].classList.add('nh-paid'));effect.hidden=false;bigWin.hidden=!big;result.textContent=(big?'Supervitória! ':'Vitória! ')+'Prêmio: '+data.premio+' moedas. Saldo: '+data.saldo+'.';effectTimer=setTimeout(()=>{effect.hidden=true;bigWin.hidden=true;pose('idle')},3200)}
+     else{pose('lose');audio('lose');result.textContent='Sem prêmio neste giro. Custo: '+bet+' moeda(s). Saldo: '+data.saldo+'.'}
+    }
+    return true;
+   }catch(e){if(sameSession(sid,uid)){result.textContent='Não foi possível confirmar o giro: '+(e?.message||'falha de conexão')+' Atualize o saldo antes de tentar novamente.';pose('idle')}return false}
+   finally{clearInterval(anim);grid.classList.remove('nh-spinning');if(loop){loop.pause();playing.delete(loop)}transaction=false;controls()}
+  }
+  async function autoRound(token){
+   if(!s.auto||s.token!==token||hub.hidden||root.hidden||document.hidden)return;
+   s.remaining--;controls();const ok=await spin();
+   if(!s.auto||s.token!==token)return;
+   if(!ok||s.remaining<=0||balance()===null||balance()<s.bet){stopAuto(s);return}
+   s.next=setTimeout(()=>autoRound(token),1100);
+  }
+  s.spin.addEventListener('click',()=>{stopAllAuto();spin()});
+  s.minus.addEventListener('click',()=>{if(transaction||s.auto)return;s.bet=Math.max(1,s.bet-1);audio('click');controls()});
+  s.plus.addEventListener('click',()=>{if(transaction||s.auto)return;s.bet=Math.min(3,s.bet+1);audio('click');controls()});
+  s.autoButton.addEventListener('click',()=>{if(s.auto){stopAuto(s);return}if(transaction)return;stopAllAuto();s.auto=true;s.remaining=10;controls();autoRound(s.token)});
+  s.entry.addEventListener('click',()=>open(themeName));s.refresh.addEventListener('click',()=>{audio('click');s.refreshBalance()});
+  q('.nh-sound').addEventListener('click',e=>{sound=!sound;e.currentTarget.setAttribute('aria-pressed',String(sound));e.currentTarget.textContent=sound?'🔊 Sons ligados':'🔇 Ativar sons';if(sound)audio('click');else pauseSounds()});
+  q('.nh-music').addEventListener('click',async e=>{const target=e.currentTarget,on=music.paused;if(on){states.filter(other=>other!==s).forEach(other=>other.stopMusic());try{await music.play()}catch{result.textContent='Toque novamente para autorizar a música.';return}if(hub.hidden||document.hidden){s.stopMusic();return}}else music.pause();target.setAttribute('aria-pressed',String(on));target.textContent=on?'♫ Música ligada':'♫ Música'});
+  paint(themeName==='amor'?['cenoura','morango','coelho','coracao','morango','coracao','cenoura','morango','coelho','cenoura','coelho','morango','cenoura','coracao','estrela']:['coelho','cenoura','coracao','morango','moeda','morango','coelho','moeda','cenoura','coracao','cenoura','coracao','coelho','morango','moeda']);
+ });
+ hub.querySelector('.nh-close').addEventListener('click',()=>close());
+ hub.querySelectorAll('[data-theme]').forEach(b=>b.addEventListener('click',()=>theme(b.dataset.theme)));
+ hub.querySelectorAll('[data-nh-nav]').forEach(b=>b.addEventListener('click',()=>{
+  const target=b.dataset.nhNav;
+  if(target==='planos'&&document.getElementById('planos-casal')?.hidden){const status=hub.querySelector('.nh-nav-status');status.hidden=false;status.textContent='Os planos estão disponíveis no Modo Casal. Volte ao início para escolher esse modo.';return}
+  close(false);
+  if(target==='inicio')document.getElementById('aba-btn-inicio')?.click();
+  if(target==='planos'){document.getElementById('aba-btn-inicio')?.click();document.getElementById('abrir-planos')?.click();document.getElementById('planos-casal')?.scrollIntoView({block:'center'})}
+  if(target==='bonus')document.getElementById('mascote-premios-abrir')?.click();
+  if(target==='perfil')document.getElementById('botao-configuracoes')?.click();
+ }));
+ hub.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){e.preventDefault();close()}
+  if(e.key==='Tab'){const nodes=[...hub.querySelectorAll('button:not(:disabled),summary')].filter(el=>el.getClientRects().length);const first=nodes[0],last=nodes[nodes.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
+ });
+ small.addEventListener('change',()=>{stopAllAuto();layout()});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){stopAllAuto();pauseSounds();states.forEach(s=>s.stopMusic())}});
+ // Preserve the previous secret chat command as an additional entry.
+ window.abrirGirininhoSecreto=()=>open('girinnho');const form=document.getElementById('chat-rodape'),input=document.getElementById('chat-texto-enviar');
+ form?.addEventListener('submit',e=>{if(input.value.trim().toLowerCase()!=='/girininho777')return;e.preventDefault();e.stopImmediatePropagation();input.value='';open('girinnho')},true);
+ setInterval(()=>{
+  if(hub.hidden)return;
+  if(!sameSession(openStory,openUser)||document.getElementById('aba-jogos')?.hidden||document.getElementById('conteudo-privado')?.style.display==='none'){close();return}
+  if(!transaction)syncBalances();
+ },400);
+ controls();layout();
+})();
+
+</script>
 </body></html>
