@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<link rel="preload" as="image" href="wallpaper_dia.png" fetchpriority="high">
-<link rel="prefetch" as="image" href="wallpaper_noite.png">
-<link rel="prefetch" as="image" href="quarto_acordado.png">
-<link rel="prefetch" as="image" href="quarto_dormindo.png">
+<link rel="preload" as="image" href="imagens/wallpaper_dia.png" fetchpriority="high">
+<link rel="prefetch" as="image" href="imagens/wallpaper_noite.png">
+<link rel="prefetch" as="image" href="imagens/quarto_acordado.png">
+<link rel="prefetch" as="image" href="imagens/quarto_dormindo.png">
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#fff5f7"><title>Nossa História ❤️</title>
 <style>
 *{box-sizing:border-box}
@@ -416,10 +416,10 @@ body.tema-escuro .quiz-opcoes label:has(input:checked){background:#60416c}
 
 
 /* Cenário dinâmico: mesmas posições de objetos de dia e de noite */
-#mascote-cenario{background-image:url("quarto_acordado.png")!important;background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important;min-height:350px!important;overflow:hidden;border:1px solid #e6c1d3!important;isolation:isolate}
-#mascote-cenario.nh-noite{background-image:url("quarto_dormindo.png")!important;border-color:#8f6da9!important}
-body.tema-escuro #mascote-cenario:not(.nh-noite){background-image:url("quarto_acordado.png")!important}
-body.tema-escuro #mascote-cenario.nh-noite{background-image:url("quarto_dormindo.png")!important}
+#mascote-cenario{background-image:url("imagens/quarto_acordado.png")!important;background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important;min-height:350px!important;overflow:hidden;border:1px solid #e6c1d3!important;isolation:isolate}
+#mascote-cenario.nh-noite{background-image:url("imagens/quarto_dormindo.png")!important;border-color:#8f6da9!important}
+body.tema-escuro #mascote-cenario:not(.nh-noite){background-image:url("imagens/quarto_acordado.png")!important}
+body.tema-escuro #mascote-cenario.nh-noite{background-image:url("imagens/quarto_dormindo.png")!important}
 #mascote-figura{position:relative;z-index:2;min-height:225px!important;display:flex!important;align-items:flex-end!important;justify-content:center!important;filter:drop-shadow(0 8px 6px #492b4933)}
 #mascote-figura img{max-height:215px;object-fit:contain}
 #mascote-balao-mensagem{position:relative;z-index:3;background:rgba(255,255,255,.94)!important;box-shadow:0 3px 14px #532f5322}
@@ -453,12 +453,12 @@ body.tema-escuro #modo-seletor button.ativo{background:#a65391;border-color:#a65
 :root{--vidro:rgba(255,246,252,.23);--vidro-borda:rgba(255,255,255,.68);--vidro-sombra:0 14px 38px rgba(74,26,62,.17);--vidro-texto:#4e2940}
 html{min-height:100%;background:#f7dbe9}
 body,body:not(.tema-escuro),body.tema-escuro{
-  background-image:linear-gradient(180deg,rgba(255,244,252,.22),rgba(255,235,249,.12)),url('wallpaper_dia.png')!important;
+  background-image:linear-gradient(180deg,rgba(255,244,252,.22),rgba(255,235,249,.12)),url('imagens/wallpaper_dia.png')!important;
   background-position:center center!important;background-repeat:no-repeat!important;background-size:cover!important;
   background-attachment:fixed!important;min-height:100vh;color:var(--vidro-texto)
 }
 body.tema-escuro{--vidro:rgba(31,24,58,.33);--vidro-borda:rgba(240,218,255,.4);--vidro-sombra:0 16px 40px rgba(10,5,30,.35);--vidro-texto:#fff3ff;
-  background-image:linear-gradient(180deg,rgba(22,13,49,.32),rgba(20,11,41,.22)),url('wallpaper_noite.png')!important;color:var(--vidro-texto)}
+  background-image:linear-gradient(180deg,rgba(22,13,49,.32),rgba(20,11,41,.22)),url('imagens/wallpaper_noite.png')!important;color:var(--vidro-texto)}
 /* cartões de vidro com contorno luminoso, flutuação sutil */
 section,body.tema-escuro section,#login-painel,body.tema-escuro #login-painel,
 #modo-seletor,body.tema-escuro #modo-seletor,#conteudo-configuracoes,body.tema-escuro #conteudo-configuracoes,
@@ -564,7 +564,7 @@ body.tema-escuro #recado-personagem{background:rgba(34,24,60,.44)!important}
 <style id="cassino-estilos">
 #cassino-amor{grid-column:1/-1;background:linear-gradient(145deg,#fff3fa,#ffe8f4);border:1px solid #f3cfe0;border-radius:25px;padding:20px 14px;text-align:center;overflow:hidden}
 #cassino-amor h2{color:#a92e68;text-align:center}
-#cassino-amor .cassino-cena{background:linear-gradient(#a72779aa,#7a2b81aa),url('fundo_cassino.png') center/cover;border-radius:24px;padding:16px 8px;color:white}
+#cassino-amor .cassino-cena{background:linear-gradient(#a72779aa,#7a2b81aa),url('cassino/maquina/fundo_cassino.png') center/cover;border-radius:24px;padding:16px 8px;color:white}
 #cassino-amor .cassino-mascote{width:min(320px,85%);height:260px;object-fit:contain;display:block;margin:12px auto 34px;transform:scale(2.35);transform-origin:center center;filter:drop-shadow(0 6px 7px #3b103a77);pointer-events:none;position:relative;z-index:1}
 #cassino-amor .cassino-tela{width:min(560px,100%);margin:10px auto;background:linear-gradient(135deg,#e7318e,#8e165a);padding:12px;border:5px solid #f5bf4c;border-radius:25px;box-shadow:0 9px 18px #4d123b66}
 #cassino-amor .cassino-grade{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;background:#fff6fb;padding:8px;border-radius:15px}
@@ -860,77 +860,6 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
 }
 @media(max-width:600px){#cassino-amor .cassino-grade{aspect-ratio:5/3!important}}
 </style>
-<style id="nh-cassinos-estilos-completos">
-/* Scoped to the casino view. All navigation and controls are real HTML buttons. */
-.nh-casino-entry{display:flex;align-items:center;gap:14px;width:min(100%,420px);margin:18px auto;padding:9px 18px 9px 9px;border:2px solid #69fc83;border-radius:28px;background:linear-gradient(115deg,#051109,#17392c);color:#caffc9;text-align:left;font-size:19px;font-weight:900}.nh-casino-entry img{width:68px;height:68px;object-fit:contain;border-radius:16px}.nh-casino-entry small{display:block;font-size:13px;margin-top:4px}
-body.nh-casino-open{overflow:hidden!important}
-#nh-casinos[hidden],#nh-casinos [hidden]{display:none!important}
-#nh-casinos{position:fixed;inset:0;z-index:2147483100;overflow:auto;overscroll-behavior:contain;background:radial-gradient(ellipse at 25% 10%,#31051d,transparent 60%),#08060b;color:#fff4e7;font-family:Arial,sans-serif;text-align:center;isolation:isolate}
-#nh-casinos *{box-sizing:border-box}
-#nh-casinos .nh-topbar{display:flex;align-items:center;gap:16px;padding:8px 14px;padding-top:calc(8px + env(safe-area-inset-top));background:linear-gradient(#160611,#080307);border-bottom:1px solid #772747;box-shadow:0 2px 20px #e8006333;position:relative;z-index:2}
-#nh-casinos .nh-brand{margin:0;color:#fff0f5!important;text-shadow:0 0 6px #ff3988,0 0 14px #ff3988;font:italic bold clamp(22px,2.5vw,35px) Georgia,serif;white-space:nowrap}
-#nh-casinos nav{display:flex;align-items:center;justify-content:center;gap:5px;flex:1}
-#nh-casinos nav button,#nh-casinos .nh-nav-current{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:10px 13px;border:1px solid transparent;border-radius:10px;background:transparent;color:#e7dce4;font-size:15px;white-space:nowrap}
-#nh-casinos .nh-nav-current{border-color:#ff2787;background:#460524;box-shadow:inset 0 0 10px #fc167166,0 0 12px #f51973;color:#fff}
-#nh-casinos .nh-wallet{display:flex;align-items:center;gap:10px;border:1px solid #6e344f;border-radius:12px;padding:5px 7px 5px 12px;background:#170e17;font-weight:800;white-space:nowrap;font-size:20px}
-#nh-casinos .nh-wallet button{height:34px;width:34px;border:1px solid #ff80b6;border-radius:9px;background:linear-gradient(#ff5ca2,#b90051);color:#fff;font-size:28px;line-height:1}
-#nh-casinos .nh-close{flex-shrink:0;width:38px;min-height:44px;background:transparent;color:#e2b4c8;border:1px solid #6e344f;border-radius:10px;font-size:28px}
-#nh-casinos .nh-disclaimer{font-size:10px;letter-spacing:2px;color:#c99aac;margin:9px 0}
-#nh-casinos .nh-theme-tabs{display:none}
-#nh-casinos .nh-casino-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:0 10px;max-width:1440px;margin:auto}
-#nh-casinos .nh-casino{--neon:#ff258a;--dark:#360117;--light:#ffe1ed;--glow:#ff006e88;min-width:0;position:relative;border:2px solid var(--neon);border-radius:24px;background:radial-gradient(ellipse at top,#660727,#12010c 70%);box-shadow:0 0 18px var(--glow),inset 0 0 14px var(--glow);overflow:hidden;padding:0 12px 16px}
-#nh-casinos .nh-casino-girinnho{--neon:#63ff26;--dark:#041606;--light:#ddffd0;--glow:#3cff004d;background:radial-gradient(ellipse at top,#193407,#010802 70%)}
-/* The supplied reference stays intact; CSS windows reuse its header and symbol artwork. */
-#nh-casinos .nh-banner{aspect-ratio:640/286;margin:-1px -13px 0;background-image:url('cassinos-referencia.jpg');background-size:200% auto;background-position:0 11.35%;background-repeat:no-repeat}
-#nh-casinos .nh-casino-girinnho .nh-banner{background-position:100% 11.35%}
-#nh-casinos .nh-machine{position:relative;border:7px ridge #ffd36c;border-radius:13px;padding:7px;background:linear-gradient(135deg,#7f4812,#f4c558 30%,#533407 55%,#ffe9a6);box-shadow:0 0 0 2px #63380a,0 0 16px var(--glow);overflow:hidden}
-#nh-casinos .nh-reels{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:var(--dark);border:2px solid #c59435;border-radius:4px;overflow:hidden;gap:1px}
-#nh-casinos .nh-cell{min-width:0;aspect-ratio:1;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse,#540725,#1d000e);border:1px solid #8f672e80;position:relative}
-#nh-casinos .nh-casino-girinnho .nh-cell{background:radial-gradient(ellipse,#122204,#010501)}
-#nh-casinos .nh-symbol{width:100%;height:100%;display:block;background-repeat:no-repeat;filter:drop-shadow(0 0 5px #ffe25655)}
-#nh-casinos .nh-symbol.nh-symbol-file{width:88%;height:88%;background-size:contain;background-position:center}
-#nh-casinos .nh-spinning .nh-symbol{animation:nh-reel .16s linear infinite}
-#nh-casinos .nh-cell.nh-paid{box-shadow:inset 0 0 20px var(--neon);outline:3px solid #ffe36d;outline-offset:-3px;z-index:1}
-#nh-casinos .nh-controls{display:grid;grid-template-columns:1fr 1.5fr 1fr;align-items:center;gap:12px;border:4px ridge #ffc85e;border-radius:15px;padding:19px 12px 13px;margin-top:15px;background:linear-gradient(160deg,#65012d,#1f000d 65%);box-shadow:0 0 0 2px var(--neon),inset 0 0 15px var(--glow);position:relative}
-#nh-casinos .nh-controls::before{content:'♥';position:absolute;top:-24px;left:50%;transform:translateX(-50%);color:var(--neon);font-size:35px;line-height:1;text-shadow:0 0 4px #fff,0 0 10px var(--neon);pointer-events:none}
-#nh-casinos .nh-casino-girinnho .nh-controls{background:linear-gradient(160deg,#103415,#000a03 65%)}
-#nh-casinos .nh-bet-group>span,#nh-casinos .nh-auto-group>span{display:block;font-size:14px;color:#fff1df;margin-bottom:7px}
-#nh-casinos .nh-stepper{display:flex;align-items:center;justify-content:center;gap:6px}
-#nh-casinos .nh-stepper button{background:linear-gradient(#ff589e,#a90045);color:white;font-size:25px;font-weight:bold;border:1px solid #ff9ec7;border-radius:9px;min-width:34px;min-height:40px;padding:0}
-#nh-casinos .nh-casino-girinnho .nh-stepper button{background:linear-gradient(#4caa45,#155c1e);border-color:#9fcf6f}
-#nh-casinos .nh-bet{font-size:20px;font-weight:700;min-width:25px;color:white;font-variant-numeric:tabular-nums}
-#nh-casinos .nh-spin{min-height:67px;min-width:0;width:100%;border:4px ridge #ffe59c;border-radius:40px;background:linear-gradient(#ff80bb 0%,#e91374 45%,#ac0045 51%,#f43287);color:#fff6eb;font-size:clamp(22px,3.1vw,42px);font-weight:900;text-shadow:0 3px 3px #430019;box-shadow:inset 0 0 0 3px #ffb1d0,0 0 6px #ffe66e,0 0 20px var(--neon);cursor:pointer;letter-spacing:1px}
-#nh-casinos .nh-casino-girinnho .nh-spin{background:linear-gradient(#c3ff54,#5ac706 45%,#188000 51%,#7be500);color:#fffddb;text-shadow:0 3px 3px #143600;box-shadow:inset 0 0 0 3px #caff73,0 0 6px #ffe66e,0 0 20px var(--neon)}
-#nh-casinos .nh-spin:active{transform:translateY(2px)}
-#nh-casinos .nh-auto{display:block;margin:auto;width:59px;min-height:32px;padding:3px;border:2px solid #cea1b3;border-radius:24px;background:#4c1531}
-#nh-casinos .nh-auto span{display:block;width:22px;height:22px;background:#fff6ed;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px #000}
-#nh-casinos .nh-auto[aria-checked="true"]{background:var(--neon);border-color:#ffe1a9}
-#nh-casinos .nh-auto[aria-checked="true"] span{transform:translateX(25px)}
-#nh-casinos .nh-auto-count{display:block;font-size:10px;color:#d4b9ad;margin-top:5px}
-#nh-casinos .nh-feedback{display:flex;align-items:center;gap:10px;text-align:left;margin:15px 0 6px;min-height:72px;padding:8px;background:#0004;border-radius:12px}
-#nh-casinos .nh-hero{width:60px;height:60px;object-fit:contain;flex-shrink:0;border-radius:10px}
-#nh-casinos .nh-casino-amor .nh-hero[src="coelho_idle.gif"],#nh-casinos .nh-casino-amor .nh-hero[src="coelho_derrota.gif"]{transform:scale(1.6);pointer-events:none}
-#nh-casinos .nh-balance{font-size:12px;color:#e5c67f;font-weight:700}
-#nh-casinos .nh-result{font-size:13px;line-height:1.5;margin:4px 0 0;color:#fff1dd;min-height:38px;overflow-wrap:anywhere}
-#nh-casinos .nh-options{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
-#nh-casinos .nh-options button{background:#0004;border:1px solid #b7905755;border-radius:9px;color:#e8d6ba;font-size:12px;padding:10px;min-height:44px}
-#nh-casinos .nh-rules{font-size:12px;line-height:1.7;text-align:left;margin-top:12px;padding:10px;color:#d9c7b5;background:#0004;border-radius:10px}
-#nh-casinos .nh-rules summary{cursor:pointer;color:var(--light);min-height:28px;font-weight:700}
-#nh-casinos .nh-win-effect{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;z-index:2}
-#nh-casinos .nh-big-win{position:absolute;inset:0;display:grid;place-items:center;color:#fff3ab;text-shadow:0 3px 5px #000,0 0 20px var(--neon);font-size:clamp(23px,3.5vw,45px);font-weight:900;pointer-events:none;z-index:3;animation:nh-prize .8s infinite alternate}
-#nh-casinos .nh-bottom-note{font-size:12px;color:#b58c9d;margin:22px 16px;padding-bottom:env(safe-area-inset-bottom)}
-#nh-casinos button:disabled{opacity:.45;cursor:default}#nh-casinos button:focus-visible,#nh-casinos summary:focus-visible{outline:3px solid #ffe89e;outline-offset:3px}
-.nh-sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
-@keyframes nh-reel{from{transform:translateY(-28%);filter:blur(3px)}to{transform:translateY(28%);filter:blur(3px)}}
-@keyframes nh-prize{to{transform:scale(1.05)}}
-@media(max-width:1050px){#nh-casinos .nh-topbar{gap:8px;flex-wrap:wrap}#nh-casinos .nh-brand{flex:1;text-align:left}#nh-casinos nav{order:4;flex-basis:100%}#nh-casinos .nh-controls{gap:6px;padding:18px 6px 10px}#nh-casinos .nh-spin{min-height:58px}#nh-casinos .nh-casino{padding-left:8px;padding-right:8px}#nh-casinos .nh-banner{margin-left:-9px;margin-right:-9px}}
-@media(max-width:700px){#nh-casinos .nh-casino-pair{grid-template-columns:minmax(0,1fr);padding:0 8px}#nh-casinos .nh-brand{font-size:23px}#nh-casinos .nh-wallet{font-size:16px;padding-left:8px;gap:6px}#nh-casinos .nh-wallet button{width:28px;height:28px}#nh-casinos .nh-close{width:32px}#nh-casinos nav button,#nh-casinos .nh-nav-current{font-size:12px;padding:8px;gap:4px}#nh-casinos .nh-theme-tabs{display:flex;gap:8px;justify-content:center;margin:10px 8px 13px}#nh-casinos .nh-theme-tabs button{flex:1;max-width:250px;border:1px solid #74454c;background:#190d16;color:#ebc7d7;border-radius:10px;padding:10px 7px;min-height:44px;font-size:13px}#nh-casinos .nh-theme-tabs button[aria-pressed="true"]{border-color:#ff4b91;background:#440720;box-shadow:0 0 8px #ff277344;color:#fff}#nh-casinos .nh-theme-tabs button[data-theme="girinnho"][aria-pressed="true"]{border-color:#64ff39;background:#123010;box-shadow:0 0 8px #64ff3944}#nh-casinos .nh-spin{font-size:28px;min-height:58px}#nh-casinos .nh-machine{border-width:5px;padding:4px}#nh-casinos .nh-controls{margin-top:14px}#nh-casinos .nh-banner{aspect-ratio:640/286}#nh-casinos .nh-bet-group>span,#nh-casinos .nh-auto-group>span{font-size:12px}#nh-casinos .nh-controls{grid-template-columns:1fr 1.35fr .8fr}#nh-casinos .nh-stepper{gap:3px}#nh-casinos .nh-stepper button{min-width:28px;min-height:44px}#nh-casinos .nh-auto{min-height:36px}#nh-casinos .nh-auto-count{font-size:9px}}
-@media(prefers-reduced-motion:reduce){#nh-casinos .nh-spinning .nh-symbol,#nh-casinos .nh-big-win{animation:none}#nh-casinos .nh-win-effect{visibility:hidden}#nh-casinos .nh-auto span{transition:none}}
-@media(max-width:360px){#nh-casinos .nh-topbar{padding-left:8px;padding-right:8px;gap:6px}#nh-casinos .nh-brand{font-size:20px}#nh-casinos .nh-wallet{font-size:14px}#nh-casinos nav{gap:2px}#nh-casinos nav button,#nh-casinos .nh-nav-current{font-size:11px;padding:8px 5px;gap:3px}}
-#nh-casinos .nh-nav-status{margin:10px 14px;color:#ffdfa1;font-size:13px;line-height:1.5}
-@media(max-width:360px){#nh-casinos .nh-spin{font-size:24px;letter-spacing:0;padding:8px 4px;border-width:3px}#nh-casinos .nh-controls{grid-template-columns:.95fr 1.4fr .7fr;gap:5px}#nh-casinos .nh-bet{font-size:18px;min-width:18px}#nh-casinos .nh-stepper button{font-size:22px;min-width:27px}#nh-casinos .nh-auto{width:50px}#nh-casinos .nh-auto[aria-checked="true"] span{transform:translateX(16px)}}
-
-</style>
 </head>
 <body data-aba="inicio"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
@@ -1041,7 +970,7 @@ body.nh-casino-open{overflow:hidden!important}
  <p class="muted">Escolha uma foto da nossa galeria e crie uma lembrança para compartilhar.</p>
  <div id="memorias-fotos" aria-label="Escolha uma foto"></div>
  <div id="memorias-temas" role="group" aria-label="Tema da imagem">
-  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="claro" checked> ☀️ Hello Kitty<img class="memorias-tema-previa" src="template_hello_kitty.png" alt="Prévia do template Hello Kitty" loading="lazy" onerror="if(!this.dataset.alt){this.dataset.alt='1';this.src='template_hello_kitty.png'}"></label>
+  <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="claro" checked> ☀️ Hello Kitty<img class="memorias-tema-previa" src="template_hello_kitty.png" alt="Prévia do template Hello Kitty" loading="lazy" onerror="if(!this.dataset.alt){this.dataset.alt='1';this.src='template_hello_kit.png'}"></label>
   <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="escuro"> 🌙 Kuromi<img class="memorias-tema-previa" src="template_kuromi.png" alt="Prévia do template Kuromi" loading="lazy"></label>
   <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="melody"> 🎀 My Melody<img class="memorias-tema-previa" src="mymelodytemplate.png" alt="Prévia do template My Melody" loading="lazy" onerror="if(!this.dataset.r){this.dataset.r='1';this.src=this.getAttribute('src')+'?v='+Date.now()}"></label>
   <label class="memorias-tema-opcao"><input type="radio" name="memorias-tema" value="cinnamoroll"> ☁️ Cinnamoroll<img class="memorias-tema-previa" src="cinnamorolltemplate.png" alt="Prévia do template Cinnamoroll" loading="lazy" onerror="if(!this.dataset.r){this.dataset.r='1';this.src=this.getAttribute('src')+'?v='+Date.now()}"></label>
@@ -1107,12 +1036,9 @@ body.nh-casino-open{overflow:hidden!important}
  <h3>💕 Nossos testes</h3><div id="compat-lista"></div>
 </section>
 
-<button type="button" id="cassino-abrir" class="cassino-abrir" aria-controls="nh-cassino-amor" aria-expanded="false">
-  <img src="coelho_parado.png" alt="" loading="lazy">
+<button type="button" id="cassino-abrir" class="cassino-abrir" aria-controls="cassino-amor" aria-expanded="false">
+  <img src="cassino/personagem/coelho_parado.png" alt="" loading="lazy">
   <span>🎰 Cassino do Amor<small>Toque para jogar 🪙</small></span>
-</button>
-<button type="button" id="girinnho-abrir" class="nh-casino-entry" aria-controls="nh-cassino-girinnho" aria-expanded="false">
- <img src="cucoparado.gif" alt="" loading="lazy"><span>⚡ Cassino do Girinnho<small>Entre no mundo neon 🪙</small></span>
 </button>
 </div>
 <div class="aba-painel" id="aba-conexao" role="tabpanel" aria-labelledby="aba-btn-conexao" hidden>
@@ -1478,9 +1404,9 @@ $('alternar-musica').onclick=async()=>{
 $('proxima-musica').onclick=()=>tocarFaixa(selecionarProximaAleatoria());
 // Se o arquivo sem acentos não existir, tenta automaticamente o nome com acentos.
 const nomesComAcentos=[
- '01 - Cafe de Carinhos.mp3',
- '02 - Dois Coracoes e um Cafe.mp3',
- '03 - Abraco de Algodao.mp3',
+ '01 - Café de Carinhos.mp3',
+ '02 - Dois Corações e um Café.mp3',
+ '03 - Abraço de Algodão.mp3',
  '04 - Encontro sob as Estrelas.mp3',
  '05 - Nosso Cantinho de Paz.mp3'
 ];
@@ -1636,7 +1562,7 @@ $('chat-texto-enviar').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shi
   const bot=$('memorias-gerar');bot.disabled=true;falar('Gerando sua memória...');
   try{
    const foto=await carregarImagem(selecionada);
-   const arquivosPorTema={claro:['template_hello_kitty.png','template_hello_kitty.png'],escuro:['template_kuromi.png'],melody:['mymelodytemplate.png'],cinnamoroll:['cinnamorolltemplate.png']};
+   const arquivosPorTema={claro:['template_hello_kitty.png','template_hello_kit.png'],escuro:['template_kuromi.png'],melody:['mymelodytemplate.png'],cinnamoroll:['cinnamorolltemplate.png']};
    const arquivos=arquivosPorTema[tema]||arquivosPorTema.claro;
    const estilosPorTema={claro:{fundo:'#fff5f7',cor:'#77364e',destaque:'#bd3267'},escuro:{fundo:'#171321',cor:'#f4eaff',destaque:'#e0b5ff'},melody:{fundo:'#fff5f7',cor:'#77364e',destaque:'#bd3267'},cinnamoroll:{fundo:'#f2f8ff',cor:'#3d5878',destaque:'#2f7fd1'}};
    const estilo=estilosPorTema[tema]||estilosPorTema.claro;
@@ -1927,7 +1853,7 @@ function mascoteGif(acao,temporaria=false){
  const img=figura.querySelector('img')||document.createElement('img');
  img.alt=''; // Não exibir texto gigante caso o GIF não seja encontrado.
  const arquivo=mascoteGifs[acao]||mascoteGifs.parado;
- const caminhos=[arquivo];
+ const caminhos=[arquivo,'imagens/'+arquivo,'cassino/animacoes/'+arquivo];
  let tentativa=0;
  img.onerror=()=>{
   tentativa++;
@@ -2505,6 +2431,206 @@ timeout = setTimeout(function () {
 </script>
 
 
+<section id="cassino-amor" class="cassino-modal" aria-labelledby="cassino-titulo" role="dialog" aria-modal="true" hidden>
+<button type="button" id="cassino-fechar" class="cassino-fechar" aria-label="Fechar cassino">×</button>
+<div class="cassino-conteudo">
+  <h2 id="cassino-titulo">🐰 Cassino do Amor</h2>
+  <p>Gire as roletas com as moedas virtuais do coelhinho! 💗</p>
+  <div class="cassino-cena">
+    <div class="ft-cabecalho"><img class="ft-topstatic" src="topstatic.webp" alt=""><video src="top3.webm" autoplay muted loop playsinline preload="metadata" poster="topstatic.webp"></video></div>
+    <img class="ft-faixa" src="marquee.webp" alt="">
+    <img id="cassino-mascote" class="cassino-mascote" src="cassino/animacoes/coelho_idle.gif" alt="Coelhinho branco com óculos dourados">
+    <div class="cassino-area-efeito">
+      <div class="cassino-tela">
+        <div class="cassino-grade" id="cassino-grade" aria-label="Roletas com três linhas e cinco colunas"></div>
+      </div>
+      <div class="ft-efeitos" id="ft-efeitos" hidden><video id="ft-video-efeito" muted playsinline preload="none"></video></div>
+      <div class="ft-premio" id="ft-premio" hidden><img id="ft-premio-imagem" alt="Premiação"></div>
+      <img id="cassino-efeito" class="cassino-efeito" alt="" hidden>
+    </div>
+    <div class="ft-enfeites" aria-hidden="true">
+      <img src="bright.webp" alt=""><img src="circle.webp" alt=""><img src="fichas.webp" alt=""><img src="roll.webp" alt=""><img src="footer.webp" alt=""><img src="total.webp" alt=""><img src="btnspin.webp" alt="">
+    </div>
+    <div class="cassino-painel">
+      <span id="cassino-saldo" class="cassino-saldo">🪙 Saldo: --</span>
+      <label for="cassino-aposta">Aposta:</label>
+      <select id="cassino-aposta" aria-label="Quantidade de moedas para apostar">
+        <option value="1">1 moeda</option>
+        <option value="2">2 moedas</option>
+        <option value="3">3 moedas</option>
+      </select>
+      <button type="button" class="cassino-girar" id="cassino-girar">🎰 GIRAR</button>
+    </div>
+    <p class="cassino-resultado" id="cassino-resultado" role="status" aria-live="polite">Pronto para jogar? 💕</p>
+    <p id="cassino-limite" style="display:none" hidden></p>
+    <div class="cassino-controles">
+      <button type="button" id="cassino-som">🔊 Som ligado</button>
+      <button type="button" id="cassino-musica">🎵 Música desligada</button>
+      <button type="button" id="cassino-atualizar">↻ Atualizar saldo</button>
+    </div>
+  </div>
+  <p class="cassino-nota">Três linhas horizontais premiam 3, 4 ou 5 símbolos iguais da esquerda para a direita. Prêmios: 3×, 7× ou 15× a aposta por linha. Apenas moedas gratuitas e recreativas: sem dinheiro, saques ou prêmios reais. Seu saldo é individual e vale também para cuidar do coelhinho.</p>
+</div>
+</section>
+<script id="cassino-script">
+(() => {
+ 'use strict';
+ const root=document.getElementById('cassino-amor');
+ if(!root)return;
+ const abrir=document.getElementById('cassino-abrir');
+ const fechar=document.getElementById('cassino-fechar');
+ let focoAnterior=null;
+ function abrirCassino(){
+   focoAnterior=document.activeElement;
+   root.hidden=false;
+   document.body.classList.add('cassino-aberto');
+   abrir.setAttribute('aria-expanded','true');
+   fechar.focus();
+   atualizarSaldo();
+ }
+ function fecharCassino(){
+   root.hidden=true;
+   document.body.classList.remove('cassino-aberto');
+   abrir.setAttribute('aria-expanded','false');
+   music.pause();
+   const fx=document.getElementById('ft-efeitos');if(fx)fx.hidden=true;
+   if(focoAnterior&&focoAnterior.isConnected)focoAnterior.focus();
+ }
+ abrir.addEventListener('click',abrirCassino);
+ fechar.addEventListener('click',fecharCassino);
+ document.addEventListener('keydown',e=>{
+   if(root.hidden)return;
+   if(e.key==='Escape'){e.preventDefault();fecharCassino();}
+   if(e.key==='Tab'){
+     const nodes=[...root.querySelectorAll('button:not(:disabled),select:not(:disabled)')];
+     if(!nodes.length)return;
+     if(e.shiftKey&&document.activeElement===nodes[0]){e.preventDefault();nodes[nodes.length-1].focus();}
+     else if(!e.shiftKey&&document.activeElement===nodes[nodes.length-1]){e.preventDefault();nodes[0].focus();}
+   }
+ });
+ const $c=id=>document.getElementById(id);
+ const simbolos=['cenoura','coracao','morango','coelho','moeda','estrela','trevo','coroa'];
+ const imagensFT={cenoura:'orange.webp',coracao:'ft_cartas.png',morango:'ft_fogos.png',coelho:'ft_wild.png',moeda:'fichas.webp',estrela:'ft_ouro.png',trevo:'ft_jade.png',coroa:'tesouro.webp'};
+ const path=(nome)=>''+(imagensFT[nome]||'orange.webp');
+ const audioBase='';
+ const audios={click:'clickbtn.ogg',apostar:'coins.ogg',iniciar:'spin2.ogg',
+  girando:'spin4.ogg',parar:'level-up.ogg',ganhou:'win1.ogg',
+  grande:'bigwin.ogg',perdeu:'spin4.ogg',semSaldo:'clickbtn.ogg',
+  comemorar:'fogos.ogg',musica:'bgsound.ogg'};
+ const music=new Audio(audioBase+audios.musica);
+ music.loop=true;music.volume=.15;
+ let somLigado=true,musicaLigada=false,ocupado=false,temporizador=null;
+ const grade=$c('cassino-grade');
+ const celulas=Array.from({length:15},()=>{
+   const el=document.createElement('div');el.className='cassino-celula';
+   const img=document.createElement('img');img.alt='Símbolo';img.loading='lazy';
+   el.append(img);grade.append(el);return img;
+ });
+ function mostrarGrade(itens){
+   itens.forEach((nome,i)=>{if(!celulas[i])return;
+     const n=simbolos.includes(nome)?nome:'coracao';
+     celulas[i].src=path(n);celulas[i].alt=n;
+   });
+ }
+ mostrarGrade(Array.from({length:15},(_,i)=>simbolos[i%simbolos.length]));
+ function tocar(nome){
+   if(!somLigado)return;
+   const a=new Audio(audioBase+audios[nome]);a.volume=.42;
+   a.play().catch(()=>{});
+ }
+ function mensagem(t){$c('cassino-resultado').textContent=t}
+ function gifMascote(nome){
+   /* O vídeo animado do tigre substitui o mascote antigo. */
+ }
+ function efeito(nome){
+   const faixa=$c('ft-premio'),foto=$c('ft-premio-imagem');
+   const arquivo=nome==='grande_vitoria'?'super-mega-ganho2.webp':'grande-ganho.webp';
+   foto.src=''+arquivo;
+   faixa.hidden=false;
+   if(temporizador)clearTimeout(temporizador);
+   const camada=$c('ft-efeitos'),video=$c('ft-video-efeito');
+   video.src=''+(nome==='grande_vitoria'?'speedlight.webm':'stars.webm');
+   camada.hidden=false;video.currentTime=0;video.play().catch(()=>{});
+   if(nome==='grande_vitoria')tocar('comemorar');
+   temporizador=setTimeout(()=>{faixa.hidden=true;camada.hidden=true;video.pause()},1900);
+ }
+ function saldoAtual(){
+   const n=Number(window.nhSaldoIndividual);
+   if(window.nhSaldoIndividual!==null && Number.isFinite(n) && n>=0){$c('cassino-saldo').textContent='🪙 Saldo: '+n;return;}
+   $c('cassino-saldo').textContent='🪙 Saldo: --';
+ }
+ async function atualizarSaldo(){
+   if(!historiaAtual?.historia_id){mensagem('Escolha o Modo Solo ou conecte-se no Modo Casal para jogar.');return}
+   try{
+     await nhAtualizarSaldo();
+     if(typeof atualizarInterfaceMascote==='function')atualizarInterfaceMascote();
+     saldoAtual();
+   }catch(e){mensagem('Não foi possível atualizar o saldo: '+e.message)}
+ }
+ async function girar(){
+   if(ocupado)return;
+   if(!historiaAtual?.historia_id){mensagem('Escolha o Modo Solo ou conecte-se no Modo Casal para jogar.');return}
+   if(!db){mensagem('Conexão com o Supabase indisponível.');return}
+   const historiaId=historiaAtual.historia_id;
+   const aposta=Number($c('cassino-aposta').value);
+   ocupado=true;$c('cassino-girar').disabled=true;
+   mensagem('Girando... boa sorte! 💕');tocar('iniciar');tocar('apostar');
+   grade.classList.add('girando');
+   gifMascote('idle');
+   const anim=setInterval(()=>mostrarGrade(Array.from({length:15},()=>simbolos[Math.floor(Math.random()*simbolos.length)])),100);
+   try{
+     // A aposta, o sorteio e o crédito são validados e registrados no Supabase.
+     const {data,error}=await db.rpc('cassino_girar',{p_story_id:historiaId,p_aposta:aposta});
+     if(error)throw error;
+     await new Promise(r=>setTimeout(r,1350));
+     if(historiaAtual?.historia_id!==historiaId)return;
+     mostrarGrade(data.simbolos);tocar('parar');
+     window.nhSaldoIndividual=Number(data.saldo);$c('cassino-saldo').textContent='🪙 Saldo: '+data.saldo;
+      
+     if(data.premio>0){
+       const grande=data.premio>=aposta*7;
+       gifMascote(grande?'grande_vitoria':'vitoria');
+       efeito(grande?'grande_vitoria':'moedas');
+       tocar(grande?'grande':'ganhou');
+       mensagem('🎉 Você ganhou '+data.premio+' moedas! Saldo: '+data.saldo);
+     }else{
+       gifMascote('derrota');tocar('perdeu');
+       mensagem('💗 Não foi desta vez! Você gastou '+aposta+' moeda(s).');
+     }
+     // Recarrega o saldo do mascote para manter os dois jogos sincronizados.
+     await atualizarSaldo();
+   }catch(e){
+     tocar('semSaldo');
+     mensagem('⚠️ '+(e?.message||'Erro ao girar'));
+   }finally{
+     clearInterval(anim);grade.classList.remove('girando');
+     ocupado=false;$c('cassino-girar').disabled=false;
+   }
+ }
+ $c('cassino-girar').addEventListener('click',girar);
+ $c('cassino-atualizar').addEventListener('click',atualizarSaldo);
+ $c('cassino-som').addEventListener('click',()=>{
+   somLigado=!somLigado;
+   $c('cassino-som').textContent=somLigado?'🔊 Som ligado':'🔇 Som desligado';
+   if(somLigado)tocar('click');
+ });
+ $c('cassino-musica').addEventListener('click',async()=>{
+   musicaLigada=!musicaLigada;
+   if(musicaLigada){
+     try{await music.play()}catch(e){musicaLigada=false;mensagem('Toque novamente para ativar a música.')}
+   }else music.pause();
+   $c('cassino-musica').textContent=musicaLigada?'🎵 Música ligada':'🎵 Música desligada';
+ });
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)music.pause();else if(musicaLigada)music.play().catch(()=>{})});
+ const obs=new MutationObserver(()=>{
+   if(!document.getElementById('aba-jogos').hidden && !root.hidden)saldoAtual();
+   else if(!root.hidden)fecharCassino();
+ });
+ obs.observe(document.getElementById('aba-jogos'),{attributes:true,attributeFilter:['hidden']});
+ setInterval(()=>{if(!root.hidden && !ocupado)saldoAtual()},3000);
+})();
+</script>
+
 <script id="nh-carteiras-individuais">
 window.nhSaldoIndividual=null;
 window.nhColetaIndividual=null;
@@ -2525,6 +2651,58 @@ async function nhAtualizarColeta(){
  window.nhColetaIndividual=data||{};
 }
 </script>
+<!-- GIRININHO: modo secreto, mesma carteira e RPC do cassino original -->
+<style>
+#girininho-modal[hidden]{display:none!important}#girininho-modal{position:fixed;inset:0;z-index:2147483000;background:radial-gradient(circle at 50% 15%,#49220b,#120a16 72%);color:#fff;overflow:auto;overscroll-behavior:contain;font-family:system-ui,Arial,sans-serif}#girininho-modal *{box-sizing:border-box}#girininho-modal .gi-wrap{max-width:980px;margin:auto;padding:18px 12px 38px;text-align:center}#girininho-modal .gi-close{position:fixed;right:14px;top:10px;z-index:2;background:#27151a;color:white;border:2px solid #eec56a;border-radius:50%;font-size:28px;width:48px;height:48px;cursor:pointer}#girininho-modal h2{color:#ffe3a0;font-size:clamp(27px,6vw,54px);text-shadow:0 3px 12px #9e5e17;margin:12px 40px}#girininho-modal .gi-hero{width:min(40vw,230px);height:clamp(100px,25vw,220px);object-fit:contain;display:block;margin:4px auto}#girininho-modal .gi-board{border:5px solid #e6b54b;background:linear-gradient(160deg,#7e341d,#3d1720);padding:12px;border-radius:25px;box-shadow:0 0 32px #b67a3277}#girininho-modal .gi-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;background:#fff6e4;border-radius:15px;padding:7px;max-width:690px;margin:0 auto 16px}#girininho-modal .gi-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:12px;background:#fbe9b9;overflow:hidden}#girininho-modal .gi-cell img{width:95%;height:95%;object-fit:contain}#girininho-modal .gi-spinning img{animation:gi-bounce .16s infinite alternate}@keyframes gi-bounce{to{transform:translateY(12%) scale(.9);filter:blur(2px)}}#girininho-modal .gi-actions{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px}#girininho-modal button,#girininho-modal select{font:inherit;cursor:pointer;border-radius:14px;padding:12px;border:2px solid #e9bb55}#girininho-modal .gi-spin{background:linear-gradient(#ffe39a,#e8a630);color:#512b09;font-weight:900;font-size:22px}#girininho-modal .gi-spin:disabled{opacity:.5;cursor:wait}#girininho-modal .gi-label{color:#ffe9bc;font-weight:700}#girininho-modal .gi-msg{min-height:40px;font-size:19px;font-weight:700;margin:14px 0}#girininho-modal .gi-note{font-size:12px;color:#e5d3bd;margin-top:12px}
+</style>
+<section id="girininho-modal" hidden role="dialog" aria-modal="true" aria-labelledby="girininho-title">
+<button type="button" id="girininho-close" class="gi-close" aria-label="Fechar Girininho">×</button>
+<div class="gi-wrap"><h2 id="girininho-title">✨ GIRININHO 777 ✨</h2><img class="gi-hero" id="girininho-hero" src="cucoparado.gif" alt="Mascote Girininho"><div class="gi-board"><div id="girininho-grid" class="gi-grid" aria-label="Roletas 3 por 5"></div><div class="gi-actions"><span id="girininho-balance" class="gi-label">🪙 Saldo: --</span><label class="gi-label">Aposta <select id="girininho-bet"><option value="1">1 moeda</option><option value="2">2 moedas</option><option value="3">3 moedas</option></select></label><button type="button" class="gi-spin" id="girininho-spin">🎰 GIRAR</button><button type="button" id="girininho-mute">🔊 Som</button></div><div id="girininho-message" class="gi-msg" role="status" aria-live="polite">Cassino secreto desbloqueado!</div><div id="girininho-limit" hidden></div></div><p class="gi-note">Somente moedas virtuais, sem valor real. Este cassino utiliza a mesma carteira, as mesmas probabilidades do Cassino do Amor, sem limite diário de giros.</p></div>
+</section>
+<script id="girininho-secret-script">
+(()=>{'use strict';
+const $=id=>document.getElementById(id), modal=$('girininho-modal'),grid=$('girininho-grid'),hero=$('girininho-hero'),message=$('girininho-message');
+const names=['cenoura','coracao','morango','coelho','moeda','estrela','trevo','coroa'];
+const imgDir='',sndDir='';
+const girininhoSymbols={cenoura:'botao_jogar.png',coracao:'bonus_liberado.png',morango:'super_win.png',coelho:'personagem_parado.png',moeda:'chuva_moedas.png',estrela:'brilho_vitoria.png',trevo:'tigre_sorte.png',coroa:'mega_win.png'};
+const sounds={open:'18_abrir_menu.wav',close:'19_fechar_menu.wav',spin:'03_roleta_girando.wav',start:'02_iniciar_rodada.wav',stop:'04_roleta_parando.wav',win:'06_vitoria_pequena.wav',big:'07_big_win.wav',lose:'05_sem_premio.wav',click:'01_clique_botao.wav'};
+let busy=false,sound=true,spinTimer=null,previousFocus=null,previousOverflow='';
+const cells=Array.from({length:15},()=>{const el=document.createElement('div');el.className='gi-cell';const img=document.createElement('img');img.alt='Símbolo';el.append(img);grid.append(el);return img});
+function paint(arr){arr.forEach((name,i)=>{if(!cells[i])return;const n=names.includes(name)?name:'coracao';cells[i].src=imgDir+girininhoSymbols[n];cells[i].alt=n})}
+paint(Array.from({length:15},(_,i)=>names[i%8]));
+function play(which){if(!sound)return;const a=new Audio(sndDir+sounds[which]);a.volume=.4;a.play().catch(()=>{});}
+const cucoGifs={parado:'cucoparado.gif',feliz:'cucofeliz.gif',triste:'cucotriste.gif'};
+function pose(estado){
+  const arquivo=cucoGifs[estado]||cucoGifs.parado;
+  hero.onerror=()=>{hero.onerror=null;hero.alt='Animação do Girininho indisponível: '+arquivo;};
+  hero.alt='Girininho '+estado;
+  if(hero.getAttribute('src')!==arquivo)hero.src=arquivo;
+}
+function validStory(){return typeof historiaAtual!=='undefined'&&historiaAtual?.historia_id}
+function validDb(){return typeof db!=='undefined'&&db}
+function setBalance(value){$('girininho-balance').textContent='🪙 Saldo: '+value}
+async function refresh(){if(!validStory()||!validDb()){message.textContent='É preciso estar em uma história ativa para jogar.';return;}try{if(typeof nhAtualizarSaldo==='function')await nhAtualizarSaldo();const v=window.nhSaldoIndividual;setBalance(Number.isFinite(Number(v))&&v!==null?v:'--')}catch(e){message.textContent='Falha ao atualizar saldo: '+e.message}}
+function open(){if(!validStory()){message.textContent='Entre em uma história para jogar.';return;}previousFocus=document.activeElement;previousOverflow=document.body.style.overflow;modal.hidden=false;document.body.style.overflow='hidden';pose('parado');play('open');$('girininho-close').focus();refresh()}
+function close(){if(busy)return;play('close');modal.hidden=true;document.body.style.overflow=previousOverflow;if(previousFocus?.isConnected)previousFocus.focus()}
+async function spin(){if(busy||modal.hidden)return;if(!validStory()||!validDb()){message.textContent='Entre em uma história para jogar.';return;}const storyId=historiaAtual.historia_id,bet=Number($('girininho-bet').value);busy=true;$('girininho-spin').disabled=true;message.textContent='Girando...';pose('parado');play('start');grid.classList.add('gi-spinning');spinTimer=setInterval(()=>paint(Array.from({length:15},()=>names[Math.floor(Math.random()*8)])),110);try{
+// Mesma função segura do cassino principal: nunca calcular saldo ou prêmio no navegador.
+const result=await db.rpc('cassino_girar',{p_story_id:storyId,p_aposta:bet});if(result.error)throw result.error;
+await new Promise(resolve=>setTimeout(resolve,1300));if(!validStory()||historiaAtual.historia_id!==storyId){message.textContent='A história mudou. Atualize seu saldo.';return;}
+paint(result.data.simbolos);window.nhSaldoIndividual=Number(result.data.saldo);setBalance(result.data.saldo);play('stop');
+if(result.data.premio>0){const big=result.data.premio>=bet*7;pose('feliz');play(big?'big':'win');message.textContent='🎉 Você ganhou '+result.data.premio+' moedas!'}else{pose('triste');play('lose');message.textContent='Sem prêmio desta vez.'}
+}catch(e){pose('parado');message.textContent='Não foi possível girar: '+e.message;}finally{clearInterval(spinTimer);grid.classList.remove('gi-spinning');busy=false;$('girininho-spin').disabled=false;}}
+$('girininho-close').addEventListener('click',close);$('girininho-spin').addEventListener('click',spin);$('girininho-mute').addEventListener('click',()=>{sound=!sound;$('girininho-mute').textContent=sound?'🔊 Som':'🔇 Mudo'});
+document.addEventListener('keydown',e=>{if(!modal.hidden&&e.key==='Escape'){e.preventDefault();close()}});
+// Captura o comando ANTES do onsubmit existente, sem gravá-lo nem enviá-lo ao Supabase.
+// O chat normal continua funcionando para todas as outras mensagens.
+const chatForm=$('chat-rodape'),chatInput=$('chat-texto-enviar');
+if(chatForm&&chatInput){chatForm.addEventListener('submit',e=>{if(chatInput.value.trim().toLowerCase()!=='/girininho777')return;e.preventDefault();e.stopImmediatePropagation();chatInput.value='';open();},true)}
+window.abrirGirininhoSecreto=open;
+})();
+</script>
+
+
+
 <script id="nh-vidro-modos-script">
 (()=>{
  const painel=document.getElementById('modo-seletor');
@@ -2635,181 +2813,79 @@ async function nhAtualizarColeta(){
  position();render();
 })();
 </script>
-<div id="nh-casinos" class="nh-casinos" hidden role="dialog" aria-modal="true" aria-labelledby="nh-casinos-title">
- <div class="nh-topbar">
-  <h2 id="nh-casinos-title" class="nh-brand">♡ Nossa História</h2>
-  <nav aria-label="Navegação dos cassinos">
-   <button type="button" data-nh-nav="inicio">⌂ <span>Início</span></button>
-   <span class="nh-nav-current" aria-current="page">♔ Cassinos</span>
-   <button type="button" data-nh-nav="planos">♛ <span>Planos</span></button>
-   <button type="button" data-nh-nav="bonus">🎁 <span>Bônus</span></button>
-   <button type="button" data-nh-nav="perfil">♙ <span>Perfil</span></button>
-  </nav>
-  <div class="nh-wallet"><span class="nh-wallet-value" aria-live="polite">🪙 --</span><button type="button" data-nh-nav="bonus" aria-label="Abrir recompensas gratuitas">+</button></div>
-  <button type="button" class="nh-close" aria-label="Fechar cassinos">×</button>
- </div>
- <p class="nh-disclaimer">MOEDAS VIRTUAIS · SEM DINHEIRO REAL</p>
- <p class="nh-nav-status" role="status" hidden></p>
- <div class="nh-theme-tabs" role="group" aria-label="Escolher cassino"><button type="button" data-theme="amor" aria-pressed="true">♡ Cassino do Amor</button><button type="button" data-theme="girinnho" aria-pressed="false">⚡ Cassino do Girinnho</button></div>
- <div class="nh-casino-pair">
-  <article id="nh-cassino-amor" class="nh-casino nh-casino-amor" aria-labelledby="nh-amor-titulo">
-   <h3 id="nh-amor-titulo" class="nh-sr-only">Cassino do Amor</h3>
-   <div class="nh-banner" role="img" aria-label="Cassino do Amor: coelhinho branco entre corações e moedas douradas"></div>
-   <div class="nh-machine"><div class="nh-reels" aria-label="Roletas com cinco colunas e três linhas"></div><img class="nh-win-effect" src="chuva_moedas.gif" alt="" hidden><div class="nh-big-win" hidden aria-hidden="true">SUPER VITÓRIA!</div></div>
-   <div class="nh-controls">
-    <div class="nh-bet-group"><span id="nh-amor-bet-label">Moedas por giro</span><div class="nh-stepper"><button type="button" class="nh-minus" aria-label="Diminuir moedas por giro">−</button><output class="nh-bet" aria-labelledby="nh-amor-bet-label">1</output><button type="button" class="nh-plus" aria-label="Aumentar moedas por giro">+</button></div></div>
-    <button type="button" class="nh-spin">GIRAR</button>
-    <div class="nh-auto-group"><span>Auto</span><button type="button" class="nh-auto" role="switch" aria-checked="false" aria-label="Ativar até 10 giros automáticos"><span></span></button><small class="nh-auto-count">Até 10 giros</small></div>
-   </div>
-   <div class="nh-feedback"><img class="nh-hero" src="coelho_idle.gif" alt="Coelhinho branco"><div><span id="cassino-saldo" class="nh-balance">🪙 Saldo: --</span><p class="nh-result" role="status" aria-live="polite">Escolha suas moedas e toque em GIRAR.</p></div></div>
-   <div class="nh-options"><button type="button" class="nh-sound" aria-pressed="false">🔇 Ativar sons</button><button type="button" class="nh-music" aria-pressed="false">♫ Música</button><button type="button" class="nh-refresh">↻ Saldo</button></div>
-   <details class="nh-rules"><summary>Regras e prêmios</summary><p>O giro custa 1, 2 ou 3 moedas. Cada uma das 3 linhas horizontais paga símbolos iguais consecutivos a partir da coluna da esquerda: 3 iguais = 3×; 4 iguais = 7×; 5 iguais = 15× o custo do giro. Some os prêmios das linhas; desconte o custo uma vez. Exemplo: giro de 2 moedas com uma linha de 4 iguais → prêmio de 14, variação do saldo +12.</p><p>A inscrição WILD pertence à ilustração: esses símbolos também precisam ser iguais, sem substituir outros. Não há diagonais ou bônus adicionais. O servidor valida o sorteio, o prêmio e o saldo da carteira do mascote.</p><p>Auto faz no máximo 10 giros e para ao desativar, sair, trocar de tema ou ocultar a página, ou se houver erro ou saldo insuficiente. Parar Auto não cancela o giro já enviado.</p><p>Somente moedas virtuais gratuitas, sem compras, saques, dinheiro ou prêmios reais. Use Bônus para abrir as recompensas existentes.</p></details>
-  </article>
-  <article id="nh-cassino-girinnho" class="nh-casino nh-casino-girinnho" aria-labelledby="nh-girinnho-titulo">
-   <h3 id="nh-girinnho-titulo" class="nh-sr-only">Cassino do Girinnho</h3>
-   <div class="nh-banner" role="img" aria-label="Cassino do Girinnho: guerreiro com olho cibernético, serpente e energia verde-neon"></div>
-   <div class="nh-machine"><div class="nh-reels" aria-label="Roletas com cinco colunas e três linhas"></div><img class="nh-win-effect" src="chuva_moedas.gif" alt="" hidden><div class="nh-big-win" hidden aria-hidden="true">SUPER VITÓRIA!</div></div>
-   <div class="nh-controls">
-    <div class="nh-bet-group"><span id="nh-girinnho-bet-label">Moedas por giro</span><div class="nh-stepper"><button type="button" class="nh-minus" aria-label="Diminuir moedas por giro">−</button><output class="nh-bet" aria-labelledby="nh-girinnho-bet-label">1</output><button type="button" class="nh-plus" aria-label="Aumentar moedas por giro">+</button></div></div>
-    <button type="button" class="nh-spin">GIRAR</button>
-    <div class="nh-auto-group"><span>Auto</span><button type="button" class="nh-auto" role="switch" aria-checked="false" aria-label="Ativar até 10 giros automáticos"><span></span></button><small class="nh-auto-count">Até 10 giros</small></div>
-   </div>
-   <div class="nh-feedback"><img class="nh-hero" src="cucoparado.gif" alt="Girinnho com olho cibernético"><div><span id="girinnho-saldo" class="nh-balance">🪙 Saldo: --</span><p class="nh-result" role="status" aria-live="polite">Escolha suas moedas e toque em GIRAR.</p></div></div>
-   <div class="nh-options"><button type="button" class="nh-sound" aria-pressed="false">🔇 Ativar sons</button><button type="button" class="nh-music" aria-pressed="false">♫ Música</button><button type="button" class="nh-refresh">↻ Saldo</button></div>
-   <details class="nh-rules"><summary>Regras e prêmios</summary><p>O giro custa 1, 2 ou 3 moedas. Cada uma das 3 linhas horizontais paga símbolos iguais consecutivos a partir da coluna da esquerda: 3 iguais = 3×; 4 iguais = 7×; 5 iguais = 15× o custo do giro. Some os prêmios das linhas; desconte o custo uma vez. Exemplo: giro de 2 moedas com uma linha de 4 iguais → prêmio de 14, variação do saldo +12.</p><p>A inscrição WILD pertence à ilustração: esses símbolos também precisam ser iguais, sem substituir outros. Não há diagonais ou bônus adicionais. O servidor valida o sorteio, o prêmio e o saldo da carteira do mascote.</p><p>Auto faz no máximo 10 giros e para ao desativar, sair, trocar de tema ou ocultar a página, ou se houver erro ou saldo insuficiente. Parar Auto não cancela o giro já enviado.</p><p>Somente moedas virtuais gratuitas, sem compras, saques, dinheiro ou prêmios reais. Use Bônus para abrir as recompensas existentes.</p></details>
-  </article>
- </div>
- <p class="nh-bottom-note">Feito para se divertir juntos. ♡ Sua história continua a um toque de distância.</p>
-</div>
-<script id="nh-cassinos-controlador-completo">
-/* Both casino themes use the existing authenticated, server-controlled wallet. */
-(() => {
- 'use strict';
- const hub=document.getElementById('nh-casinos');if(!hub)return;
- const keys=['cenoura','coracao','morango','coelho','moeda','estrela','trevo','coroa'];
- const sounds={click:'01_clique_botao.wav',open:'18_abrir_menu.wav',start:'02_iniciar_rodada.wav',spin:'03_roleta_girando.wav',stop:'04_roleta_parando.wav',coins:'14_moeda_caindo.wav',win:'06_vitoria_pequena.wav',big:'09_super_win.wav',lose:'05_sem_premio.wav'};
- const poses={amor:{idle:'coelho_idle.gif',win:'coelho_vitoria.gif',lose:'coelho_derrota.gif',big:'coelho_grande_vitoria.gif'},girinnho:{idle:'cucoparado.gif',win:'cucofeliz.gif',lose:'cucotriste.gif',big:'cucofeliz.gif'}};
- // Artwork is displayed through CSS windows over the unmodified supplied JPEG.
- // The canonical server symbol IDs and probabilities are unchanged by the theme.
- const art={amor:{cenoura:[46,367,'Lingote dourado'],coracao:[377,367,'Cartas de amor'],morango:[157,367,'Laranja'],coelho:[266,367,'Coelhinho'],estrela:[484,576,'Fogos'],moeda:['simbolo_moeda.png','Moeda'],trevo:['simbolo_trevo.png','Trevo'],coroa:['simbolo_coracao.png','Coração']},girinnho:{cenoura:[795,367,'Serpente neon'],coracao:[906,367,'Coroa'],morango:[1014,367,'Esmeralda'],coelho:[687,367,'Girinnho'],moeda:[1125,367,'Moedas'],estrela:['ft_ouro.png','Ouro'],trevo:['ft_fogos.png','Fogos'],coroa:['ft_cartas.png','Cartas']}};
- const states=[];const playing=new Set();const small=matchMedia('(max-width:700px)');
- let current='amor',transaction=false,previousFocus=null,openStory=null,openUser=null,ambient=null,ambientWasPlaying=false;
- const story=()=>typeof historiaAtual!=='undefined'?historiaAtual?.historia_id:null;
- const user=()=>typeof usuario!=='undefined'?usuario?.id:null;
- const connected=()=>typeof db!=='undefined'&&db&&story()&&user();
- const sameSession=(sid,uid)=>story()===sid&&user()===uid;
- const pauseSounds=()=>{for(const a of playing)a.pause();playing.clear()};
- function balance(){const n=window.nhSaldoIndividual;return Number.isSafeInteger(n)&&n>=0?n:null}
- function syncBalances(){const n=balance();states.forEach(s=>s.root.querySelector('.nh-balance').textContent='🪙 Saldo: '+(n??'--'));hub.querySelector('.nh-wallet-value').textContent='🪙 '+(n===null?'--':n.toLocaleString('pt-BR'));const pet=document.getElementById('mascote-saldo');if(pet&&n!==null)pet.textContent='🪙 '+n}
- // Display-only verification. The browser never credits rewards to the server.
- function lines(symbols,bet){let total=0;const paid=[];for(let row=0;row<3;row++){let count=1;while(count<5&&symbols[row*5+count]===symbols[row*5])count++;if(count>=3){total+=bet*({3:3,4:7,5:15}[count]);for(let col=0;col<count;col++)paid.push(row*5+col)}}return {total,paid}}
- function controls(){states.forEach(s=>{s.spin.disabled=transaction;s.minus.disabled=transaction||s.bet===1||s.auto;s.plus.disabled=transaction||s.bet===3||s.auto;s.refresh.disabled=transaction;s.autoButton.disabled=transaction&&!s.auto;s.autoButton.setAttribute('aria-checked',String(s.auto));s.autoButton.setAttribute('aria-label',s.auto?'Parar giros automáticos':'Ativar até 10 giros automáticos');s.root.querySelector('.nh-auto-count').textContent=s.auto?s.remaining+' restantes':'Até 10 giros';s.root.querySelector('.nh-bet').textContent=s.bet})}
- function stopAuto(s){s.auto=false;s.token++;clearTimeout(s.next);controls()}
- function stopAllAuto(){states.forEach(stopAuto)}
- function theme(name){stopAllAuto();pauseSounds();states.forEach(s=>s.stopMusic());current=name;layout();const selected=states.find(s=>s.theme===name);if(small.matches)hub.scrollTop=0;selected?.spin.focus({preventScroll:true})}
- function layout(){states.forEach(s=>s.root.hidden=small.matches&&s.theme!==current);hub.querySelectorAll('[data-theme]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.theme===current)))}
- function open(name){
-  if(hub.hidden){previousFocus=document.activeElement;openStory=story();openUser=user();ambient=document.getElementById('musica');ambientWasPlaying=!!ambient&&!ambient.paused;if(ambientWasPlaying)ambient.pause()}
-  current=name;hub.hidden=false;layout();document.body.classList.add('nh-casino-open');
-  states.forEach(s=>s.entry.setAttribute('aria-expanded',String(!s.root.hidden)));hub.querySelector('.nh-close').focus();syncBalances();states.find(s=>s.theme===name)?.refreshBalance();
- }
- function close(restore=true){
-  stopAllAuto();pauseSounds();states.forEach(s=>{s.clearEffect();s.stopMusic();s.entry.setAttribute('aria-expanded','false')});
-  hub.hidden=true;document.body.classList.remove('nh-casino-open');
-  if(restore&&previousFocus?.isConnected)previousFocus.focus();
-  if(ambientWasPlaying&&!document.hidden){ambient?.play().catch(()=>{});ambientWasPlaying=false}
- }
- hub.querySelectorAll('.nh-casino').forEach(root=>{
-  const themeName=root.classList.contains('nh-casino-amor')?'amor':'girinnho';
-  const q=selector=>root.querySelector(selector);
-  const s={root,theme:themeName,entry:document.getElementById(themeName==='amor'?'cassino-abrir':'girinnho-abrir'),spin:q('.nh-spin'),minus:q('.nh-minus'),plus:q('.nh-plus'),refresh:q('.nh-refresh'),autoButton:q('.nh-auto'),bet:1,auto:false,remaining:0,token:0,next:null};states.push(s);
-  const grid=q('.nh-reels'),hero=q('.nh-hero'),result=q('.nh-result'),effect=q('.nh-win-effect'),bigWin=q('.nh-big-win');
-  let sound=false,effectTimer=null;const music=new Audio('bgsound.ogg');music.loop=true;music.volume=.12;
-  const cells=Array.from({length:15},()=>{const cell=document.createElement('div');cell.className='nh-cell';cell.setAttribute('role','img');const img=document.createElement('span');img.className='nh-symbol';img.setAttribute('aria-hidden','true');cell.append(img);grid.append(cell);return cell});
-  function paint(symbols){symbols.forEach((key,i)=>{
-   const cell=cells[i],img=cell.firstElementChild,a=art[themeName][key];cell.dataset.symbol=key;
-   if(typeof a[0]==='string'){img.className='nh-symbol nh-symbol-file';img.style.backgroundImage='url("'+a[0]+'")';img.style.backgroundSize='';img.style.backgroundPosition='';cell.setAttribute('aria-label',a[1])}
-   else{img.className='nh-symbol';img.style.backgroundImage='url("cassinos-referencia.jpg")';img.style.backgroundSize=(1280/98*100)+'% '+(853/98*100)+'%';img.style.backgroundPosition=(a[0]/(1280-98)*100)+'% '+(a[1]/(853-98)*100)+'%';cell.setAttribute('aria-label',a[2])}
-  })}
-  function pose(state){hero.src=poses[themeName][state];hero.alt=(themeName==='amor'?'Coelhinho branco':'Girinnho')+' — '+({idle:'pronto para jogar',win:'vitória',lose:'sem prêmio',big:'supervitória'}[state])}
-  function audio(name,loop=false){if(!sound||hub.hidden||root.hidden||document.hidden)return null;const a=new Audio(sounds[name]);a.volume=.35;a.loop=loop;playing.add(a);a.onended=()=>playing.delete(a);a.play().catch(()=>playing.delete(a));return a}
-  s.stopMusic=()=>{music.pause();q('.nh-music').setAttribute('aria-pressed','false');q('.nh-music').textContent='♫ Música'};
-  s.clearEffect=()=>{clearTimeout(effectTimer);effect.hidden=true;bigWin.hidden=true;cells.forEach(cell=>cell.classList.remove('nh-paid'))};
-  s.refreshBalance=async()=>{
-   if(!connected()){result.textContent='Entre na sua conta e escolha o Modo Solo ou uma história do casal para jogar.';return}
-   if(transaction)return;const sid=story(),uid=user();
-   try{const {data,error}=await db.rpc('nh_meu_saldo');if(error)throw error;if(!sameSession(sid,uid)||transaction)return;const n=Number(data);if(data===null||!Number.isSafeInteger(n)||n<0)throw new Error('Saldo inválido');window.nhSaldoIndividual=n;syncBalances()}
-   catch(e){if(sameSession(sid,uid))result.textContent='Não foi possível atualizar o saldo: '+e.message}
-  };
-  async function spin(){
-   if(transaction||hub.hidden||root.hidden)return false;
-   if(!connected()){result.textContent='Entre na sua conta e escolha uma história para jogar.';return false}
-   const sid=story(),uid=user(),bet=s.bet;
-   if(balance()!==null&&balance()<bet){result.textContent='Saldo insuficiente. Abra Bônus para ver as recompensas gratuitas.';return false}
-   transaction=true;controls();s.clearEffect();pose('idle');result.textContent='Girando… boa sorte!';audio('start');audio('coins');
-   const loop=audio('spin',true);grid.classList.add('nh-spinning');
-   const anim=setInterval(()=>{if(!hub.hidden&&!root.hidden)paint(Array.from({length:15},()=>keys[Math.floor(Math.random()*keys.length)]))},95);const started=Date.now();
-   try{
-    // Never automatically retry a debit: a lost response may already have consumed it.
-    const {data,error}=await db.rpc('cassino_girar',{p_story_id:sid,p_aposta:bet});if(error)throw error;
-    await new Promise(resolve=>setTimeout(resolve,Math.max(0,1250-(Date.now()-started))));
-    clearInterval(anim);grid.classList.remove('nh-spinning');if(loop){loop.pause();playing.delete(loop)}
-    if(!sameSession(sid,uid))return false;
-    if(!data||!Array.isArray(data.simbolos)||data.simbolos.length!==15||!data.simbolos.every(n=>keys.includes(n))||!Number.isSafeInteger(data.saldo)||data.saldo<0||!Number.isSafeInteger(data.premio)||data.premio<0)throw new Error('Resposta do servidor inválida. Atualize o saldo.');
-    paint(data.simbolos);window.nhSaldoIndividual=data.saldo;syncBalances();const payout=lines(data.simbolos,bet);
-    if(payout.total!==data.premio){result.textContent='Prêmio informado pelo servidor: '+data.premio+' moedas. Ele diverge da tabela; Auto foi parado. Confira as regras com o administrador.';pose('idle');return false}
-    if(!hub.hidden&&!root.hidden){
-     audio('stop');
-     if(data.premio>0){const big=data.premio>=bet*7;pose(big?'big':'win');audio(big?'big':'win');payout.paid.forEach(i=>cells[i].classList.add('nh-paid'));effect.hidden=false;bigWin.hidden=!big;result.textContent=(big?'Supervitória! ':'Vitória! ')+'Prêmio: '+data.premio+' moedas. Saldo: '+data.saldo+'.';effectTimer=setTimeout(()=>{effect.hidden=true;bigWin.hidden=true;pose('idle')},3200)}
-     else{pose('lose');audio('lose');result.textContent='Sem prêmio neste giro. Custo: '+bet+' moeda(s). Saldo: '+data.saldo+'.'}
-    }
-    return true;
-   }catch(e){if(sameSession(sid,uid)){result.textContent='Não foi possível confirmar o giro: '+(e?.message||'falha de conexão')+' Atualize o saldo antes de tentar novamente.';pose('idle')}return false}
-   finally{clearInterval(anim);grid.classList.remove('nh-spinning');if(loop){loop.pause();playing.delete(loop)}transaction=false;controls()}
-  }
-  async function autoRound(token){
-   if(!s.auto||s.token!==token||hub.hidden||root.hidden||document.hidden)return;
-   s.remaining--;controls();const ok=await spin();
-   if(!s.auto||s.token!==token)return;
-   if(!ok||s.remaining<=0||balance()===null||balance()<s.bet){stopAuto(s);return}
-   s.next=setTimeout(()=>autoRound(token),1100);
-  }
-  s.spin.addEventListener('click',()=>{stopAllAuto();spin()});
-  s.minus.addEventListener('click',()=>{if(transaction||s.auto)return;s.bet=Math.max(1,s.bet-1);audio('click');controls()});
-  s.plus.addEventListener('click',()=>{if(transaction||s.auto)return;s.bet=Math.min(3,s.bet+1);audio('click');controls()});
-  s.autoButton.addEventListener('click',()=>{if(s.auto){stopAuto(s);return}if(transaction)return;stopAllAuto();s.auto=true;s.remaining=10;controls();autoRound(s.token)});
-  s.entry.addEventListener('click',()=>open(themeName));s.refresh.addEventListener('click',()=>{audio('click');s.refreshBalance()});
-  q('.nh-sound').addEventListener('click',e=>{sound=!sound;e.currentTarget.setAttribute('aria-pressed',String(sound));e.currentTarget.textContent=sound?'🔊 Sons ligados':'🔇 Ativar sons';if(sound)audio('click');else pauseSounds()});
-  q('.nh-music').addEventListener('click',async e=>{const target=e.currentTarget,on=music.paused;if(on){states.filter(other=>other!==s).forEach(other=>other.stopMusic());try{await music.play()}catch{result.textContent='Toque novamente para autorizar a música.';return}if(hub.hidden||document.hidden){s.stopMusic();return}}else music.pause();target.setAttribute('aria-pressed',String(on));target.textContent=on?'♫ Música ligada':'♫ Música'});
-  paint(themeName==='amor'?['cenoura','morango','coelho','coracao','morango','coracao','cenoura','morango','coelho','cenoura','coelho','morango','cenoura','coracao','estrela']:['coelho','cenoura','coracao','morango','moeda','morango','coelho','moeda','cenoura','coracao','cenoura','coracao','coelho','morango','moeda']);
- });
- hub.querySelector('.nh-close').addEventListener('click',()=>close());
- hub.querySelectorAll('[data-theme]').forEach(b=>b.addEventListener('click',()=>theme(b.dataset.theme)));
- hub.querySelectorAll('[data-nh-nav]').forEach(b=>b.addEventListener('click',()=>{
-  const target=b.dataset.nhNav;
-  if(target==='planos'&&document.getElementById('planos-casal')?.hidden){const status=hub.querySelector('.nh-nav-status');status.hidden=false;status.textContent='Os planos estão disponíveis no Modo Casal. Volte ao início para escolher esse modo.';return}
-  close(false);
-  if(target==='inicio')document.getElementById('aba-btn-inicio')?.click();
-  if(target==='planos'){document.getElementById('aba-btn-inicio')?.click();document.getElementById('abrir-planos')?.click();document.getElementById('planos-casal')?.scrollIntoView({block:'center'})}
-  if(target==='bonus')document.getElementById('mascote-premios-abrir')?.click();
-  if(target==='perfil')document.getElementById('botao-configuracoes')?.click();
- }));
- hub.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){e.preventDefault();close()}
-  if(e.key==='Tab'){const nodes=[...hub.querySelectorAll('button:not(:disabled),summary')].filter(el=>el.getClientRects().length);const first=nodes[0],last=nodes[nodes.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
- });
- small.addEventListener('change',()=>{stopAllAuto();layout()});
- document.addEventListener('visibilitychange',()=>{if(document.hidden){stopAllAuto();pauseSounds();states.forEach(s=>s.stopMusic())}});
- // Preserve the previous secret chat command as an additional entry.
- window.abrirGirininhoSecreto=()=>open('girinnho');const form=document.getElementById('chat-rodape'),input=document.getElementById('chat-texto-enviar');
- form?.addEventListener('submit',e=>{if(input.value.trim().toLowerCase()!=='/girininho777')return;e.preventDefault();e.stopImmediatePropagation();input.value='';open('girinnho')},true);
- setInterval(()=>{
-  if(hub.hidden)return;
-  if(!sameSession(openStory,openUser)||document.getElementById('aba-jogos')?.hidden||document.getElementById('conteudo-privado')?.style.display==='none'){close();return}
-  if(!transaction)syncBalances();
- },400);
- controls();layout();
-})();
+<style id="nh-cassinos-somente-visual">
+/* Atualização exclusivamente visual. Os scripts, controles e regras originais permanecem intactos. */
+#cassino-amor.cassino-modal{background:radial-gradient(ellipse at top,#570b2b,#15010c 75%)!important;color:#fff1e8!important}
+#cassino-amor .cassino-conteudo{background:transparent!important;color:#fff1e8!important;padding-top:56px!important}
+#cassino-amor h2{color:#ffe2a5!important;text-shadow:0 0 16px #ff1779!important}
+#cassino-amor .cassino-conteudo>p{color:#f5c6d8!important}
+#cassino-amor .cassino-cena{max-width:700px!important;padding:0 12px 16px!important;border:2px solid #ff3b8c!important;border-radius:22px!important;background:linear-gradient(#6c1039,#250011)!important;box-shadow:0 0 22px #ff147966,inset 0 0 14px #ff147944!important;overflow:hidden}
+#cassino-amor .ft-cabecalho{width:calc(100% + 24px)!important;height:auto!important;aspect-ratio:640/286!important;margin:0 -12px 0!important;background:url('cassinos-referencia.jpg') 0 11.35%/200% auto no-repeat!important}
+#cassino-amor .ft-cabecalho>*{display:none!important}
+#cassino-amor .ft-faixa,#cassino-amor .ft-enfeites{display:none!important}
+#cassino-amor .cassino-tela{width:100%!important;max-width:none!important;border:6px ridge #ffd77f!important;background:linear-gradient(135deg,#9e5d1c,#f1c25c,#68400e)!important;padding:5px!important;box-shadow:0 0 10px #ffdd7b66!important;border-radius:13px!important;overflow:hidden}
+#cassino-amor .cassino-grade{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-auto-rows:auto!important;aspect-ratio:5/3!important;gap:1px!important;padding:0!important;background:#bb9237!important;border-radius:4px!important;overflow:hidden}
+#cassino-amor .cassino-celula{position:relative;aspect-ratio:1!important;min-width:0!important;border:1px solid #bd8c3d!important;border-radius:0!important;background:radial-gradient(ellipse,#580b2b,#25000d)!important;overflow:hidden}
+#cassino-amor .cassino-celula img{width:90%!important;height:90%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;filter:drop-shadow(0 0 5px #e3b75466)}
+#cassino-amor .cassino-painel{display:grid!important;grid-template-columns:auto minmax(65px,1fr) minmax(110px,2fr)!important;gap:9px!important;border:4px ridge #ffd67b!important;border-radius:17px!important;background:linear-gradient(#5f062f,#260010)!important;padding:12px!important;margin:15px 0 12px!important;box-shadow:0 0 0 2px #ff3c88,0 0 14px #ff167955!important}
+#cassino-amor .cassino-saldo{grid-column:1/-1;background:transparent!important;border:0!important;color:#ffe2a1!important;font-size:15px!important;padding:3px!important}
+#cassino-amor .cassino-painel label{margin:0!important;color:#ffe7ed!important;font-size:14px!important}
+#cassino-amor .cassino-painel select{min-width:0!important;width:100%!important;background:#36001e!important;color:#fff0db!important;border:1px solid #ffc66a!important;font-size:15px!important;padding:10px 6px!important}
+#cassino-amor .cassino-girar{border:4px ridge #ffe5a1!important;border-radius:40px!important;background:linear-gradient(#ff8ac1,#e51072 46%,#a90045 52%,#f73e91)!important;color:#fff4e5!important;text-shadow:0 2px 3px #650021!important;box-shadow:inset 0 0 0 2px #ffb3d2,0 0 15px #ff2988!important;font-size:clamp(18px,4vw,30px)!important;min-height:55px!important;padding:8px 10px!important}
+#cassino-amor .cassino-resultado{color:#ffe8d1!important;text-shadow:none!important;font-size:16px!important;min-height:30px!important}
+#cassino-amor .cassino-controles{gap:8px!important}
+#cassino-amor .cassino-controles button{background:#330419!important;color:#ffe4ef!important;border:1px solid #c25883!important;min-height:44px!important;padding:10px 12px!important}
+#cassino-amor .cassino-nota{color:#eec4d3!important;font-size:12px!important;line-height:1.7!important}
+#cassino-amor .cassino-fechar{background:#35051d!important;color:#ffe9f3!important;border-color:#ff77ac!important}
+#girininho-modal{background:radial-gradient(ellipse at top,#17370b,#010703 75%)!important;color:#edffe1!important}
+#girininho-modal .gi-wrap{position:relative;max-width:700px!important;margin:56px auto 20px!important;padding:0 12px 20px!important;border:2px solid #67ff21!important;border-radius:22px!important;background:linear-gradient(#18320b,#020c04)!important;box-shadow:0 0 22px #57ff2255,inset 0 0 14px #57ff2222!important;overflow:hidden}
+#girininho-modal .gi-wrap::before{content:'';display:block;width:calc(100% + 24px);aspect-ratio:640/286;margin:0 -12px;background:url('cassinos-referencia.jpg') 100% 11.35%/200% auto no-repeat}
+#girininho-modal h2{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important;margin:0!important}
+#girininho-modal .gi-hero{position:absolute;right:14px;top:12px;width:58px!important;height:58px!important;border-radius:50%;border:1px solid #7fff55;box-shadow:0 0 12px #7fff5544;margin:0!important;background:#021005}
+#girininho-modal .gi-board{border:6px ridge #ffd77f!important;padding:5px!important;border-radius:13px!important;background:linear-gradient(135deg,#9e5d1c,#f1c25c,#68400e)!important;box-shadow:0 0 14px #53ff2266!important;overflow:hidden}
+#girininho-modal .gi-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:1px!important;padding:0!important;max-width:none!important;margin:0 0 18px!important;background:#b28b36!important;border:1px solid #d7b05b!important;border-radius:4px!important;overflow:hidden}
+#girininho-modal .gi-cell{position:relative;aspect-ratio:1!important;min-width:0!important;background:radial-gradient(ellipse,#19310b,#010702)!important;border:1px solid #ad863d!important;border-radius:0!important;overflow:hidden}
+#girininho-modal .gi-cell img{width:90%!important;height:90%!important;object-fit:contain!important}
+#girininho-modal .gi-actions{border:3px ridge #ffd77f!important;border-radius:14px!important;padding:12px 8px!important;gap:10px!important;background:linear-gradient(#123414,#010c05)!important;box-shadow:inset 0 0 12px #4bff1922!important}
+#girininho-modal .gi-label{color:#eaffd7!important;font-size:14px!important;margin:0!important}
+#girininho-modal .gi-label:first-child{flex-basis:100%;text-align:center;color:#ffe399!important}
+#girininho-modal select{background:#061c07!important;color:#f0ffe5!important;border-color:#80ca4d!important;font-size:15px!important;padding:10px!important;margin-top:5px!important}
+#girininho-modal .gi-spin{border:4px ridge #ffe5a1!important;border-radius:40px!important;background:linear-gradient(#d3ff7c,#6fda14 46%,#228c01 52%,#77dc18)!important;color:#fffbd9!important;text-shadow:0 2px 3px #183900!important;box-shadow:inset 0 0 0 2px #d1ff87,0 0 15px #70ff24!important;font-size:clamp(18px,4vw,30px)!important;min-height:55px!important;padding:8px 16px!important}
+#girininho-modal #girininho-mute{background:#061807!important;color:#e8ffdc!important;border:1px solid #7dba58!important;min-height:44px!important}
+#girininho-modal .gi-msg{color:#eaffda!important;font-size:16px!important;margin:14px 6px 8px!important}
+#girininho-modal .gi-note{color:#c0d4b5!important;font-size:12px!important;line-height:1.7!important}
+#girininho-modal .gi-close{background:#071508!important;border-color:#9bee6f!important;color:#eeffdf!important}
+#cassino-amor button:focus-visible,#girininho-modal button:focus-visible,#cassino-amor select:focus-visible,#girininho-modal select:focus-visible{outline:3px solid #ffe4a0!important;outline-offset:3px!important}
+@keyframes nh-visual-giro{to{transform:translateY(3%);filter:blur(2px)}}
+#cassino-amor .cassino-grade.girando .cassino-celula,#girininho-modal .gi-spinning .gi-cell{animation:nh-visual-giro .13s linear infinite alternate}
+@media(max-width:600px){#cassino-amor .cassino-conteudo{padding-left:8px!important;padding-right:8px!important}#cassino-amor .cassino-cena{padding-left:7px!important;padding-right:7px!important;border-radius:16px!important}#cassino-amor .ft-cabecalho{width:calc(100% + 14px)!important;margin-left:-7px!important;margin-right:-7px!important}#cassino-amor .cassino-tela,#girininho-modal .gi-board{border-width:4px!important;padding:3px!important}#cassino-amor .cassino-painel{padding:9px 7px!important;gap:6px!important}#girininho-modal .gi-wrap{margin:56px 8px 16px!important;padding-left:7px!important;padding-right:7px!important}#girininho-modal .gi-wrap::before{width:calc(100% + 14px);margin-left:-7px;margin-right:-7px}#girininho-modal .gi-actions{gap:7px!important}#girininho-modal .gi-hero{width:44px!important;height:44px!important}#cassino-amor .cassino-resultado,#girininho-modal .gi-msg{font-size:14px!important}}
+@media(prefers-reduced-motion:reduce){#cassino-amor .cassino-grade.girando .cassino-celula,#girininho-modal .gi-spinning .gi-cell{animation:none}}
 
-</script>
+#cassino-amor .cassino-celula:has(img[src="orange.webp"]){background-image:url("cassinos-referencia.jpg")!important;background-repeat:no-repeat!important;background-size:1306.122449% 870.408163%!important;background-position:13.282572% 48.609272%!important;}
+#cassino-amor .cassino-celula:has(img[src="orange.webp"]) img{visibility:hidden!important}
+#cassino-amor .cassino-celula:has(img[src="ft_cartas.png"]){background-image:url("cassinos-referencia.jpg")!important;background-repeat:no-repeat!important;background-size:1306.122449% 870.408163%!important;background-position:31.895093% 48.609272%!important;}
+#cassino-amor .cassino-celula:has(img[src="ft_cartas.png"]) img{visibility:hidden!important}
+#cassino-amor .cassino-celula:has(img[src="ft_fogos.png"]){background-image:url("cassinos-referencia.jpg")!important;background-repeat:no-repeat!important;background-size:1306.122449% 870.408163%!important;background-position:40.947547% 76.291391%!important;}
+#cassino-amor .cassino-celula:has(img[src="ft_fogos.png"]) img{visibility:hidden!important}
+#cassino-amor .cassino-celula:has(img[src="ft_wild.png"]){background-image:url("cassinos-referencia.jpg")!important;background-repeat:no-repeat!important;background-size:1306.122449% 870.408163%!important;background-position:22.504230% 48.609272%!important;}
+#cassino-amor .cassino-celula:has(img[src="ft_wild.png"]) img{visibility:hidden!important}
+#cassino-amor .cassino-celula:has(img[src="fichas.webp"]){background-image:url("cassinos-referencia.jpg")!important;background-repeat:no-repeat!important;background-size:1306.122449% 870.408163%!important;background-position:3.891709% 48.609272%!important;}
+#cassino-amor .cassino-celula:has(img[src="fichas.webp"]) img{visibility:hidden!important}
+#girininho-modal .gi-cell:has(img[src="botao_jogar.png"]){background-image:url("cassinos-referencia.jpg")!important;background-repeat:no-repeat!important;background-size:1306.122449% 870.408163%!important;background-position:67.258883% 48.609272%!important;}
+#girininho-modal .gi-cell:has(img[src="botao_jogar.png"]) img{visibility:hidden!important}
+#girininho-modal .gi-cell:has(img[src="bonus_liberado.png"]){background-image:url("cassinos-referencia.jpg")!important;background-repeat:no-repeat!important;background-size:1306.122449% 870.408163%!important;background-position:76.649746% 48.609272%!important;}
+#girininho-modal .gi-cell:has(img[src="bonus_liberado.png"]) img{visibility:hidden!important}
+#girininho-modal .gi-cell:has(img[src="super_win.png"]){background-image:url("cassinos-referencia.jpg")!important;background-repeat:no-repeat!important;background-size:1306.122449% 870.408163%!important;background-position:85.786802% 48.609272%!important;}
+#girininho-modal .gi-cell:has(img[src="super_win.png"]) img{visibility:hidden!important}
+#girininho-modal .gi-cell:has(img[src="personagem_parado.png"]){background-image:url("cassinos-referencia.jpg")!important;background-repeat:no-repeat!important;background-size:1306.122449% 870.408163%!important;background-position:58.121827% 48.609272%!important;}
+#girininho-modal .gi-cell:has(img[src="personagem_parado.png"]) img{visibility:hidden!important}
+#girininho-modal .gi-cell:has(img[src="chuva_moedas.png"]){background-image:url("cassinos-referencia.jpg")!important;background-repeat:no-repeat!important;background-size:1306.122449% 870.408163%!important;background-position:95.177665% 48.609272%!important;}
+#girininho-modal .gi-cell:has(img[src="chuva_moedas.png"]) img{visibility:hidden!important}
+#girininho-modal .gi-cell:has(img[src="brilho_vitoria.png"]){background-image:url("ft_ouro.png")!important;background-size:90% 90%!important;background-position:center!important;background-repeat:no-repeat!important;}
+#girininho-modal .gi-cell:has(img[src="brilho_vitoria.png"]) img{visibility:hidden!important}
+#girininho-modal .gi-cell:has(img[src="tigre_sorte.png"]){background-image:url("ft_fogos.png")!important;background-size:90% 90%!important;background-position:center!important;background-repeat:no-repeat!important;}
+#girininho-modal .gi-cell:has(img[src="tigre_sorte.png"]) img{visibility:hidden!important}
+#girininho-modal .gi-cell:has(img[src="mega_win.png"]){background-image:url("ft_cartas.png")!important;background-size:90% 90%!important;background-position:center!important;background-repeat:no-repeat!important;}
+#girininho-modal .gi-cell:has(img[src="mega_win.png"]) img{visibility:hidden!important}
+</style>
 </body></html>
