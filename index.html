@@ -952,6 +952,8 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
   <div class="mascote-medidor"><div class="mascote-medidor-topo"><span>🌙 Sono</span><b id="val-sono">--</b></div><div class="mascote-trilho"><div class="mascote-preenchimento" id="barra-sono"></div></div></div>
  </div>
  <p>⭐ Nível <strong id="mascote-nivel">1</strong> · <span id="mascote-xp">0 XP</span></p>
+ <p id="mascote-idade" aria-live="polite">Bebê · Macacão e babador</p>
+ <p class="muted nh-idades-regra">Bebê 1–4 · Filhote 5–9 · Juvenil 10–19 · Jovem 20–29 · Adulto 30+. Cada 100 XP sobe um nível.</p>
  <div id="mascote-xp-trilho"><div id="mascote-xp-barra"></div></div>
  </details>
  <div id="mascote-acoes"><button type="button" data-mascote-acao="alimentar" disabled>🥕 Alimentar · 5 🪙</button><button type="button" data-mascote-acao="brincar" disabled>🎾 Brincar · 4 🪙</button><button type="button" data-mascote-acao="carinho" disabled>💖 Dar carinho · 2 🪙</button><button type="button" data-mascote-acao="banho" disabled>🛁 Dar banho · 3 🪙</button><button type="button" id="btn-mascote-dormir" data-mascote-acao="dormir" disabled>😴 Dormir</button></div>
@@ -1857,14 +1859,24 @@ function mascoteBotoes(habilitar){
 }
 function mascoteMensagem(t){$('mascote-status').textContent=t||'';}
 const mascoteGifs={triste:'triste.gif',parado:'coelho.gif',alimentar:'comendo.gif',dormir:'sono.gif',banho:'banho.gif',carinho:'carinho.gif',brincar:'brincadeira.gif'};
+// A idade é visual: usa a experiência existente, sem mudar saldo ou regras de cuidado.
+const mascoteIdades=[{id:'bebe',nome:'Bebê',min:1,roupa:'Macacão e babador'},{id:'filhote',nome:'Filhote',min:5,roupa:'Jardineira'},{id:'juvenil',nome:'Juvenil',min:10,roupa:'Camiseta e short'},{id:'jovem',nome:'Jovem',min:20,roupa:'Moletom e calça'},{id:'adulto',nome:'Adulto',min:30,roupa:'Camisa e cardigan'}];
+function mascoteIdadeAtual(){
+ const xp=Math.max(0,Number(mascoteDados?.experiencia)||0),nivel=Math.floor(xp/100)+1;
+ return [...mascoteIdades].reverse().find(idade=>nivel>=idade.min)||mascoteIdades[0];
+}
+function mascoteArquivo(acao){return 'pet-'+mascoteIdadeAtual().id+'-'+(Object.hasOwn(mascoteGifs,acao)?acao:'parado')+'.gif';}
 let mascoteAnimacaoTimer=null,mascoteAnimacaoAtiva=false;
 function mascoteGif(acao,temporaria=false){
  const figura=$('mascote-figura');if(!figura)return;
  if(mascoteAnimacaoTimer){clearTimeout(mascoteAnimacaoTimer);mascoteAnimacaoTimer=null;}
  const img=figura.querySelector('img')||document.createElement('img');
  img.alt=''; // Não exibir texto gigante caso o GIF não seja encontrado.
- const arquivo=mascoteGifs[acao]||mascoteGifs.parado;
- const caminhos=[arquivo,'imagens/'+arquivo,'cassino/animacoes/'+arquivo];
+ const arquivo=mascoteArquivo(acao);
+ const caminhos=[arquivo,mascoteGifs[acao]||mascoteGifs.parado];
+ figura.dataset.idade=mascoteIdadeAtual().id;
+ figura.dataset.acao=acao;
+ img.alt=mascoteIdadeAtual().nome+' — '+acao;
  let tentativa=0;
  img.onerror=()=>{
   tentativa++;
@@ -1904,7 +1916,7 @@ function atualizarInterfaceMascote(){
   const valor=mascoteLimitar(d[chave]);$(valorId).textContent=Math.round(valor)+'%';$(barraId).style.width=valor+'%';
  }
  const xp=Math.max(0,Number(d.experiencia)||0),nivel=Math.floor(xp/100)+1;
- $('mascote-saldo').textContent='🪙 '+(window.nhSaldoIndividual??'--');mascoteAtualizarPremios();$('mascote-nivel').textContent=nivel;$('mascote-xp').textContent=xp+' XP';$('mascote-xp-barra').style.width=(xp%100)+'%';
+ $('mascote-saldo').textContent='🪙 '+(window.nhSaldoIndividual??'--');mascoteAtualizarPremios();$('mascote-nivel').textContent=nivel;const idade=mascoteIdadeAtual();$('mascote-idade').textContent=idade.nome+' · '+idade.roupa;$('mascote-xp').textContent=xp+' XP';$('mascote-xp-barra').style.width=(xp%100)+'%';
  const figura=$('mascote-figura');figura.classList.toggle('dormindo',dormindo);
  const cenarioMascote=$('mascote-cenario');if(cenarioMascote)cenarioMascote.classList.toggle('nh-noite',dormindo);
  const problemasMascote=[];
@@ -1915,7 +1927,7 @@ function atualizarInterfaceMascote(){
  const estadoGif=dormindo?'dormir':problemasMascote.length?'triste':'parado';
  if(!mascoteAnimacaoAtiva){
   const img=figura.querySelector('img');
-  const alvo=mascoteGifs[estadoGif];
+  const alvo=mascoteArquivo(estadoGif);
   if(!img||!img.getAttribute('src')?.split('?')[0].endsWith('/'+alvo)&&!img.getAttribute('src')?.split('?')[0].endsWith(alvo))mascoteGif(estadoGif);
  }
  $('mascote-balao-mensagem').textContent=dormindo?'Zzz... Que soninho bom! 😴':problemasMascote.length
@@ -3199,5 +3211,19 @@ body[data-interface="vidro"].tema-escuro :is(#botao-tema,#botao-musica,#botao-co
 /* Evita que a animação antiga de entrada impeça o desfoque de fundo nos cartões. */
 body[data-interface="vidro"] #historia-painel>.aba-painel{animation:none!important;transform:none!important;opacity:1!important}
 body[data-interface="vidro"]:has(#login-painel:not([hidden])) #botao-tema{bottom:24px!important}
+</style>
+<style id="nh-pet-idades-e-legibilidade">
+body[data-interface="vidro"] .nh-introducao{margin:12px auto 18px;padding:20px 18px!important;max-width:600px;background:var(--ui-control);border:1px solid var(--ui-edge);border-radius:28px;backdrop-filter:blur(18px) saturate(125%);-webkit-backdrop-filter:blur(18px) saturate(125%);box-shadow:inset 0 1px 0 #ffffff60,0 8px 24px #43183218;text-shadow:none!important}
+body[data-interface="vidro"] #mensagem-romantica-dia{color:#541c37!important;text-shadow:none!important}
+body[data-interface="vidro"] #mensagem-romantica-aviso{color:#704658!important}
+body[data-interface="vidro"].tema-escuro #mensagem-romantica-dia{color:#fff0f5!important}
+body[data-interface="vidro"].tema-escuro #mensagem-romantica-aviso{color:#efd6e0!important}
+#mascote-figura[data-idade="bebe"] img{width:min(140px,34vw);height:140px}
+#mascote-figura[data-idade="filhote"] img{width:min(160px,38vw);height:160px}
+#mascote-figura[data-idade="juvenil"] img{width:min(180px,42vw);height:180px}
+#mascote-figura[data-idade="jovem"] img{width:min(195px,45vw);height:195px}
+#mascote-figura[data-idade="adulto"] img{width:min(210px,48vw);height:210px}
+#mascote-idade{font-weight:700;color:var(--ui-ink,#541c37);text-align:center}
+.nh-idades-regra{font-size:12px;line-height:1.6;text-align:center}
 </style>
 </body></html>
