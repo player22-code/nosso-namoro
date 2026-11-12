@@ -861,7 +861,7 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
 @media(max-width:600px){#cassino-amor .cassino-grade{aspect-ratio:5/3!important}}
 </style>
 </head>
-<body data-aba="inicio"><audio id="musica" preload="none"></audio>
+<body data-aba="inicio" data-interface="vidro"><audio id="musica" preload="none"></audio>
 <button id="botao-tema" type="button" aria-label="Ativar tema escuro" title="Alternar tema">🌙</button>
 <button id="botao-configuracoes" type="button" aria-label="Abrir configurações" title="Configurações">⚙️</button>
 <canvas id="nh-visualizador" width="160" height="160" aria-hidden="true"></canvas><button id="botao-musica" type="button" aria-label="Abrir nuvem de músicas" aria-expanded="false" aria-controls="janela-musicas">🎵</button>
@@ -889,9 +889,10 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
  </div>
  <form id="chat-rodape"><textarea id="chat-texto-enviar" maxlength="2000" rows="1" placeholder="Escreva uma mensagem..." aria-label="Mensagem"></textarea><button id="chat-enviar" type="submit" aria-label="Enviar mensagem">➤</button></form>
 </div>
-<div id="login-painel" hidden><h2>Bem-vindo ao Nossa História ❤️</h2><p class="subtitulo">Entre com sua conta Google para continuar.</p><button id="login-google" class="primary" type="button">Continuar com Google</button><p id="mensagem-login" role="status"></p></div>
-<div id="barra-conta"><span id="dados-conta"></span><button id="sair-conta" class="secondary" type="button">Sair da conta</button></div>
 <header><div id="personagem-com-recado"><img id="animacao-cabecalho" class="coracao" src="danca.png" alt="Animação do casal" role="button" tabindex="0" aria-label="Reproduzir animação de beijo"><div id="recado-personagem"><p>Não carregou direitinho? 💗</p><button id="recarregar-personagem" type="button" onclick="window.location.reload()" aria-label="Recarregar a página">↻ Atualizar</button></div></div><h1 id="titulo-site" title="">Nossa História</h1><p class="subtitulo">Cada história merece um lugar especial.</p></header>
+<div id="login-painel" hidden><h2>Bem-vindo ao Nossa História ❤️</h2><p class="subtitulo">Entre com sua conta Google para continuar.</p><button id="login-google" class="primary" type="button">Continuar com Google</button><p id="mensagem-login" role="status"></p></div>
+
+
 <main id="conteudo-privado"><p id="aviso-global" role="status"></p>
 <div id="modo-alternar" hidden><button id="modo-abrir-opcoes" type="button" aria-expanded="false" aria-controls="modo-seletor">💗 Escolher modo <span id="modo-atual-indicador"></span></button></div>
 <section id="modo-seletor" hidden aria-label="Escolher modo de uso">
@@ -907,6 +908,7 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
 <div id="conteudo-configuracoes">
 <button id="fechar-configuracoes" type="button" aria-label="Fechar configurações" title="Fechar">×</button>
 <h2 id="titulo-configuracoes">Configurações ⚙️</h2>
+<div id="barra-conta"><span id="dados-conta"></span><button id="sair-conta" class="secondary" type="button">Sair da conta</button></div>
 <p class="muted">Altere seu nome, consulte seu código e gerencie a conexão do casal.</p>
 <section id="config-secao-perfil"><h2>Meu perfil 💗</h2><div class="stack"><div><label for="nome-usuario">Seu nome</label><input id="nome-usuario" maxlength="40" placeholder="Como deseja ser chamado(a)?"></div><button id="salvar-nome" class="primary" type="button">Salvar nome</button><div><p class="muted">Seu código pessoal de conexão:</p><p id="codigo-conexao">Carregando...</p><button id="copiar-codigo" class="secondary" type="button">Copiar código</button></div></div></section>
 <section id="config-secao-conectar"><h2>Conectar com alguém 💌</h2><label for="codigo-outra-pessoa">Código da outra pessoa</label><input id="codigo-outra-pessoa" placeholder="Cole o código aqui"><div class="actions"><button id="enviar-pedido" class="primary" type="button">Enviar solicitação</button></div><h3>Solicitações pendentes</h3><div id="solicitacoes">Carregando...</div></section>
@@ -914,11 +916,11 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
 </div>
 <div id="historia-painel" hidden>
 <nav id="abas-nav" role="tablist" aria-label="Seções do site">
- <button id="aba-btn-inicio" class="aba-btn ativa" type="button" role="tab" aria-selected="true" aria-controls="aba-inicio" data-aba="inicio"><span class="aba-icone" aria-hidden="true">🏠</span><span class="aba-rotulo">INÍCIO</span></button>
- <button id="aba-btn-galeria" class="aba-btn" type="button" role="tab" aria-selected="false" aria-controls="aba-galeria" data-aba="galeria" tabindex="-1"><span class="aba-icone" aria-hidden="true">📸</span><span class="aba-rotulo">GALERIA</span></button>
- <button id="aba-btn-mensagem" class="aba-btn" type="button" role="tab" aria-selected="false" aria-controls="aba-mensagem" data-aba="mensagem" tabindex="-1"><span class="aba-icone" aria-hidden="true">💌</span><span class="aba-rotulo">MENSAGEM</span></button>
- <button id="aba-btn-jogos" class="aba-btn" type="button" role="tab" aria-selected="false" aria-controls="aba-jogos" data-aba="jogos" tabindex="-1"><span class="aba-icone" aria-hidden="true">🎮</span><span class="aba-rotulo">JOGOS</span></button>
- <button id="aba-btn-conexao" class="aba-btn" type="button" role="tab" aria-selected="false" aria-controls="aba-conexao" data-aba="conexao" tabindex="-1"><span class="aba-icone" aria-hidden="true">🔗</span><span class="aba-rotulo">CONEXÃO</span></button>
+ <button id="aba-btn-inicio" class="aba-btn ativa" type="button" role="tab" aria-selected="true" aria-controls="aba-inicio" data-aba="inicio"><span class="aba-icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/></svg></span><span class="aba-rotulo">Início</span></button>
+ <button id="aba-btn-galeria" class="aba-btn" type="button" role="tab" aria-selected="false" aria-controls="aba-galeria" data-aba="galeria" tabindex="-1"><span class="aba-icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 4 4 3-3 5 5"/></svg></span><span class="aba-rotulo">Memórias</span></button>
+ <button id="aba-btn-jogos" class="aba-btn" type="button" role="tab" aria-selected="false" aria-controls="aba-jogos" data-aba="jogos" tabindex="-1"><span class="aba-icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 7h10a4 4 0 0 1 4 3l1 7a3 3 0 0 1-5 2l-3-3h-4l-3 3a3 3 0 0 1-5-2l1-7a4 4 0 0 1 4-3Z"/><path d="M7 10v5m-2-2h4m7-2h.01m3 3h.01"/></svg></span><span class="aba-rotulo">Jogos</span></button>
+ <button id="aba-btn-mensagem" class="aba-btn" type="button" role="tab" aria-selected="false" aria-controls="aba-mensagem" data-aba="mensagem" tabindex="-1"><span class="aba-icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 11a9 9 0 0 1-9 9 10 10 0 0 1-4-.8L3 21l1.8-5A9 9 0 1 1 21 11Z"/></svg></span><span class="aba-rotulo">Conversas</span></button>
+ <button id="aba-btn-conexao" class="aba-btn" type="button" role="tab" aria-selected="false" aria-controls="aba-conexao" data-aba="conexao" tabindex="-1"><span class="aba-icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></span><span class="aba-rotulo">Mais</span></button>
 </nav>
 <div id="modal-limite-fotos" hidden role="dialog" aria-modal="true" aria-labelledby="titulo-limite-fotos" style="position:fixed;inset:0;background:rgba(25,15,30,.72);z-index:9999;display:none;align-items:center;justify-content:center;padding:18px;">
  <div style="width:min(100%,430px);max-height:90vh;overflow:auto;background:#fff7fb;color:#503548;border-radius:20px;padding:25px;box-shadow:0 15px 45px #0005;text-align:center;">
@@ -933,13 +935,16 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
  </div>
 </div>
 <div class="aba-painel" id="aba-inicio" role="tabpanel" aria-labelledby="aba-btn-inicio">
-<section><h2 id="titulo-historia">Nossa História</h2><p class="muted">Cada segundo com você é especial.</p><div id="contador"><div class="tempo"><span class="numero" id="anos">00</span><span class="legenda">Anos</span></div><div class="tempo"><span class="numero" id="meses">00</span><span class="legenda">Meses</span></div><div class="tempo"><span class="numero" id="dias">00</span><span class="legenda">Dias</span></div><div class="tempo"><span class="numero" id="horas">00</span><span class="legenda">Horas</span></div><div class="tempo"><span class="numero" id="minutos">00</span><span class="legenda">Minutos</span></div><div class="tempo"><span class="numero" id="segundos">00</span><span class="legenda">Segundos</span></div></div><p id="inicio-status">Aguardando a data de início ❤️</p><label for="data-inicio">Data e horário em que tudo começou</label><input id="data-inicio" type="datetime-local"><div class="actions"><button id="salvar-inicio" class="primary" type="button">Salvar data do casal</button></div></section>
+<div class="nh-introducao"><p>SEU ESPAÇO DE CARINHO</p><h2>Nosso cantinho</h2><span>Cada momento merece uma memória.</span></div>
+
+<section class="nh-contador-card"><h2 id="titulo-historia">Nossa História</h2><p class="muted">Cada segundo com você é especial.</p><div class="nh-tempo-destaque"><span aria-hidden="true">♡</span><div><span>Juntos há</span><strong><span id="nh-total-dias">--</span> dias</strong></div></div><details id="nh-tempo-detalhes"><summary>Ver contador completo</summary><div id="contador"><div class="tempo"><span class="numero" id="anos">00</span><span class="legenda">Anos</span></div><div class="tempo"><span class="numero" id="meses">00</span><span class="legenda">Meses</span></div><div class="tempo"><span class="numero" id="dias">00</span><span class="legenda">Dias</span></div><div class="tempo"><span class="numero" id="horas">00</span><span class="legenda">Horas</span></div><div class="tempo"><span class="numero" id="minutos">00</span><span class="legenda">Minutos</span></div><div class="tempo"><span class="numero" id="segundos">00</span><span class="legenda">Segundos</span></div></div></details><p id="inicio-status">Aguardando a data de início ❤️</p><details id="nh-data-detalhes"><summary>Editar data do casal</summary><label for="data-inicio">Data e horário em que tudo começou</label><input id="data-inicio" type="datetime-local"><div class="actions"><button id="salvar-inicio" class="primary" type="button">Salvar data do casal</button></div></details></section>
 
 <section id="mascote-juntos" aria-labelledby="mascote-titulo">
  <h2 id="mascote-titulo">🐰 Nosso mascote: <span id="mascote-nome-titulo">Juntos</span> 💕</h2>
  <p class="muted">Um coelhinho para vocês cuidarem juntos, em tempo real!</p>
  <div id="mascote-moedas"><span id="mascote-saldo" aria-live="polite">🪙 --</span><button type="button" id="mascote-premios-abrir">🎁 Recompensas</button></div>
  <div id="mascote-cenario"><span id="mascote-figura" role="img" aria-label="Coelhinho Juntos">🐰</span><span id="mascote-balao-mensagem" aria-live="polite">Carregando nosso coelhinho... 💗</span></div>
+ <details id="nh-mascote-detalhes"><summary>Cuidados e evolução</summary>
  <div id="mascote-estatisticas">
   <div class="mascote-medidor"><div class="mascote-medidor-topo"><span>🥕 Fome</span><b id="val-fome">--</b></div><div class="mascote-trilho"><div class="mascote-preenchimento" id="barra-fome"></div></div></div>
   <div class="mascote-medidor"><div class="mascote-medidor-topo"><span>💗 Felicidade</span><b id="val-felicidade">--</b></div><div class="mascote-trilho"><div class="mascote-preenchimento" id="barra-felicidade"></div></div></div>
@@ -948,9 +953,15 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
  </div>
  <p>⭐ Nível <strong id="mascote-nivel">1</strong> · <span id="mascote-xp">0 XP</span></p>
  <div id="mascote-xp-trilho"><div id="mascote-xp-barra"></div></div>
+ </details>
  <div id="mascote-acoes"><button type="button" data-mascote-acao="alimentar" disabled>🥕 Alimentar · 5 🪙</button><button type="button" data-mascote-acao="brincar" disabled>🎾 Brincar · 4 🪙</button><button type="button" data-mascote-acao="carinho" disabled>💖 Dar carinho · 2 🪙</button><button type="button" data-mascote-acao="banho" disabled>🛁 Dar banho · 3 🪙</button><button type="button" id="btn-mascote-dormir" data-mascote-acao="dormir" disabled>😴 Dormir</button></div>
  <p id="mascote-status" role="status">Aguardando conexão...</p>
 </section>
+<div id="nh-atalhos-inicio" aria-label="Atalhos da tela inicial">
+ <button type="button" data-ui-tab="galeria"><span aria-hidden="true">♡</span>Memórias</button>
+ <button type="button" data-ui-tab="jogos"><span aria-hidden="true">♧</span>Jogos</button>
+ <button type="button" id="nh-atalho-cinema"><span aria-hidden="true">▷</span>Cinema</button>
+</div>
 <section id="nosso-cineminha" aria-label="Nosso Cineminha">
  <h2>🍿 Nosso Cineminha 💕</h2>
  <p class="muted">Cole um link do YouTube para vocês assistirem juntos. Os dois podem escolher, pausar e avançar o vídeo.</p>
@@ -964,7 +975,7 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
 </section>
 </div>
 <div class="aba-painel" id="aba-galeria" role="tabpanel" aria-labelledby="aba-btn-galeria" hidden>
-<section><h2>Nossas lembranças 📸</h2><div id="galeria"><p class="subtitulo">Carregando...</p></div><button id="adicionar-foto" class="primary" type="button">＋ Adicionar foto</button><input id="arquivo-foto" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><p id="aviso-galeria" class="muted">Somente participantes desta história devem ter acesso às fotos privadas.</p></section>
+<section><h2>Nossas memórias 📸</h2><div id="galeria"><p class="subtitulo">Carregando...</p></div><button id="adicionar-foto" class="primary" type="button">＋ Adicionar foto</button><input id="arquivo-foto" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><p id="aviso-galeria" class="muted">Somente participantes desta história devem ter acesso às fotos privadas.</p></section>
 <section id="compartilhar-memorias">
  <h2>Compartilhar Memórias 💌</h2>
  <p class="muted">Escolha uma foto da nossa galeria e crie uma lembrança para compartilhar.</p>
@@ -1042,7 +1053,7 @@ input[type="radio"],input[type="checkbox"]{accent-color:#ec83b9}
 </button>
 </div>
 <div class="aba-painel" id="aba-conexao" role="tabpanel" aria-labelledby="aba-btn-conexao" hidden>
-<section id="conexao-atalhos"><h2>Código e convites 💌</h2><p class="muted">Seu código pessoal, o envio de convites e as respostas às solicitações ficam na janela de Configurações. Abra direto pelo atalho:</p><div class="actions"><button id="aba-abrir-perfil" class="primary" type="button">💗 Meu código e perfil</button><button id="aba-abrir-conectar" class="primary" type="button">💌 Convites e solicitações</button></div></section>
+<section id="conexao-atalhos"><h2>Sua conta e conexões</h2><p class="muted">Seu código pessoal, o envio de convites e as respostas às solicitações ficam na janela de Configurações. Abra direto pelo atalho:</p><div class="actions"><button id="aba-abrir-perfil" class="primary" type="button">💗 Meu código e perfil</button><button id="aba-abrir-conectar" class="primary" type="button">💌 Convites e solicitações</button><button id="nh-atalho-planos" class="secondary" type="button">♡ Planos do casal</button></div></section>
 <section><h2>Conexão</h2><p class="muted">Ao desfazer a conexão, as duas pessoas perderão o acesso à história. As fotos não serão apagadas automaticamente.</p><button id="desfazer-conexao" class="secondary" type="button">Desfazer conexão</button></section>
 </div>
 </div>
@@ -1781,7 +1792,7 @@ $('cinema-sincronizar').onclick=async()=>{await cinemaBuscar();if(cinemaEstado)c
 
 /* Navegação por abas — só reorganiza a interface; nenhuma função anterior foi alterada. */
 (function(){
- const ABAS=['inicio','galeria','mensagem','jogos','conexao'];
+ const ABAS=['inicio','galeria','jogos','mensagem','conexao'];
  const nav=$('abas-nav'),painel=$('historia-painel');
  function mostrarAba(nome,opcoes){
   opcoes=opcoes||{};
@@ -3019,4 +3030,174 @@ window.abrirGirininhoSecreto=open;
 })();
 
 </script>
+<style id="nh-interface-vidro-clean">
+/* Interface de vidro: wallpapers e recursos originais preservados. Escopo fora dos cassinos. */
+body[data-interface="vidro"]{--ui-ink:#541c37;--ui-muted:#704658;--ui-surface:rgba(255,246,250,.55);--ui-control:rgba(255,245,250,.42);--ui-popup:rgba(255,246,250,.91);--ui-edge:rgba(255,255,255,.75);--ui-accent:#a93463;--ui-selected:rgba(211,103,145,.29);--ui-shadow:0 9px 26px rgba(72,27,47,.13),inset 0 1px 0 rgba(255,255,255,.8);--ui-float-bottom:calc(100px + env(safe-area-inset-bottom,0px));color:var(--ui-ink)!important;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body[data-interface="vidro"].tema-escuro{--ui-ink:#fff0f5;--ui-muted:#efd6e0;--ui-surface:rgba(48,27,42,.62);--ui-control:rgba(82,47,67,.48);--ui-popup:rgba(44,25,39,.94);--ui-edge:rgba(255,230,242,.47);--ui-accent:#ffd0e1;--ui-selected:rgba(209,127,167,.27);--ui-shadow:0 10px 28px rgba(16,6,14,.24),inset 0 1px 0 rgba(255,245,251,.38)}
+body[data-interface="vidro"]>header{max-width:740px;width:calc(100% - 24px);margin:18px auto 8px;padding:16px 70px 12px 16px;display:grid;grid-template-columns:52px minmax(0,1fr);column-gap:12px;row-gap:2px;text-align:left;background:var(--ui-control);border:1px solid var(--ui-edge);border-radius:28px;box-shadow:var(--ui-shadow);backdrop-filter:blur(14px) saturate(125%);-webkit-backdrop-filter:blur(14px) saturate(125%)}
+body[data-interface="vidro"] #personagem-com-recado{display:contents}
+body[data-interface="vidro"] #animacao-cabecalho{grid-column:1;grid-row:1/3;align-self:center;width:52px;height:58px;margin:0;filter:drop-shadow(0 2px 5px #76263b16)}
+body[data-interface="vidro"] header #titulo-site{grid-column:2;grid-row:1;font:700 clamp(20px,3.8vw,28px)/1.2 Georgia,serif;margin:3px 0;color:var(--ui-ink)!important;text-shadow:none!important;overflow-wrap:anywhere}
+body[data-interface="vidro"] header .subtitulo{grid-column:2;grid-row:2;font-size:11px;line-height:1.45;margin:0;color:var(--ui-muted)!important;text-shadow:none!important}
+body[data-interface="vidro"] #recado-personagem{grid-column:1/-1;position:static;display:flex;align-items:center;justify-content:flex-start;gap:8px;max-width:none;width:auto;margin-top:9px;padding:0;border:0!important;background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;color:var(--ui-muted)!important;font-size:10px;line-height:1.3}
+body[data-interface="vidro"] #recado-personagem p{margin:0;white-space:nowrap}body[data-interface="vidro"] #recado-personagem::before{display:none}
+body[data-interface="vidro"] #recarregar-personagem{font-size:10px;padding:5px 8px;border:1px solid var(--ui-edge);background:var(--ui-control)!important;color:var(--ui-ink)!important;font-weight:600}
+body[data-interface="vidro"] #barra-conta{max-width:740px;width:calc(100% - 28px);padding:3px 5px;margin:8px auto;color:var(--ui-ink)!important;font-size:11px;text-shadow:none!important}
+body[data-interface="vidro"] #dados-conta{color:var(--ui-ink)!important;text-shadow:none!important;font-size:11px}
+body[data-interface="vidro"] #sair-conta{padding:6px 10px;min-height:32px;background:var(--ui-control);color:var(--ui-ink);border:1px solid var(--ui-edge);font-size:11px}
+body[data-interface="vidro"] #conteudo-privado{max-width:740px;width:100%;padding:0 12px calc(240px + env(safe-area-inset-bottom,0px));margin:auto}
+body[data-interface="vidro"] .nh-introducao{text-align:center;padding:18px 4px 8px;color:var(--ui-ink);text-shadow:0 1px 8px rgba(255,245,250,.65)}
+body[data-interface="vidro"].tema-escuro .nh-introducao{text-shadow:0 2px 8px #170814cc}
+body[data-interface="vidro"] .nh-introducao p{font-size:10px;letter-spacing:2px;margin:0 0 8px;font-weight:700}
+body[data-interface="vidro"] .nh-introducao h2{font:700 clamp(29px,6vw,38px)/1.2 Georgia,serif;margin:0 0 8px;color:var(--ui-ink)!important}
+body[data-interface="vidro"] .nh-introducao>span{font-size:13px}
+body[data-interface="vidro"] :is(#login-painel,#modo-seletor,#secao-historias),body[data-interface="vidro"] #historia-painel>.aba-painel>section,body[data-interface="vidro"] #aba-jogos :is(#quiz-amor,#compat-casal){background:var(--ui-surface)!important;color:var(--ui-ink)!important;border:1px solid var(--ui-edge)!important;border-radius:24px!important;padding:20px 18px;margin:16px 0;box-shadow:var(--ui-shadow)!important;backdrop-filter:blur(16px) saturate(120%)!important;-webkit-backdrop-filter:blur(16px) saturate(120%)!important;transform:none!important}
+body[data-interface="vidro"] #login-painel{width:calc(100% - 32px);max-width:460px;margin:28px auto;padding:28px 22px}
+body[data-interface="vidro"] #login-painel h2,body[data-interface="vidro"] #conteudo-privado :is(h2,h3),body[data-interface="vidro"] #aba-jogos :is(#quiz-amor,#compat-casal) h2{color:var(--ui-ink)!important;text-shadow:none!important}
+body[data-interface="vidro"] #conteudo-privado h2{font:700 24px/1.3 Georgia,serif;margin:0 0 12px}
+body[data-interface="vidro"] #conteudo-privado h3{font-size:17px}
+body[data-interface="vidro"] #conteudo-privado :is(.muted,.subtitulo,.legenda,#inicio-status,#cinema-status,#cinema-sincronia,#mascote-status),body[data-interface="vidro"] #aba-jogos :is(#quiz-amor,#compat-casal) .muted{color:var(--ui-muted)!important;line-height:1.6}
+body[data-interface="vidro"] #login-painel :is(p,#mensagem-login),body[data-interface="vidro"] #aviso-global{color:var(--ui-ink)!important}
+body[data-interface="vidro"] #conteudo-privado :is(.primary,.secondary,#mascote-acoes button,#mascote-premios-abrir,#modo-abrir-opcoes),body[data-interface="vidro"] #login-google{border:1px solid var(--ui-edge)!important;border-radius:16px!important;background:var(--ui-control)!important;color:var(--ui-ink)!important;box-shadow:inset 0 1px 0 #ffffff66,0 3px 10px #4823300a!important;min-height:44px;padding:10px 15px;font-weight:650;backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important;text-shadow:none!important}
+body[data-interface="vidro"] #conteudo-privado .primary,body[data-interface="vidro"] #login-google{background:var(--ui-selected)!important}
+body[data-interface="vidro"] #conteudo-privado :is(input:not([type="radio"]):not([type="checkbox"]):not([type="file"]),select,textarea){background:var(--ui-control)!important;color:var(--ui-ink)!important;border:1px solid var(--ui-edge)!important;border-radius:13px!important;box-shadow:inset 0 1px 0 #fff5;font-size:16px;min-height:44px;padding:11px}
+body[data-interface="vidro"] #conteudo-privado :is(input,textarea)::placeholder{color:var(--ui-muted);opacity:.85}
+body[data-interface="vidro"] #conteudo-privado option{background:#fff4f8;color:#541c37}
+body[data-interface="vidro"].tema-escuro #conteudo-privado option{background:#352032;color:#fff0f5}
+body[data-interface="vidro"] #modo-alternar{margin:12px 0 4px}
+body[data-interface="vidro"] #modo-abrir-opcoes{font-size:12px;min-height:38px!important;padding:7px 15px!important;border-radius:999px!important}
+body[data-interface="vidro"] #modo-seletor h2{font-size:23px}
+body[data-interface="vidro"] #modo-seletor .modo-botoes{gap:10px}
+body[data-interface="vidro"] #modo-seletor :is(#modo-btn-solo,#modo-btn-casal){background:var(--ui-control)!important;color:var(--ui-ink)!important;border:1px solid var(--ui-edge)!important;border-radius:18px!important;min-height:50px;box-shadow:none!important}
+body[data-interface="vidro"] #modo-seletor button.ativo{background:var(--ui-selected)!important}
+body[data-interface="vidro"] #titulo-historia{font-family:inherit!important;font-size:16px!important}
+body[data-interface="vidro"] #contador{gap:8px;margin-top:15px;grid-template-columns:repeat(3,minmax(0,1fr))}
+body[data-interface="vidro"] #contador .tempo{background:var(--ui-control)!important;border:1px solid var(--ui-edge);border-radius:15px;padding:10px 4px;box-shadow:none!important;backdrop-filter:none!important}
+body[data-interface="vidro"] #contador .numero{font:700 27px/1.25 Georgia,serif;color:var(--ui-ink)!important}
+body[data-interface="vidro"] #contador .legenda{font-size:11px;color:var(--ui-muted)!important}
+body[data-interface="vidro"] #inicio-status{font-size:12px;margin:10px 0}
+body[data-interface="vidro"] :is(#nh-data-detalhes,#nh-mascote-detalhes){border-top:1px solid var(--ui-edge);padding-top:10px;margin-top:12px;text-align:left;font-size:13px}
+body[data-interface="vidro"] :is(#nh-data-detalhes,#nh-mascote-detalhes)>summary{cursor:pointer;min-height:30px;padding:5px 0;color:var(--ui-ink);font-weight:650}
+body[data-interface="vidro"] #nh-data-detalhes label{margin-top:12px;color:var(--ui-muted);font-size:12px}
+body[data-interface="vidro"] #mascote-moedas{justify-content:space-between;gap:8px;margin:12px 0;background:var(--ui-control)!important;color:var(--ui-ink)!important;border:1px solid var(--ui-edge)!important;border-radius:18px;padding:8px 10px;box-shadow:none!important;backdrop-filter:none!important}
+body[data-interface="vidro"] #mascote-saldo{font-size:18px;color:var(--ui-ink)!important}
+body[data-interface="vidro"] #mascote-premios-abrir{font-size:12px;padding:7px 10px!important;min-height:38px!important}
+body[data-interface="vidro"] #mascote-cenario{min-height:0!important;height:250px;border-radius:18px!important;border:1px solid var(--ui-edge)!important}
+body[data-interface="vidro"] #mascote-estatisticas{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+body[data-interface="vidro"] .mascote-medidor{background:var(--ui-control)!important;border:1px solid var(--ui-edge)!important;border-radius:13px;padding:9px;backdrop-filter:none!important;color:var(--ui-ink)!important}
+body[data-interface="vidro"] .mascote-medidor-topo{font-size:12px;color:var(--ui-ink)!important}
+body[data-interface="vidro"] #mascote-acoes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
+body[data-interface="vidro"] #mascote-acoes button{font-size:12px;padding:10px 6px!important;white-space:normal}
+body[data-interface="vidro"] #mascote-acoes #btn-mascote-dormir{grid-column:1/-1}
+body[data-interface="vidro"] #nh-atalhos-inicio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+body[data-interface="vidro"] #nh-atalhos-inicio button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:var(--ui-control);color:var(--ui-ink);border:1px solid var(--ui-edge);box-shadow:var(--ui-shadow);border-radius:21px;min-height:78px;font-size:13px;font-weight:650;backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px)}
+body[data-interface="vidro"] #nh-atalhos-inicio button>span{font:28px/1 Georgia,serif}
+body[data-interface="vidro"] #nh-atalhos-inicio button[hidden]{display:none!important}
+body[data-interface="vidro"] #abas-nav,body[data-interface="vidro"] #abas-nav.fixa{position:fixed!important;inset:auto auto calc(12px + env(safe-area-inset-bottom,0px)) 50%!important;transform:translateX(-50%)!important;width:min(716px,calc(100vw - 24px))!important;display:flex!important;justify-content:space-around;gap:4px!important;margin:0!important;padding:6px!important;border:1px solid var(--ui-edge)!important;border-radius:28px!important;background:var(--ui-surface)!important;box-shadow:0 7px 28px #31122024,inset 0 1px 0 #ffffffa6!important;backdrop-filter:blur(22px) saturate(145%)!important;-webkit-backdrop-filter:blur(22px) saturate(145%)!important;z-index:900!important}
+body[data-interface="vidro"] #abas-nav .aba-btn{flex:1;min-width:0;min-height:54px!important;padding:6px 2px!important;gap:4px!important;border:0!important;border-radius:22px!important;background:transparent!important;color:var(--ui-ink)!important;box-shadow:none!important;backdrop-filter:none!important;transform:none!important;letter-spacing:0;font-weight:600}
+body[data-interface="vidro"] #abas-nav .aba-btn.ativa{background:var(--ui-selected)!important;box-shadow:inset 0 1px 0 #fff5!important;color:var(--ui-ink)!important}
+body[data-interface="vidro"] #abas-nav .aba-btn[hidden]{display:none!important}
+body[data-interface="vidro"] #abas-nav .aba-rotulo{font-size:11px!important;font-weight:600!important}
+body[data-interface="vidro"] #abas-nav .aba-icone{height:22px;width:24px;font-size:22px!important}
+body[data-interface="vidro"] .aba-icone svg{width:23px;height:23px;display:block}
+body[data-interface="vidro"] :is(#botao-tema,#botao-musica,#botao-configuracoes,#abrir-chat){width:56px!important;height:56px!important;min-height:56px!important;padding:0!important;position:fixed!important;border-radius:50%!important;border:1px solid var(--ui-edge)!important;background:linear-gradient(140deg,rgba(255,255,255,.32),rgba(255,255,255,.06)),var(--ui-control)!important;color:var(--ui-ink)!important;box-shadow:0 6px 22px #39122726,inset 1px 2px 1px #ffffffa3,inset -1px -1px 1px #ffffff30!important;backdrop-filter:blur(17px) saturate(155%)!important;-webkit-backdrop-filter:blur(17px) saturate(155%)!important;font-size:0!important;line-height:0!important;text-shadow:none!important}
+body[data-interface="vidro"] #botao-configuracoes{top:24px!important;right:18px!important;z-index:1001}
+body[data-interface="vidro"] #botao-musica{right:18px!important;bottom:var(--ui-float-bottom)!important;z-index:1000}
+body[data-interface="vidro"] #botao-tema{right:18px!important;bottom:calc(var(--ui-float-bottom) + 68px)!important;z-index:1000}
+body[data-interface="vidro"] #abrir-chat{left:18px!important;bottom:var(--ui-float-bottom)!important;z-index:1000}
+body[data-interface="vidro"] #abrir-chat[hidden]{display:none!important}
+body[data-interface="vidro"] :is(#botao-tema,#botao-musica,#botao-configuracoes,#abrir-chat)::before{content:'';position:absolute;inset:16px;display:block;background:currentColor;mask:var(--ui-icon) center/contain no-repeat;-webkit-mask:var(--ui-icon) center/contain no-repeat;pointer-events:none}
+body[data-interface="vidro"] #nh-visualizador{right:6px!important;bottom:calc(var(--ui-float-bottom) - 12px)!important;left:auto!important;top:auto!important;width:80px!important;height:80px!important;z-index:999!important}
+body[data-interface="vidro"] #status-musica{right:86px;bottom:calc(var(--ui-float-bottom) + 10px);background:var(--ui-popup);color:var(--ui-ink);border:1px solid var(--ui-edge);box-shadow:var(--ui-shadow)}
+body[data-interface="vidro"] #janela-musicas{right:12px;bottom:calc(var(--ui-float-bottom) + 72px);max-height:calc(100dvh - 205px);overflow:auto;padding:22px 16px 16px;border:1px solid var(--ui-edge)!important;border-radius:25px;background:var(--ui-popup)!important;color:var(--ui-ink)!important;box-shadow:var(--ui-shadow);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+body[data-interface="vidro"] #janela-musicas:after{display:none}
+body[data-interface="vidro"] #janela-musicas :is(h3,#musica-atual){color:var(--ui-ink)!important}
+body[data-interface="vidro"] #janela-musicas .faixa-musica{background:var(--ui-control)!important;color:var(--ui-ink)!important;border:1px solid var(--ui-edge)!important;border-radius:12px}
+body[data-interface="vidro"] #janela-musicas .faixa-musica.ativa{background:var(--ui-selected)!important}
+body[data-interface="vidro"] #conteudo-configuracoes,body[data-interface="vidro"] #mascote-premios-caixa{background:var(--ui-popup)!important;color:var(--ui-ink)!important;border:1px solid var(--ui-edge)!important;border-radius:26px;box-shadow:var(--ui-shadow);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+body[data-interface="vidro"] #conteudo-configuracoes>h2,body[data-interface="vidro"] #mascote-premios-caixa :is(h2,p){color:var(--ui-ink)!important}
+body[data-interface="vidro"] #conteudo-configuracoes section{background:var(--ui-control)!important;color:var(--ui-ink)!important;border:1px solid var(--ui-edge)!important;box-shadow:none!important;backdrop-filter:none!important;padding:16px;border-radius:18px!important}
+body[data-interface="vidro"] #janela-chat{bottom:calc(var(--ui-float-bottom) + 68px);height:min(570px,calc(100dvh - 225px));background:var(--ui-popup)!important;border:1px solid var(--ui-edge)!important;box-shadow:var(--ui-shadow);color:var(--ui-ink)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+body[data-interface="vidro"] #janela-chat :is(#chat-cabecalho,#chat-rodape,#chat-status,#chat-mensagens){background:transparent!important;color:var(--ui-ink)!important}
+body[data-interface="vidro"] #janela-chat :is(.chat-balao,.chat-linha.minha .chat-balao){background:var(--ui-control)!important;color:var(--ui-ink)!important;border:1px solid var(--ui-edge)!important}
+body[data-interface="vidro"] #janela-chat :is(input,textarea){background:var(--ui-control)!important;color:var(--ui-ink)!important;border:1px solid var(--ui-edge)!important;border-radius:12px}
+body[data-interface="vidro"] #janela-chat :is(.chat-nome,.chat-hora){color:var(--ui-muted)!important}
+body[data-interface="vidro"] #conteudo-privado :is(.item,.quiz-item),body[data-interface="vidro"] #planos-casal .cartao-plano{background:var(--ui-control)!important;color:var(--ui-ink)!important;border:1px solid var(--ui-edge)!important;border-radius:18px!important;box-shadow:none!important;backdrop-filter:none!important}
+body[data-interface="vidro"] #conteudo-privado :is(.aviso-moedas-jogo,#memorias-legenda){background:var(--ui-control)!important;color:var(--ui-ink)!important;border:1px solid var(--ui-edge)!important;box-shadow:none!important}
+body[data-interface="vidro"] #conteudo-privado .aviso-moedas-jogo strong,body[data-interface="vidro"] #planos-casal :is(.preco-plano,h3){color:var(--ui-ink)!important}
+body[data-interface="vidro"] #conteudo-privado footer{color:var(--ui-ink)!important;text-shadow:0 1px 5px #fff8}
+body[data-interface="vidro"] :is(button,summary,input,select,textarea):focus-visible{outline:3px solid var(--ui-accent);outline-offset:3px}
+@media(max-width:420px){body[data-interface="vidro"]>header{width:calc(100% - 20px);padding:14px 66px 10px 12px;grid-template-columns:43px minmax(0,1fr);gap:6px 9px;border-radius:24px}body[data-interface="vidro"] #animacao-cabecalho{width:43px;height:50px}body[data-interface="vidro"] header #titulo-site{font-size:20px}body[data-interface="vidro"] #recado-personagem{gap:5px;font-size:9px;flex-wrap:wrap}body[data-interface="vidro"] #conteudo-privado{padding-left:10px;padding-right:10px}body[data-interface="vidro"] #historia-painel>.aba-painel>section{padding:18px 14px}body[data-interface="vidro"] #mascote-cenario{height:230px}body[data-interface="vidro"] #abas-nav .aba-rotulo{font-size:10px!important}body[data-interface="vidro"] #abas-nav{width:calc(100vw - 20px)!important;gap:2px!important}body[data-interface="vidro"] #nh-atalhos-inicio{gap:8px}body[data-interface="vidro"] #nh-atalhos-inicio button{font-size:12px;min-height:72px}}
+@media(max-height:650px){body[data-interface="vidro"]{--ui-float-bottom:calc(88px + env(safe-area-inset-bottom,0px))}body[data-interface="vidro"] #abas-nav{bottom:calc(8px + env(safe-area-inset-bottom,0px))!important}body[data-interface="vidro"] #abas-nav .aba-btn{min-height:48px!important}body[data-interface="vidro"] #janela-chat{bottom:calc(var(--ui-float-bottom) + 62px);height:calc(100dvh - 205px)}}
+@media(prefers-reduced-transparency:reduce){body[data-interface="vidro"]{--ui-surface:rgba(255,246,250,.95);--ui-control:rgba(255,245,250,.91)}body[data-interface="vidro"].tema-escuro{--ui-surface:rgba(48,27,42,.96);--ui-control:rgba(82,47,67,.94)}}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){body[data-interface="vidro"]{--ui-surface:rgba(255,246,250,.95);--ui-control:rgba(255,245,250,.91)}body[data-interface="vidro"].tema-escuro{--ui-surface:rgba(48,27,42,.96);--ui-control:rgba(82,47,67,.94)}}
+
+body[data-interface="vidro"] #botao-musica{--ui-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M9%2018V5l12-2v13M9%208l12-2%22%2F%3E%3Cellipse%20cx%3D%226%22%20cy%3D%2218%22%20rx%3D%223%22%20ry%3D%222%22%2F%3E%3Cellipse%20cx%3D%2218%22%20cy%3D%2216%22%20rx%3D%223%22%20ry%3D%222%22%2F%3E%3C%2Fsvg%3E")}
+
+body[data-interface="vidro"] #botao-configuracoes{--ui-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m9%203-.5%202-2%201L4%205l-2%204%202%201v3l-2%201%202%204%202.5-1%202%201L9%2021h5l.5-3%202-1%202.5%201%202-4-2-1v-3l2-1-2-4-2.5%201-2-1L14%203Z%22%2F%3E%3Ccircle%20cx%3D%2211.5%22%20cy%3D%2212%22%20r%3D%223%22%2F%3E%3C%2Fsvg%3E")}
+
+body[data-interface="vidro"] #abrir-chat{--ui-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2011a9%209%200%200%201-9%209%2010%2010%200%200%201-4-.8L3%2021l1.8-5A9%209%200%201%201%2021%2011Z%22%2F%3E%3Cpath%20d%3D%22M8%2011h.01M12%2011h.01M16%2011h.01%22%2F%3E%3C%2Fsvg%3E")}
+
+body[data-interface="vidro"] #botao-tema{--ui-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M20.9%2013A9%209%200%201%201%2011%203.1%207%207%200%200%200%2020.9%2013Z%22%2F%3E%3C%2Fsvg%3E")}
+
+body[data-interface="vidro"].tema-escuro #botao-tema{--ui-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%224%22%2F%3E%3Cpath%20d%3D%22M12%202v2m0%2016v2M2%2012h2m16%200h2M5%205l1.5%201.5m11%2011L19%2019M5%2019l1.5-1.5m11-11L19%205%22%2F%3E%3C%2Fsvg%3E")}
+
+</style>
+<script id="nh-interface-atalhos">
+/* Atalhos de apresentação: todos encaminham aos controles originais. */
+(() => {
+ 'use strict';
+ const byId=id=>document.getElementById(id);
+ document.querySelectorAll('[data-ui-tab]').forEach(button=>button.addEventListener('click',()=>{
+  const target=byId('aba-btn-'+button.dataset.uiTab);if(target&&!target.hidden&&!target.disabled)target.click();
+ }));
+ byId('nh-atalho-cinema')?.addEventListener('click',()=>{const target=byId('nosso-cineminha');if(target&&!target.hidden)target.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})});
+ byId('nh-atalho-planos')?.addEventListener('click',()=>{
+  const tab=byId('aba-btn-galeria'),plans=byId('planos-casal');
+  if(!tab||tab.hidden||!plans||plans.hidden)return;
+  tab.click();byId('abrir-planos')?.click();plans.scrollIntoView({block:'start'});
+ });
+ function sync(){
+  document.querySelectorAll('[data-ui-tab]').forEach(button=>{const target=byId('aba-btn-'+button.dataset.uiTab);button.hidden=!target||target.hidden});
+  const cinema=byId('nosso-cineminha');byId('nh-atalho-cinema').hidden=!cinema||cinema.hidden;
+  const gallery=byId('aba-btn-galeria'),plans=byId('planos-casal');byId('nh-atalho-planos').hidden=!gallery||gallery.hidden||!plans||plans.hidden;
+  const heading=document.querySelector('.nh-introducao h2');if(heading)heading.textContent=typeof modoAtual!=='undefined'&&modoAtual==='solo'?'Seu cantinho':'Nosso cantinho';
+ }
+ function updateDayTotal(){
+  const date=typeof historiaAtual!=='undefined'&&historiaAtual?.data_inicio?new Date(historiaAtual.data_inicio).getTime():NaN;
+  const elapsed=Date.now()-date;const value=Number.isFinite(elapsed)&&elapsed>=0?Math.floor(elapsed/86400000).toLocaleString('pt-BR'):'--';
+  const output=byId('nh-total-dias');if(output&&output.textContent!==value)output.textContent=value;
+ }
+ const counter=byId('contador');if(counter)new MutationObserver(updateDayTotal).observe(counter,{childList:true,subtree:true});
+ updateDayTotal();
+ const observer=new MutationObserver(sync);
+ for(const id of ['aba-btn-galeria','aba-btn-jogos','nosso-cineminha','planos-casal','modo-btn-solo','modo-btn-casal']){const el=byId(id);if(el)observer.observe(el,{attributes:true,attributeFilter:['hidden','class']})}
+ sync();
+})();
+
+</script>
+<style id="nh-vidro-refinamentos">
+/* Um único wallpaper fixo, sem emendas ao rolar, também no Safari móvel. */
+body[data-interface="vidro"]{position:relative;isolation:isolate;background-repeat:no-repeat!important;background-size:cover!important;background-position:center!important;background-attachment:fixed!important}
+body[data-interface="vidro"]::before{content:''!important;position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:inherit;background-position:center;background-size:cover;background-repeat:no-repeat;transform:translateZ(0)}
+body[data-interface="vidro"] #conteudo-privado :is(strong,b){color:var(--ui-ink)!important}
+body[data-interface="vidro"] #aba-jogos :is(.quiz-pergunta,.quiz-opcoes label,#quiz-resultado){background:var(--ui-control)!important;color:var(--ui-ink)!important;border:1px solid var(--ui-edge)!important;border-radius:15px!important;backdrop-filter:none!important}
+body[data-interface="vidro"] #aba-jogos :is(#compat-placar,#quiz-resultado-numero){color:var(--ui-ink)!important}
+body[data-interface="vidro"] #conteudo-privado :is(input[type="radio"],input[type="checkbox"]){min-height:0;padding:0;width:auto;accent-color:#b44c78}
+body[data-interface="vidro"] #nh-tempo-detalhes{border-top:1px solid var(--ui-edge);padding-top:8px;margin-top:12px;text-align:left;font-size:12px}
+body[data-interface="vidro"] #nh-tempo-detalhes>summary{cursor:pointer;min-height:30px;padding:5px 0;font-weight:650}
+body[data-interface="vidro"] .nh-contador-card>p.muted{display:none}
+body[data-interface="vidro"] .nh-tempo-destaque{display:flex;align-items:center;justify-content:center;gap:18px;padding:8px 0 6px;text-align:left}
+body[data-interface="vidro"] .nh-tempo-destaque>span{font:48px/1 Georgia,serif;color:var(--ui-accent)}
+body[data-interface="vidro"] .nh-tempo-destaque>div>span{display:block;font-size:13px;line-height:1.3}
+body[data-interface="vidro"] .nh-tempo-destaque strong{display:block;font:700 34px/1.25 Georgia,serif;white-space:nowrap}
+body[data-interface="vidro"] #nh-data-detalhes{font-size:12px;margin-top:3px;padding-top:0;border:0}
+body[data-interface="vidro"] .nh-introducao{padding-top:12px;padding-bottom:4px}
+body[data-interface="vidro"].tema-escuro :is(#botao-tema,#botao-musica,#botao-configuracoes,#abrir-chat){background:linear-gradient(140deg,rgba(255,255,255,.19),rgba(255,255,255,.035)),rgba(44,24,39,.58)!important}
+</style>
+<style id="nh-vidro-backdrop-fix">
+/* Evita que a animação antiga de entrada impeça o desfoque de fundo nos cartões. */
+body[data-interface="vidro"] #historia-painel>.aba-painel{animation:none!important;transform:none!important;opacity:1!important}
+body[data-interface="vidro"]:has(#login-painel:not([hidden])) #botao-tema{bottom:24px!important}
+</style>
 </body></html>

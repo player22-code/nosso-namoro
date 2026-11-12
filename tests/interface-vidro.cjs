@@ -1,0 +1,44 @@
+/* Visual/interaction regression only. Mock session/data; no real account, payment or wallet changes. */
+const {chromium}=require('playwright');const assert=require('node:assert/strict');const fs=require('node:fs');
+const base=process.env.TEST_URL||'http://127.0.0.1:8765',out=process.env.CAPTURE_DIR||'/tmp/interface-vidro';fs.mkdirSync(out,{recursive:true});
+(async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});try{
+for(const width of (process.argv[2]||'390,320,1280').split(',').map(Number)){
+ const page=await browser.newPage({viewport:{width,height:width===320?640:900}}),errors=[],missing=[];
+ page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.url().startsWith(base)&&r.status()>=400)missing.push(r.url())});
+ await page.route('https://**/*',route=>{if(route.request().url().includes('supabase.min.js'))return route.fulfill({contentType:'application/javascript',body:`window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session:null}}),onAuthStateChange:()=>{},signInWithOAuth:async(args)=>{window.testOAuth=args;return {error:null}}},removeChannel:()=>{},channel:()=>({on(){return this},subscribe(){return this}}),from:()=>{const q=new Proxy({}, {get:(t,k)=>k==='then'?r=>r({data:[],error:null}):()=>q});return q},rpc:async(n,args)=>{window.calls=(window.calls||[]);window.calls.push({n,args});if(n==='nh_meu_saldo')return {data:120};return {data:null}}})};`});return route.fulfill({body:'',contentType:'application/javascript'})});
+ await page.goto(base);await page.waitForTimeout(150);
+ assert.equal(await page.locator('#login-painel').isVisible(),true);assert.match(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundImage),/wallpaper_dia/);
+ assert.equal(await page.locator('#abas-nav').isVisible(),false);assert.equal(await page.locator('#botao-musica').isVisible(),false);
+ await page.screenshot({path:out+'/entrada-dia-'+width+'.png'});
+ await page.click('#login-google');assert.equal(await page.evaluate(()=>window.testOAuth.provider),'google');
+ await page.click('#botao-tema');assert.match(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundImage),/wallpaper_noite/);await page.screenshot({path:out+'/entrada-noite-'+width+'.png'});await page.click('#botao-tema');
+ // Represent an existing authenticated couple story without contacting private services.
+ await page.evaluate(()=>{usuario={id:'test-user',email:'exemplo@teste.local'};perfil={username:'Lia'};modoAtual='casal';historiaAtual={historia_id:'test-story',meu_nome:'Lia',parceiro_nome:'Alex',data_inicio:'2025-07-12T12:00:00Z'};historias=[historiaAtual];
+ document.getElementById('conteudo-privado').style.display='block';document.getElementById('historia-painel').hidden=false;document.getElementById('login-painel').hidden=true;document.getElementById('janela-configuracoes').hidden=true;document.getElementById('barra-conta').style.display='flex';document.getElementById('dados-conta').textContent='Conta de demonstração';document.getElementById('botao-musica').style.display='flex';document.getElementById('botao-configuracoes').style.display='flex';document.getElementById('abrir-chat').hidden=false;
+ atualizarInterfaceModo();atualizarTitulo();window.nhSaldoIndividual=120;mascoteDados={nome:'Juntos',fome:25,felicidade:90,energia:85,sono:18,experiencia:135,estado:'acordado',necessidades_at:new Date().toISOString()};atualizarInterfaceMascote();});
+ await page.click('#aba-btn-inicio');await page.evaluate(()=>window.scrollTo(0,0));await page.waitForTimeout(100);
+ assert.equal(await page.locator('body').evaluate(el=>el.scrollWidth>innerWidth+1),false);assert.equal(await page.locator('body').evaluate(el=>getComputedStyle(el,'::before').position),'fixed');assert.ok(await page.locator('body').evaluate(el=>getComputedStyle(el,'::before').backgroundRepeat.split(',').every(v=>v.trim()==='no-repeat')));
+ await page.screenshot({path:out+'/inicio-dia-'+width+'.png'});
+ for(const id of ['botao-tema','botao-musica','botao-configuracoes','abrir-chat']){
+  const info=await page.locator('#'+id).evaluate(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return {blur:s.backdropFilter||s.webkitBackdropFilter,bg:s.backgroundColor,mask:getComputedStyle(el,'::before').maskImage,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height}});
+  assert.match(info.blur,/blur/);assert.match(info.bg,/rgba/);assert.match(info.mask,/svg/);assert.ok(info.left>=0&&info.right<=width+1);assert.ok(info.width>=44&&info.height>=44);
+ }
+ const nav=await page.locator('#abas-nav').boundingBox();for(const id of ['botao-musica','botao-tema','abrir-chat']){const r=await page.locator('#'+id).boundingBox();assert.ok(r.y+r.height<nav.y,id+' overlaps bottom navigation')}
+ assert.deepEqual(await page.locator('#abas-nav .aba-rotulo').allTextContents(),['Início','Memórias','Jogos','Conversas','Mais']);
+ await page.click('#botao-tema');await page.waitForTimeout(300);await page.screenshot({path:out+'/inicio-noite-'+width+'.png'});assert.match(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundImage),/wallpaper_noite/);await page.click('#botao-tema');
+ assert.notEqual(await page.locator('#nh-total-dias').innerText(),'--');await page.click('#nh-tempo-detalhes summary');assert.equal(await page.locator('#contador').isVisible(),true);await page.click('#nh-tempo-detalhes summary');await page.click('#nh-data-detalhes summary');assert.equal(await page.locator('#data-inicio').isVisible(),true);assert.equal(await page.locator('#salvar-inicio').isVisible(),true);await page.click('#nh-data-detalhes summary');
+ await page.click('#nh-mascote-detalhes summary');for(const id of ['val-fome','val-felicidade','val-energia','val-sono','mascote-nivel','mascote-xp'])assert.equal(await page.locator('#'+id).isVisible(),true,id);assert.equal(await page.locator('#mascote-acoes [data-mascote-acao]').count(),5);await page.click('#nh-mascote-detalhes summary');
+ await page.click('[data-ui-tab="galeria"]');assert.equal(await page.locator('#aba-galeria').isVisible(),true);assert.equal(await page.locator('#adicionar-foto').isVisible(),true);
+ await page.click('#aba-btn-jogos');assert.equal(await page.locator('#aba-jogos').isVisible(),true);assert.equal(await page.locator('#cassino-abrir').isVisible(),true);
+ // Same keyboard navigation as visible order; all original handlers are retained.
+ await page.locator('#aba-btn-inicio').focus();await page.keyboard.press('ArrowRight');assert.equal(await page.locator('#aba-btn-galeria').getAttribute('aria-selected'),'true');await page.keyboard.press('ArrowRight');assert.equal(await page.locator('#aba-btn-jogos').getAttribute('aria-selected'),'true');
+ await page.click('#aba-btn-conexao');assert.equal(await page.locator('#aba-conexao').isVisible(),true);await page.click('#nh-atalho-planos');assert.equal(await page.locator('#conteudo-planos').isVisible(),true);await page.click('#fechar-planos');
+ await page.click('#botao-configuracoes');assert.equal(await page.locator('#janela-configuracoes').isVisible(),true);await page.click('#fechar-configuracoes');
+ await page.click('#botao-musica');assert.equal(await page.locator('#janela-musicas').isVisible(),true);const music=await page.locator('#janela-musicas').boundingBox();assert.ok(music.y>=0&&music.x>=0&&music.x+music.width<=width+1);assert.ok(await page.locator('.faixa-musica').count()>=5);await page.click('#fechar-musicas');
+ await page.click('#abrir-chat');assert.equal(await page.locator('#janela-chat').isVisible(),true);assert.equal(await page.locator('#chat-ligar').isVisible(),true);await page.click('#chat-fechar');
+ // No shortcut exposes couple-only features or the secret message in Solo.
+ await page.evaluate(()=>{modoAtual='solo';nhSoloMensagemRevelada=false;atualizarInterfaceModo();atualizarTitulo()});await page.click('#aba-btn-inicio');await page.waitForTimeout(50);
+ assert.equal(await page.locator('[data-ui-tab="galeria"]').isVisible(),false);assert.equal(await page.locator('#nh-atalho-cinema').isVisible(),false);assert.equal(await page.locator('#aba-btn-mensagem').isVisible(),false);assert.equal(await page.locator('#aba-btn-conexao').isVisible(),false);assert.equal(await page.locator('[data-ui-tab="jogos"]').isVisible(),true);
+ assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);console.log('PASS',width,': glass, wallpapers, responsive layout, floating controls, original navigation/forms/music/chat/plans and Solo visibility.');await page.close();
+}
+}finally{await browser.close()}})().catch(e=>{console.error(e);process.exit(1)});
