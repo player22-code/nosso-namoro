@@ -1,0 +1,18 @@
+PATCH - NOSSA HISTORIA - PACOTE JOGAVEL ORIGINAL
+
+Conteudo:
+- 14 GIFs animados de coelhinho original, 12 quadros cada
+- 14 PNGs transparentes e spritesheet 12x14
+- 6 cenarios SVG originais (sala, cozinha, banheiro, quarto, jardim, passeio)
+- 24 objetos/itens SVG
+- 26 efeitos sonoros WAV originais
+- Referencia visual conceitual (imagem unica, nao sprites isolados)
+- codigo/index.html, codigo/style.css, codigo/game.js: prototipo funcional
+
+COMO TESTAR: Extraia o ZIP mantendo as pastas. Abra codigo/index.html em navegador ou publique toda a pasta no GitHub Pages. Para desenvolvimento local, rode um servidor HTTP simples na pasta raiz: python -m http.server 8000 e acesse /codigo/.
+
+JOGABILIDADE: 6 comodos, necessidades que diminuem com o tempo, alimentacao, banho, carinho, sono, danca, compras, moedas, niveis, minijogo de coracoes e memoria. Progresso salvo no localStorage do navegador.
+
+LIMITACOES IMPORTANTES: Nao esta integrado ao Supabase; o progresso nao e compartilhado entre o casal. Os cenarios e objetos sao SVG vetoriais e alguns usam emoji do sistema. GIFs sao animacoes originais simples, nao producao profissional. Sem sincronizacao em tempo real, sistema de roupas equipadas, passeios com movimentacao ou sistema de quests diarias. E uma base jogavel e um pacote de recursos, nao uma replica completa de Talking Tom.
+
+Para incorporar no site existente, faca o Codex adaptar os arquivos de codigo ao Patch e implementar a persistencia no Supabase. Nao substitua todo o index.html existente.
