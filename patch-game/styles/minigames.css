@@ -1,0 +1,150 @@
+#patch-game .patch-mini-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  background: #43273d66;
+  backdrop-filter: blur(5px);
+}
+#patch-game .patch-mini-panel {
+  position: relative;
+  max-height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+  width: 100%;
+  background: #fff7fb;
+  color: #623956;
+  padding: 22px 18px 18px;
+  border: 1px solid #fff;
+  border-radius: 24px;
+  box-shadow: 0 12px 28px #5c304e33;
+  animation: patch-mini-open 0.18s ease-out;
+}
+body #conteudo-privado #patch-game .patch-mini-panel h3 {
+  color: #623956 !important;
+  font: 750 23px/1.25 system-ui !important;
+  margin: 0 32px 14px 0 !important;
+}
+#patch-game .patch-mini-panel p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 10px 0;
+  color: #764c67;
+}
+#patch-game .patch-mini-panel label {
+  display: grid;
+  gap: 7px;
+  margin: 14px 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+#patch-game .patch-mini-panel select {
+  width: 100%;
+  min-height: 44px;
+  color: #623956 !important;
+  background: #f6dfef !important;
+  border: 1px solid #d4a6c5 !important;
+  border-radius: 13px;
+  padding: 9px;
+  font: 600 14px system-ui;
+}
+#patch-game .patch-mini-panel > button:not(.patch-mini-close) {
+  display: block;
+  width: 100%;
+  margin: 9px 0;
+  min-height: 44px;
+}
+#patch-game .patch-mini-panel .patch-mini-primary {
+  background: linear-gradient(140deg, #efa3c7, #d8b8ed);
+  border-color: #d394bd;
+  box-shadow: 0 3px 8px #ae6e9a25;
+}
+#patch-game .patch-mini-panel .patch-mini-close {
+  position: absolute;
+  right: 9px;
+  top: 9px;
+  min-height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 23px;
+}
+#patch-game .patch-mini-panel dl {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 9px;
+  padding: 14px;
+  background: #f5dfed;
+  border-radius: 16px;
+  font-size: 14px;
+}
+#patch-game .patch-mini-panel dt {
+  color: #754763;
+}
+#patch-game .patch-mini-panel dd {
+  margin: 0;
+  font-weight: 750;
+}
+#patch-game .patch-mini-controls {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  z-index: 51;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+#patch-game .patch-mini-controls button {
+  min-height: 42px;
+  min-width: 85px;
+  background: #fff1f9e8;
+  border-color: #dda9cb;
+  box-shadow: 0 3px 8px #6d3d5a22;
+  touch-action: manipulation;
+}
+#patch-game .patch-mini-memory-controls {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  bottom: auto;
+}
+#patch-game .patch-mini-memory-controls:focus-within {
+  width: auto;
+  height: auto;
+  clip-path: none;
+  bottom: 8px;
+  flex-wrap: wrap;
+  background: #fff2f9;
+  padding: 6px;
+  border-radius: 12px;
+}
+#patch-game .patch-mini-memory-controls button {
+  min-width: 60px;
+  font-size: 10px;
+  min-height: 34px;
+}
+@keyframes patch-mini-open {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #patch-game .patch-mini-panel {
+    animation: none;
+  }
+}
+
+#patch-game[data-minigame="true"] .patch-room-label {
+  display: none !important;
+}

@@ -1,3 +1,9 @@
+import { makeScene } from "./patch-game/scenes/HouseScene.js";
+import { SaveManager } from "./patch-game/SaveManager.js";
+import { ProductionUI } from "./patch-game/ProductionUI.js";
+import { CareController } from "./patch-game/CareController.js";
+import { NEEDS, normalizeNeeds } from "./patch-game/systems/NeedsSystem.js";
+import { levelProgress } from "./patch-game/systems/LevelSystem.js";
 /* Nosso Patch — Phaser 3.90.0. Toda alteração de saldo/progresso passa por RPCs autenticadas. */
 (() => {
   "use strict";
@@ -59,12 +65,117 @@
       $("patch-status").textContent = text;
       $("patch-status").dataset.error = String(error);
     },
+    audioVolume: 0.35,
+    getVolume() {
+      return this.audioVolume;
+    },
+    getSound() {
+      return $("patch-som").dataset.ativo !== "false";
+    },
+    setVolume(value) {
+      this.audioVolume = Math.max(0, Math.min(1, Number(value) || 0));
+      window.dispatchEvent(new Event("nh-config-alterada"));
+    },
+    setSound(on) {
+      const b = $("patch-som");
+      b.dataset.ativo = String(on);
+      b.setAttribute("aria-pressed", String(on));
+      b.textContent = on ? "Som ligado ♫" : "Som desligado";
+      window.dispatchEvent(new Event("nh-config-alterada"));
+    },
+    dragMode: false,
+    waits: {},
+    pending: null,
+    setDragMode(on) {
+      this.dragMode = !!on;
+      root.dataset.arrastar = String(this.dragMode);
+      if (this.dragMode && this.game?.canvas) {
+        this.game.canvas.scrollIntoView({
+          block: "center",
+          behavior: "instant",
+        });
+        this.game.scale.updateBounds();
+      }
+      $("patch-drag-mode").setAttribute("aria-pressed", String(this.dragMode));
+      $("patch-drag-mode").textContent = this.dragMode
+        ? "✓ Terminar de mover"
+        : "↔ Mover objetos";
+      $("patch-gesture-help").textContent = this.dragMode
+        ? "Arraste um objeto. Ao soltar, a rolagem volta ao normal."
+        : "Toque para cuidar · Deslize para rolar a página";
+    },
+    refreshControls() {
+      const now = performance.now(),
+        bath = this.scene?.bath;
+      root
+        .querySelectorAll("[data-room],[data-patch-menu],#patch-drag-mode")
+        .forEach((b) => {
+          b.disabled = this.busy || !!bath?.animating || !!this.scene?.mini;
+        });
+      for (const b of $("patch-actions").querySelectorAll("[data-action]")) {
+        const a = b.dataset.action,
+          wait = Math.max(0, Math.ceil(((this.waits[a] || 0) - now) / 1000));
+        let locked = b.dataset.locked === "true",
+          note = b.dataset.note || "";
+        if (a.startsWith("bath-")) {
+          const step = a.slice(5);
+          locked = bath?.phase !== step || !!bath?.animating;
+          note = bath?.animating
+            ? "Aguarde a animação…"
+            : bath?.phase === step
+              ? {
+                  sabao: "Começar por aqui",
+                  chuveiro: "Espuma pronta",
+                  toalha: "Enxaguado: pode secar",
+                }[step]
+              : bath?.phase === "done"
+                ? "Banho concluído"
+                : "Conclua a etapa anterior";
+          if (bath?.phase === "done" && step === "sabao" && !wait)
+            locked = false;
+        }
+        const realAction = a.startsWith("bath-")
+            ? "banho"
+            : a.endsWith("-real")
+              ? a.slice(0, -5)
+              : a,
+          remaining = Math.max(
+            wait,
+            Math.ceil(((this.waits[realAction] || 0) - now) / 1000),
+          );
+        b.disabled = this.busy || !this.scene || locked || remaining > 0;
+        b.classList.toggle(
+          "is-working",
+          this.busy && this.pending === realAction,
+        );
+        const n = b.querySelector(".patch-action-note");
+        if (n)
+          n.textContent =
+            remaining > 0
+              ? "Disponível em " + remaining + "s"
+              : this.busy && this.pending === realAction
+                ? "Salvando…"
+                : note;
+      }
+    },
     setBusy(v) {
       this.busy = v;
       root.setAttribute("aria-busy", String(v));
       root.querySelectorAll("button:not(.patch-close)").forEach((b) => {
         b.disabled = v || b.dataset.locked === "true";
       });
+      this.refreshControls();
+      if (
+        !v &&
+        this.levelNotice &&
+        !this.menu &&
+        !this.scene?.mini &&
+        !this.careController?.session
+      ) {
+        this.levelToShow = this.levelNotice;
+        this.levelNotice = null;
+        this.openMenu("nivel");
+      }
     },
     async connect() {
       const c = bridge.context();
@@ -102,7 +213,11 @@
       this.reading = null;
       this.busy = false;
       this.closeMenu();
+      this.saves?.clear();
+      this.careController?.reset();
       this.scene?.cancelMini(false);
+      this.setDragMode(false);
+      this.waits = {};
       if (this.scene) this.scene.input.enabled = false;
       $("patch-moedas").textContent = "—";
       $("patch-nivel").textContent = "Preparando seu cantinho…";
@@ -113,6 +228,7 @@
       root.dataset.conectado = "false";
       $("mascote-juntos").classList.remove("patch-conectado");
       $("patch-classico").open = true;
+      $("patch-classico").hidden = false;
       this.message("Entre em uma história para cuidar do Patch.");
     },
     connectionError(e) {
@@ -165,8 +281,15 @@
         !Array.isArray(s.catalogo)
       )
         throw new Error("Estado do Patch indisponível");
+      const oldLevel = this.state?.nivel;
       const first = !this.state;
       this.state = s;
+      this.waits = Object.fromEntries(
+        Object.entries(s.esperas || {}).map(([k, v]) => [
+          k,
+          performance.now() + Math.max(0, Number(v) || 0) * 1000,
+        ]),
+      );
       if (!this.unsubscribe) {
         try {
           this.unsubscribe = bridge.subscribe(this.story, () =>
@@ -181,6 +304,7 @@
       root.dataset.conectado = "true";
       $("mascote-juntos").classList.add("patch-conectado");
       if (first) $("patch-classico").open = false;
+      $("patch-classico").hidden = !!s.producao;
       $("patch-retry")?.remove();
       this.hud();
       if (this.scene) {
@@ -189,16 +313,26 @@
         $("patch-loading").hidden = true;
       } else if (this.visible) this.boot();
       if (this.menu) this.renderMenu();
+      if (oldLevel && s.nivel > oldLevel) {
+        this.levelNotice = s.nivel;
+        this.scene?.celebrateLevel(s.nivel);
+      }
     },
     hud() {
       const s = this.state;
       if (!s) return;
       $("patch-nivel").textContent =
-        "Nível " + s.nivel + " · " + (s.experiencia % 100) + " / 100 XP";
-      $("patch-xp").style.width = (s.experiencia % 100) + "%";
+        "Nível " +
+        s.nivel +
+        " · " +
+        levelProgress(s).current +
+        " / " +
+        levelProgress(s).next +
+        " XP";
+      $("patch-xp").style.width = levelProgress(s).percent + "%";
       root
         .querySelector(".patch-xp")
-        .setAttribute("aria-valuenow", String(s.experiencia % 100));
+        .setAttribute("aria-valuenow", String(levelProgress(s).percent));
       $("patch-moedas").textContent = Number(s.moedas).toLocaleString("pt-BR");
       $("patch-sync").textContent =
         (bridge.context().modo === "solo"
@@ -207,22 +341,10 @@
         " · Moedas exclusivas do Patch";
       const area = $("patch-needs");
       area.replaceChildren();
-      for (const [key, name, inverse] of [
-        ["fome", "Fome", true],
-        ["higiene", "Higiene"],
-        ["sono", "Sono", true],
-        ["diversao", "Diversão"],
-        ["carinho", "Carinho"],
-      ]) {
-        const value = Math.max(
-          0,
-          Math.min(
-            100,
-            inverse ? 100 - s.necessidades[key] : s.necessidades[key],
-          ),
-        );
+      for (const [key, name, icon] of NEEDS) {
+        const value = normalizeNeeds(s)[key];
         const box = el("div", undefined, "patch-need"),
-          label = el("b", name),
+          label = el("b", icon + " " + name),
           meter = el("meter");
         meter.min = 0;
         meter.max = 100;
@@ -230,17 +352,11 @@
         meter.high = 70;
         meter.optimum = 100;
         meter.value = value;
-        meter.setAttribute(
-          "aria-label",
-          (key === "fome" ? "Saciedade" : key === "sono" ? "Descanso" : name) +
-            ": " +
-            Math.round(value) +
-            "%",
-        );
+        meter.setAttribute("aria-label", name + ": " + Math.round(value) + "%");
         box.title =
           key === "fome"
             ? "A barra cai quando fica com fome"
-            : key === "sono"
+            : key === "energia"
               ? "A barra sobe quando descansa"
               : name;
         box.append(label, meter, el("span", Math.round(value) + "%"));
@@ -275,6 +391,35 @@
         return;
       }
       const s = this.state;
+      if (s.producao && this.careController?.render(area)) return;
+      if (s.cuidado_ativo) {
+        const owned = s.cuidado_ativo.jogador_id === this.user,
+          b = el(
+            "button",
+            owned
+              ? "Retomar cuidado em andamento"
+              : "Seu par está cuidando do Patch",
+          );
+        b.disabled = !owned;
+        b.dataset.locked = String(!owned);
+        b.onclick = () => this.careController.start(s.cuidado_ativo.tipo);
+        area.append(b);
+        return;
+      }
+      if (s.atividade_ativa) {
+        const owned = s.atividade_ativa.jogador_id === this.user,
+          b = el(
+            "button",
+            owned
+              ? "Encerrar partida anterior"
+              : "Seu par está em uma atividade",
+          );
+        b.disabled = !owned;
+        b.dataset.locked = String(!owned);
+        b.onclick = () => this.cancelGame(s.atividade_ativa.id);
+        area.append(b);
+        return;
+      }
       if (s.dormindo) {
         const b = el("button", "☀ Acordar");
         b.onclick = () => this.care("acordar");
@@ -283,57 +428,101 @@
           "Enquanto dorme, o Patch recupera o descanso com o passar do tempo.";
         return;
       }
-      const controls = {
-        sala: [
-          ["♡ Carinho", () => this.care("carinho")],
-          ["♬ Dançar", () => this.care("dancar")],
-          ["Bola", () => this.scene?.playBall()],
-        ],
-        cozinha: (s.catalogo_alimentos || [])
-          .map((f) => [
-            f.icone +
-              " " +
-              f.nome +
-              " · " +
-              (s.alimentos?.[f.id] || 0) +
-              " no estoque",
-            () => this.care("alimentar", f.id),
-            (s.alimentos?.[f.id] || 0) < 1,
-          ])
-          .concat([["🥕 Comprar comidas", () => this.openMenu("comidas")]]),
-        banheiro: [
-          ["1 · Sabonete", () => this.scene?.bathStep("sabao")],
-          ["2 · Chuveiro", () => this.scene?.bathStep("chuveiro")],
-          ["3 · Toalha", () => this.scene?.bathStep("toalha")],
-        ],
-        quarto: [
-          ["☾ Dormir / apagar luz", () => this.care("dormir")],
-          ["♡ Carinho", () => this.care("carinho")],
-        ],
-        jardim: [
-          ["Regar flores", () => this.scene?.waterPlant()],
-          ["Brincar com bola", () => this.scene?.playBall()],
-        ],
-        passeio: [
-          ["Iniciar passeio", () => this.startGame("passeio")],
-          ["♡ Carinho", () => this.care("carinho")],
-        ],
-      };
-      for (const [text, fn, locked] of controls[s.comodo] || []) {
-        const b = el("button", text);
+      const button = (action, label, icon, note, fn, locked = false) => {
+        const b = el("button", undefined, "patch-action");
+        b.dataset.action = action;
+        b.dataset.note = note;
+        b.dataset.locked = String(locked);
+        b.append(
+          el("span", icon, "patch-action-icon"),
+          el("strong", label),
+          el("small", note, "patch-action-note"),
+        );
         b.onclick = fn;
-        b.dataset.locked = String(!!locked);
         area.append(b);
+        return b;
+      };
+      area.dataset.room = s.comodo;
+      const care = (a, title, icon, note) =>
+        button(a, title, icon, note, () => this.care(a));
+      if (s.comodo === "sala") {
+        care("carinho", "Fazer carinho", "♡", "Toque e ganhe afeto");
+        care("dancar", "Dançar", "♫", "Animar o Patch");
+        if (s.producao)
+          care("descansar", "Descansar", "🛋", "Recuperar energia no sofá");
+        button("brincar", "Jogar bola", "⚽", "Brincar juntos", () =>
+          this.scene?.playBall(),
+        );
+      } else if (s.comodo === "cozinha") {
+        for (const f of s.catalogo_alimentos || []) {
+          const qty = Number(s.alimentos?.[f.id] || 0),
+            b = button(
+              "alimentar",
+              f.nome,
+              f.icone,
+              qty ? qty + " no estoque" : "Acabou",
+              () => this.care("alimentar", f.id),
+              !qty,
+            );
+          b.dataset.foodAction = f.id;
+        }
+        button("mercado", "Comprar comidas", "🛒", "Repor o estoque", () =>
+          this.openMenu("comidas"),
+        );
+      } else if (s.comodo === "banheiro" && s.producao) {
+        button(
+          "banho-real",
+          "Dar banho",
+          "🧽",
+          "Esfregue, enxágue e seque",
+          () => this.careController.start("banho"),
+        );
+        button(
+          "dentes-real",
+          "Escovar dentes",
+          "🪥",
+          "Deslize a escova sobre a boca",
+          () => this.careController.start("dentes"),
+        );
+      } else if (s.comodo === "banheiro") {
+        for (const [i, key, label, icon] of [
+          [1, "sabao", "Ensaboar", "🧼"],
+          [2, "chuveiro", "Enxaguar", "🚿"],
+          [3, "toalha", "Secar", "🧺"],
+        ])
+          button("bath-" + key, i + " · " + label, icon, "", () =>
+            this.scene?.bathStep(key),
+          );
+      } else if (s.comodo === "quarto") {
+        care("dormir", "Dormir", "☾", "Apagar a luz e descansar");
+        care("carinho", "Fazer carinho", "♡", "Um carinho antes de dormir");
+      } else if (s.comodo === "jardim") {
+        button("regar", "Regar flores", "🌷", "Cuidar do jardim", () =>
+          this.scene?.waterPlant(),
+        );
+        button("brincar", "Jogar bola", "⚽", "Diversão ao ar livre", () =>
+          this.scene?.playBall(),
+        );
+      } else if (s.comodo === "passeio") {
+        button(
+          "passear",
+          "Iniciar passeio",
+          "🌳",
+          "Encontrar três corações",
+          () => this.startGame("passeio"),
+        );
+        care("carinho", "Fazer carinho", "♡", "Cuidar durante o passeio");
       }
       const help = {
-        sala: "Toque no Patch para fazer carinho. Arraste a bola ou toque no chão para ele caminhar.",
+        sala: "Toque no Patch para fazer carinho, na bola para brincar ou no chão para caminhar. Deslize para rolar a página.",
         cozinha:
-          "Arraste uma comida do estoque até a boca. Reponha na aba Comidas e ganhe moedas quando alimentar o Patch com fome.",
+          "Toque em uma comida para alimentar. Para arrastar até a boca, ative Mover objetos. Reponha o estoque na aba Comidas.",
         banheiro:
-          "Arraste o sabonete no bichinho, enxágue e seque com a toalha. Também é possível usar os botões.",
+          "Siga as etapas: ensaboar, enxaguar e secar. Aguarde cada animação; a próxima etapa será liberada automaticamente.",
         quarto:
           "Toque na cama ou no interruptor para dormir. O descanso continua mesmo fora da página.",
-        jardim: "Arraste o regador até as flores e brinque com a bola.",
+        jardim:
+          "Toque nas flores para regar ou na bola para brincar. Ative Mover objetos se quiser arrastar.",
         passeio:
           "Comece o passeio e toque nos três corações ao longo do caminho.",
       };
@@ -343,15 +532,19 @@
     async act(action, item) {
       if (this.busy || !this.state) return null;
       const gen = this.generation;
+      this.pending = action;
       this.setBusy(true);
       try {
-        const s = await bridge.rpc("patch_acao", {
-          p_story: this.story,
-          p_acao: action,
-          p_item: item || null,
-        });
+        const s = await this.saves.command(this.state, this, action, item);
         if (gen !== this.generation) return null;
         this.accept(s);
+        this.scene?.audio?.play(
+          action.startsWith("comprar")
+            ? "compra"
+            : action.startsWith("resgatar")
+              ? "missao_concluida"
+              : "toque_botao",
+        );
         this.message(
           action === "comprar"
             ? "Item comprado e guardado no inventário."
@@ -382,11 +575,43 @@
       }
     },
     async care(action, item) {
+      if (
+        this.state?.producao &&
+        ["banho", "carinho", "dentes"].includes(action)
+      ) {
+        await this.careController.start(
+          action === "banho"
+            ? "banho"
+            : action === "dentes"
+              ? "dentes"
+              : "carinho",
+        );
+        return null;
+      }
+      if (this.scene?.bath.animating && action !== "banho") {
+        this.message("Espere a etapa do banho terminar.");
+        return null;
+      }
+      const wait = Math.ceil(
+        ((this.waits[action] || 0) - performance.now()) / 1000,
+      );
+      if (wait > 0) {
+        this.message("Este cuidado estará disponível em " + wait + "s.");
+        return null;
+      }
       const s = await this.act(action, item);
       if (s) this.scene?.react(action, item);
       return s;
     },
     async go(room) {
+      if (this.careController?.session && !(await this.careController.cancel()))
+        return;
+      if (this.scene?.bath.animating) {
+        this.message("Espere terminar esta etapa do banho.");
+        return;
+      }
+      if (this.state?.comodo === room) return;
+      this.setDragMode(false);
       if (this.scene?.mini) {
         this.message(
           "Termine ou saia da atividade antes de trocar de ambiente.",
@@ -394,6 +619,14 @@
         return;
       }
       await this.act("comodo", room);
+    },
+    retryScene() {
+      this.scene = null;
+      this.game?.destroy(true);
+      this.game = null;
+      this.booting = false;
+      $("patch-asset-retry")?.remove();
+      if (this.state) this.boot();
     },
     async boot() {
       if (this.booting || this.game || !this.state) return;
@@ -421,8 +654,12 @@
             mode: Phaser.Scale.FIT,
             autoCenter: Phaser.Scale.CENTER_BOTH,
           },
+          input: {
+            touch: { capture: false },
+            mouse: { preventDefaultWheel: false },
+          },
           audio: { disableWebAudio: true },
-          scene: makeScene(Phaser, this),
+          scene: makeScene(Phaser, this, { rooms, age, reduced, $ }),
         });
       } catch (e) {
         this.message(
@@ -433,17 +670,26 @@
       }
     },
     openMenu(name) {
+      if (this.scene?.bath.animating) {
+        this.message("Espere a etapa do banho terminar.");
+        return;
+      }
       if (!this.state || this.scene?.mini || this.busy) return;
+      this.scene?.audio?.play("abrir_menu");
       this.focusBack = document.activeElement;
       this.menu = name;
       if (this.scene) this.scene.input.enabled = false;
       this.renderMenu();
       $("patch-overlay").hidden = false;
+      const dialog = $("patch-dialog");
+      if (dialog && !dialog.open) dialog.showModal();
       $("patch-sheet-close").focus();
     },
     closeMenu() {
+      if (this.menu) this.scene?.audio?.play("fechar_menu");
       this.menu = null;
       if (this.scene) this.scene.input.enabled = true;
+      $("patch-dialog")?.close();
       $("patch-overlay").hidden = true;
       if (this.focusBack?.isConnected) this.focusBack.focus();
     },
@@ -451,6 +697,21 @@
       const s = this.state,
         area = $("patch-sheet-body");
       if (!s || !this.menu) return;
+      if (this.menu === "nivel") {
+        $("patch-sheet-title").textContent = "Novo nível!";
+        area.replaceChildren(
+          el("p", "O Patch chegou ao nível " + this.levelToShow + " ♡"),
+          el(
+            "p",
+            "A experiência e a recompensa foram salvas. Confira os novos itens disponíveis na loja.",
+          ),
+        );
+        const close = el("button", "Continuar cuidando");
+        close.onclick = () => this.closeMenu();
+        area.append(close);
+        return;
+      }
+      if (this.productionUI?.render(this.menu, s, area)) return;
       area.replaceChildren();
       const title = {
         tarefas: "Tarefas e recompensas",
@@ -614,7 +875,7 @@
           );
           b.onclick = () => {
             this.closeMenu();
-            this.startGame(type);
+            this.scene.showMiniIntro(type);
           };
           area.append(b);
         }
@@ -684,7 +945,29 @@
       }
       this.setBusy(this.busy);
     },
-    async startGame(type) {
+    async cancelGame(id) {
+      if (!this.state?.producao) return;
+      const gen = this.generation;
+      this.setBusy(true);
+      try {
+        const r = await bridge.rpc("patch_partida_cancelar", { p_partida: id });
+        if (gen === this.generation && r?.estado) this.accept(r.estado);
+      } catch (e) {
+        if (gen === this.generation)
+          this.message(
+            e.message ||
+              "Não foi possível encerrar a partida. Tente novamente.",
+            true,
+          );
+      } finally {
+        if (gen === this.generation) this.setBusy(false);
+      }
+    },
+    async startGame(type, difficulty = "normal") {
+      if (this.careController?.session) {
+        this.message("Encerre o cuidado antes de jogar.");
+        return;
+      }
       if (this.busy || !this.scene || !this.state || this.scene.mini) return;
       if (this.state.dormindo) {
         this.message("Acorde o Patch antes de começar.", true);
@@ -696,6 +979,7 @@
         const game = await bridge.rpc("patch_partida_iniciar", {
           p_story: this.story,
           p_tipo: type,
+          ...(this.state.producao ? { p_dificuldade: difficulty } : {}),
         });
         if (gen !== this.generation) return;
         this.scene.beginMini(game);
@@ -720,8 +1004,8 @@
           p_resposta: proof,
         });
         if (gen !== this.generation) return;
-        this.scene.cancelMini(false);
         this.accept(result.estado);
+        this.scene.showMiniResult(result, game);
         this.message(
           result.premio > 0
             ? "Muito bem! +" + result.premio + " moedas do Patch."
@@ -730,7 +1014,7 @@
         if (result.premio > 0) this.scene.sfx("patch-win");
       } catch (e) {
         if (gen === this.generation) {
-          this.scene.cancelMini();
+          this.scene.showMiniError(game, proof, e);
           this.message(
             e.message ||
               "Resultado não confirmado. Nenhuma recompensa foi adicionada.",
@@ -762,7 +1046,9 @@
     if (e.key === "Escape") App.closeMenu();
     if (e.key === "Tab" && !$("patch-overlay").hidden) {
       const focus = [
-        ...$("patch-overlay").querySelectorAll("button:not(:disabled)"),
+        ...$("patch-overlay").querySelectorAll(
+          'button:not(:disabled),input:not(:disabled),select:not(:disabled),[tabindex="0"]',
+        ),
       ];
       if (e.shiftKey && document.activeElement === focus[0]) {
         e.preventDefault();
@@ -784,6 +1070,34 @@
     soundState(e.detail.patchSom !== false),
   );
   soundState(window.nhPreferencias?.valor("patchSom") !== false);
+  $("patch-drag-mode").onclick = () => App.setDragMode(!App.dragMode);
+  App.setDragMode(false);
+  setInterval(() => {
+    if (App.state) App.refreshControls();
+  }, 250);
+  root.querySelectorAll("[data-patch-menu]").forEach((b) => {
+    const menus = {
+      comidas: ["🥕", "Comidas"],
+      tarefas: ["✓", "Tarefas"],
+      loja: ["🛍", "Loja"],
+      inventario: ["🎒", "Itens"],
+      jogos: ["🎮", "Jogos"],
+    };
+    const item = menus[b.dataset.patchMenu];
+    if (item) {
+      b.replaceChildren(
+        el("span", item[0], "patch-tool-icon"),
+        el("span", item[1]),
+      );
+    }
+  });
+  App.saves = new SaveManager(bridge);
+  App.productionUI = new ProductionUI(App, { root, $, el });
+  App.careController = new CareController(App, { root, $, el });
+  App.audioVolume = window.nhPreferencias?.valor("patchVolume") ?? 0.35;
+  window.addEventListener("nh-preferencias-aplicar", (e) => {
+    App.audioVolume = e.detail.patchVolume ?? 0.35;
+  });
   const observer = new IntersectionObserver(
     (entries) => {
       App.visible = entries[0].isIntersecting;
@@ -813,927 +1127,9 @@
     refresh: () => App.refresh(),
     getState: () => (App.state ? JSON.parse(JSON.stringify(App.state)) : null),
     scene: () => App.scene,
+    getVolume: () => App.getVolume(),
+    care: () => App.careController,
     action: (a, i) => App.act(a, i),
     startGame: (t) => App.startGame(t),
   };
-  function makeScene(P, app) {
-    return class PatchScene extends P.Scene {
-      constructor() {
-        super("PatchRoom");
-        this.room = null;
-        this.age = null;
-        this.mini = null;
-        this.reactionTimer = null;
-        this.objects = [];
-        this.roomTweens = [];
-        this.bath = { soap: 0, rinse: false, done: false };
-        this.fridgeOpen = true;
-        this.downAt = 0;
-        this.walkTween = null;
-      }
-      preload() {
-        for (const room of Object.keys(rooms))
-          this.load.image("room-" + room, "patch/assets/" + room + ".webp");
-        const a = age(app.state?.nivel || 1);
-        this.load.spritesheet("pet-" + a, "patch/assets/pet-" + a + ".webp", {
-          frameWidth: 256,
-          frameHeight: 256,
-          endFrame: 27,
-        });
-        this.load.audio("patch-click", "01_clique_botao.wav");
-        this.load.audio("patch-win", "06_vitoria_pequena.wav");
-        this.load.audio("patch-coin", "14_moeda_caindo.wav");
-        this.load.on("loaderror", () =>
-          app.message(
-            "Um recurso não carregou. Recarregue para tentar novamente.",
-            true,
-          ),
-        );
-      }
-      create() {
-        app.scene = this;
-        this.back = this.add
-          .image(240, 320, "room-sala")
-          .setDisplaySize(480, 640);
-        this.floorShadow = this.add
-          .ellipse(240, 458, 110, 18, 0x8f5474, 0.18)
-          .setDepth(4);
-        this.pet = this.add.container(240, 450).setDepth(10);
-        this.body = this.add
-          .sprite(0, 0, "pet-" + age(app.state?.nivel || 1), 0)
-          .setOrigin(0.5, 1)
-          .setDisplaySize(240, 240);
-        this.clothes = this.add.graphics().setScale(240 / 190);
-        this.pet.add([this.body, this.clothes]);
-        this.makeAnims(age(app.state?.nivel || 1));
-        this.age = age(app.state?.nivel || 1);
-        this.body.setInteractive();
-        this.body.on("pointerdown", () => {
-          if (!this.mini) app.care("carinho");
-        });
-        this.night = this.add
-          .rectangle(240, 320, 480, 640, 0x201d4b, 0.55)
-          .setDepth(24)
-          .setVisible(false);
-        this.notice = this.add
-          .text(240, 80, "", {
-            fontFamily: "sans-serif",
-            fontSize: "17px",
-            color: "#633759",
-            align: "center",
-            backgroundColor: "#fff2fa",
-            padding: { x: 14, y: 8 },
-          })
-          .setOrigin(0.5)
-          .setDepth(50)
-          .setVisible(false);
-        this.input.on("dragstart", (pointer, obj) => {
-          obj.setDepth(40);
-          obj._home = { x: obj.x, y: obj.y };
-          obj._lastStroke = 0;
-        });
-        this.input.on("drag", (pointer, obj, x, y) => {
-          if (app.busy || this.mini) return;
-          obj.setPosition(P.Math.Clamp(x, 25, 455), P.Math.Clamp(y, 90, 590));
-          if (
-            obj._tool === "sabao" &&
-            Math.abs(x - this.pet.x) < 100 &&
-            y > this.pet.y - 175 &&
-            y < this.pet.y + 10
-          ) {
-            if (this.time.now - obj._lastStroke > 150) {
-              obj._lastStroke = this.time.now;
-              this.bathStep("esfregar");
-            }
-          }
-        });
-        this.input.on("dragend", (pointer, obj) => {
-          if (app.busy || this.mini) return;
-          if (
-            obj._food &&
-            P.Math.Distance.Between(obj.x, obj.y, this.pet.x, this.pet.y - 90) <
-              120
-          )
-            app.care("alimentar", obj._food);
-          else if (obj._tool === "toalha" && Math.abs(obj.x - this.pet.x) < 110)
-            this.bathStep("toalha");
-          else if (obj._tool === "regador" && obj.y > 350) this.waterPlant();
-          else if (obj._ball) this.playBall();
-          if (obj.active && obj._home)
-            this.tweens.add({
-              targets: obj,
-              x: obj._home.x,
-              y: obj._home.y,
-              duration: 250,
-              ease: "Sine.easeOut",
-            });
-        });
-        this.input.on("pointerdown", (pointer) => {
-          if (this.mini?.tipo === "estrelas") {
-            this.jump();
-            return;
-          }
-          if (
-            !this.mini &&
-            pointer.y > 470 &&
-            ["sala", "jardim", "passeio"].includes(this.room)
-          )
-            this.walkTo(pointer.x, 450);
-        });
-        this.input.keyboard?.on("keydown-SPACE", () => {
-          if (this.mini?.tipo === "estrelas") this.jump();
-        });
-        if (!reduced.matches) {
-          this.breathe = this.tweens.add({
-            targets: this.body,
-            scaleY: this.body.scaleY * 1.025,
-            duration: 1200,
-            yoyo: true,
-            repeat: -1,
-            ease: "Sine.easeInOut",
-          });
-        }
-        if (app.state) this.applyState(app.state);
-        $("patch-loading").hidden = true;
-        app.message("Toque, arraste e cuide do seu Patch ♡");
-      }
-      makeAnims(a) {
-        const key = "pet-" + a;
-        if (!this.textures.exists(key)) return;
-        for (const [row, name] of [
-          "idle",
-          "sad",
-          "eat",
-          "sleep",
-          "bath",
-          "love",
-          "play",
-        ].entries()) {
-          const anim = key + "-" + name;
-          if (!this.anims.exists(anim))
-            this.anims.create({
-              key: anim,
-              frames: this.anims.generateFrameNumbers(key, {
-                start: row * 4,
-                end: row * 4 + 3,
-              }),
-              frameRate: reduced.matches ? 1 : name === "idle" ? 3 : 7,
-              repeat: -1,
-            });
-        }
-      }
-      ensureAge(a) {
-        if (this.age === a) return;
-        if (this.textures.exists("pet-" + a)) {
-          this.makeAnims(a);
-          this.age = a;
-          this.body.setTexture("pet-" + a);
-          this.rest();
-          return;
-        }
-        if (this.loadingAge === a) return;
-        this.loadingAge = a;
-        this.load.spritesheet("pet-" + a, "patch/assets/pet-" + a + ".webp", {
-          frameWidth: 256,
-          frameHeight: 256,
-          endFrame: 27,
-        });
-        this.load.once("complete", () => {
-          this.loadingAge = null;
-          if (this.sys.isActive() && app.state)
-            this.ensureAge(age(app.state.nivel));
-        });
-        this.load.start();
-      }
-      applyState(s) {
-        if (!this.body) return;
-        this.ensureAge(age(s.nivel));
-        if (this.room !== s.comodo && !this.mini) this.renderRoom(s.comodo);
-        this.drawClothes(s.roupa);
-        this.night.setVisible(s.dormindo);
-        if (!this.reactionTimer) this.rest();
-        if (!this.mini) this.renderDecor(s.decoracao);
-        if (this.room === "cozinha" && !this.mini) this.syncFoods(s);
-      }
-      rest() {
-        if (!app.state || !this.body.active) return;
-        const n = app.state.necessidades;
-        const anim = app.state.dormindo
-          ? "sleep"
-          : n.fome > 75 ||
-              n.sono > 75 ||
-              n.diversao < 25 ||
-              n.higiene < 25 ||
-              n.carinho < 25
-            ? "sad"
-            : "idle";
-        if (reduced.matches) {
-          this.body.stop();
-          this.body.setFrame({ idle: 0, sad: 4, sleep: 12 }[anim] || 0);
-        } else this.body.play("pet-" + this.age + "-" + anim, true);
-      }
-      react(action, item) {
-        if (!this.body?.active) return;
-        this.reactionTimer?.remove();
-        this.reactionTimer = null;
-        const name = {
-          alimentar: "eat",
-          carinho: "love",
-          brincar: "play",
-          dancar: "play",
-          banho: "love",
-          regar: "love",
-        }[action];
-        if (name && !reduced.matches)
-          this.body.play("pet-" + this.age + "-" + name, true);
-        if (action === "dormir" || action === "acordar") {
-          this.rest();
-          return;
-        }
-        if (action === "alimentar") {
-          const food = this.add
-            .text(
-              this.pet.x + 65,
-              this.pet.y - 65,
-              {
-                maca: "🍎",
-                leite: "🥛",
-                banana: "🍌",
-                morango: "🍓",
-                bolinho: "🧁",
-              }[item] || "🥕",
-              { fontSize: "30px" },
-            )
-            .setOrigin(0.5)
-            .setDepth(30);
-          this.tweens.add({
-            targets: food,
-            x: this.pet.x,
-            y: this.pet.y - 120,
-            scale: 0,
-            alpha: 0,
-            duration: 600,
-            onComplete: () => food.destroy(),
-          });
-        }
-        this.sfx(action === "alimentar" ? "patch-coin" : "patch-click");
-        this.burst(
-          this.pet.x,
-          this.pet.y - 115,
-          action === "banho" ? "✧" : "♡",
-          0xc75d96,
-        );
-        if (!reduced.matches)
-          this.tweens.add({
-            targets: this.pet,
-            angle: action === "dancar" ? 8 : 3,
-            duration: 200,
-            yoyo: true,
-            repeat: action === "dancar" ? 5 : 1,
-            ease: "Sine.easeInOut",
-            onComplete: () => this.pet.setAngle(0),
-          });
-        this.reactionTimer = this.time.delayedCall(
-          action === "dancar" ? 2600 : 1700,
-          () => {
-            this.reactionTimer = null;
-            this.rest();
-          },
-        );
-      }
-      sfx(key) {
-        if ($("patch-som").dataset.ativo === "false") return;
-        try {
-          this.sound.play(key, { volume: 0.25 });
-        } catch {}
-      }
-      track(obj) {
-        this.objects.push(obj);
-        return obj;
-      }
-      icon(text, x, y, size = 45, action) {
-        const obj = this.add
-          .text(x, y, text, {
-            fontFamily: "sans-serif",
-            fontSize: size + "px",
-            color: "#8c4676",
-            stroke: "#fff3fa",
-            strokeThickness: 2,
-          })
-          .setOrigin(0.5)
-          .setDepth(20)
-          .setInteractive({ useHandCursor: true });
-        obj.setPadding(9);
-        if (action) obj.on("pointerdown", action);
-        this.track(obj);
-        return obj;
-      }
-      label(text, x, y) {
-        return this.track(
-          this.add
-            .text(x, y, text, {
-              fontFamily: "sans-serif",
-              fontSize: "13px",
-              color: "#6d365b",
-              backgroundColor: "#fff0f7",
-              padding: { x: 9, y: 5 },
-              align: "center",
-            })
-            .setOrigin(0.5)
-            .setDepth(21),
-        );
-      }
-      draggable(obj) {
-        this.input.setDraggable(obj);
-        return obj;
-      }
-      clearRoom() {
-        this.walkTween?.stop();
-        this.walkResolve?.();
-        this.walkResolve = null;
-        this.reactionTimer?.remove();
-        this.reactionTimer = null;
-        this.roomTweens.forEach((t) => t.stop());
-        this.roomTweens = [];
-        for (const obj of this.objects) if (obj.active) obj.destroy();
-        this.objects = [];
-        this.extraDecor?.destroy();
-        this.extraDecor = null;
-        this.pet.setPosition(240, 450).setAngle(0).setVisible(true);
-        this.floorShadow.setPosition(240, 458);
-        this.body.setVisible(true);
-        this.bath = { soap: 0, rinse: false, done: false };
-      }
-      renderRoom(room) {
-        this.clearRoom();
-        this.room = room;
-        this.back.setTexture("room-" + room);
-        this.pet.setPosition(240, 450);
-        if (!reduced.matches) this.cameras.main.fadeIn(220, 255, 225, 240);
-        this.notice.setVisible(false);
-        if (room === "sala" || room === "jardim") {
-          const ball = this.draggable(
-            this.icon("⚽", 360, 525, 50, () => this.playBall()),
-          );
-          ball._ball = true;
-          if (room === "sala")
-            this.icon("♪", 415, 165, 30, () => app.care("dancar"));
-        }
-        if (room === "cozinha") {
-          this.icon("▥", 414, 240, 64, () => {
-            this.fridgeOpen = !this.fridgeOpen;
-            this.foods.forEach((o) => o.setVisible(this.fridgeOpen));
-            app.message(
-              this.fridgeOpen
-                ? "Escolha e arraste um alimento."
-                : "Geladeira fechada. Toque para abrir.",
-            );
-          });
-          this.label("Geladeira", 408, 300);
-          this.foods = [];
-          for (const [i, f] of (app.state.catalogo_alimentos || []).entries()) {
-            const x = 130 + (i % 3) * 110,
-              y = 540 + Math.floor(i / 3) * 65,
-              food = this.draggable(this.icon(f.icone, x, y, 38));
-            food._food = f.id;
-            food._qty = this.label("", x, y + 25);
-            this.foods.push(food);
-          }
-          this.syncFoods(app.state);
-          this.label("Arraste até a boca · Estoque da cozinha", 240, 485);
-        }
-        if (room === "banheiro") {
-          const tub = this.add.graphics().setDepth(14);
-          tub.fillStyle(0xf8afd4, 1);
-          tub.fillRoundedRect(130, 417, 220, 98, 35);
-          tub.lineStyle(5, 0xffedf7, 1);
-          tub.strokeRoundedRect(130, 417, 220, 98, 35);
-          tub.fillStyle(0xffedf7, 1);
-          tub.fillEllipse(240, 421, 220, 40);
-          tub.fillStyle(0xcfe9f6, 0.9);
-          tub.fillEllipse(240, 418, 190, 25);
-          this.track(tub);
-          this.pet.setPosition(240, 446);
-          const soap = this.draggable(
-            this.icon("🧼", 77, 550, 42, () => this.bathStep("sabao")),
-          );
-          soap._tool = "sabao";
-          this.icon("🚿", 408, 170, 48, () => this.bathStep("chuveiro"));
-          const towel = this.draggable(
-            this.icon("▰", 400, 548, 52, () => this.bathStep("toalha")),
-          );
-          towel._tool = "toalha";
-          this.bathLabel = this.label("Sabonete → chuveiro → toalha", 240, 594);
-        }
-        if (room === "quarto") {
-          const bed = this.add.graphics().setDepth(5);
-          bed.fillStyle(0xd7b0ed, 1);
-          bed.fillRoundedRect(100, 368, 285, 145, 30);
-          bed.lineStyle(5, 0xffe5f5, 1);
-          bed.strokeRoundedRect(100, 368, 285, 145, 30);
-          bed.fillStyle(0xffe5f5, 1);
-          bed.fillRoundedRect(122, 380, 90, 52, 20);
-          this.track(bed);
-          const hit = this.add
-            .zone(240, 440, 290, 150)
-            .setInteractive({ useHandCursor: true });
-          hit.on("pointerdown", () =>
-            app.care(app.state.dormindo ? "acordar" : "dormir"),
-          );
-          this.track(hit);
-          this.pet.setPosition(250, 456);
-          this.icon("💡", 413, 170, 43, () =>
-            app.care(app.state.dormindo ? "acordar" : "dormir"),
-          );
-          this.label("Toque na cama ou na luz", 240, 566);
-        }
-        if (room === "jardim") {
-          this.plants = [];
-          for (let i = 0; i < 3; i++)
-            this.plants.push(
-              this.icon("🌷", 115 + i * 90, 502, 40, () => this.waterPlant()),
-            );
-          const can = this.draggable(
-            this.icon("🚿", 407, 560, 43, () => this.waterPlant()),
-          );
-          can._tool = "regador";
-          this.label("Regue as flores ♡", 230, 580);
-        }
-        if (room === "passeio") {
-          this.label("Toque em Iniciar passeio", 240, 570);
-        }
-        this.rest();
-        if (app.state) this.renderDecor(app.state.decoracao);
-      }
-      syncFoods(s) {
-        for (const obj of this.foods || []) {
-          if (!obj.active) continue;
-          const qty = Number(s.alimentos?.[obj._food] || 0);
-          obj.setAlpha(qty ? 1 : 0.35);
-          if (obj.input) obj.input.enabled = qty > 0;
-          obj._qty?.setText("× " + qty);
-        }
-      }
-      coinReward(amount) {
-        this.sfx("patch-coin");
-        this.burst(this.pet.x, this.pet.y - 160, "●", 0xd6a340);
-        const label = this.add
-          .text(this.pet.x, this.pet.y - 170, "+" + amount + " moedas", {
-            fontFamily: "sans-serif",
-            fontSize: "23px",
-            fontStyle: "bold",
-            color: "#956511",
-            stroke: "#fff2cf",
-            strokeThickness: 4,
-          })
-          .setOrigin(0.5)
-          .setDepth(55);
-        this.tweens.add({
-          targets: label,
-          y: label.y - 60,
-          alpha: 0,
-          duration: 1400,
-          onComplete: () => label.destroy(),
-        });
-      }
-      renderDecor(id) {
-        if (this.decorId === id && this.extraDecor?.active) return;
-        this.extraDecor?.destroy();
-        this.extraDecor = null;
-        this.decorId = id;
-        if (!id) return;
-        const values = {
-            tapete_flor: ["🌸", 240, 510, 94, 3],
-            almofada_lilas: ["🛋", 92, 429, 60, 6],
-            vaso_rosa: ["🌷", 410, 410, 55, 6],
-          },
-          v = values[id];
-        if (v)
-          this.extraDecor = this.add
-            .text(v[1], v[2], v[0], { fontSize: v[3] + "px" })
-            .setOrigin(0.5)
-            .setDepth(v[4]);
-      }
-      drawClothes(id) {
-        const g = this.clothes;
-        g.clear();
-        if (!id) return;
-        if (id === "camiseta_rosa" || id === "pijama_lilas") {
-          g.fillStyle(id === "camiseta_rosa" ? 0xf5a2cb : 0xc5a6e5, 1);
-          g.fillRoundedRect(-24, -63, 48, 25, 8);
-          g.fillStyle(0xfff2f8, 1);
-          g.fillCircle(0, -50, 6);
-          g.lineStyle(2, 0xffe2f0, 0.8);
-          g.strokeRoundedRect(-24, -63, 48, 25, 8);
-        } else if (id === "oculos_coracao") {
-          g.lineStyle(3, 0xe875ac, 1);
-          g.strokeCircle(-22, -111, 15);
-          g.strokeCircle(22, -111, 15);
-          g.lineBetween(-7, -111, 7, -111);
-        } else if (id === "laco_dourado") {
-          g.fillStyle(0xf3ca61, 1);
-          g.fillTriangle(20, -167, 42, -181, 41, -157);
-          g.fillTriangle(44, -168, 66, -183, 64, -155);
-          g.fillCircle(43, -168, 7);
-        }
-      }
-      burst(x, y, text = "♡", color = 0xc8689c) {
-        if (reduced.matches) return;
-        for (let i = 0; i < 5; i++) {
-          const heart = this.add
-            .text(x, y, text, {
-              fontSize: 18 + i * 2 + "px",
-              color: "#" + color.toString(16).padStart(6, "0"),
-            })
-            .setOrigin(0.5)
-            .setDepth(45);
-          this.tweens.add({
-            targets: heart,
-            x: x + (i - 2) * 26,
-            y: y - 75 - Math.random() * 30,
-            alpha: 0,
-            duration: 700 + i * 90,
-            onComplete: () => heart.destroy(),
-          });
-        }
-      }
-      walkTo(x, y = 450) {
-        if (app.state?.dormindo || (this.mini && this.mini.tipo !== "passeio"))
-          return Promise.resolve();
-        this.walkTween?.stop();
-        this.walkResolve?.();
-        this.walkResolve = null;
-        return new Promise((ok) => {
-          this.walkResolve = ok;
-          this.walkTween = this.tweens.add({
-            targets: this.pet,
-            x: P.Math.Clamp(x, 70, 410),
-            duration: reduced.matches ? 0 : 500,
-            ease: "Sine.easeInOut",
-            onUpdate: () => this.floorShadow.setX(this.pet.x),
-            onComplete: () => ok(),
-          });
-        });
-      }
-      async playBall() {
-        if (this.mini || app.busy) return;
-        const s = await app.care("brincar");
-        if (!s) return;
-        const ball = this.objects.find((o) => o._ball);
-        if (ball)
-          this.tweens.add({
-            targets: ball,
-            x: 100,
-            y: 460,
-            duration: 450,
-            yoyo: true,
-            ease: "Sine.easeInOut",
-          });
-        this.burst(this.pet.x, this.pet.y - 40, "☆");
-      }
-      async waterPlant() {
-        if (this.mini || app.busy) return;
-        const s = await app.care("regar");
-        if (!s) return;
-        for (const plant of this.plants || [])
-          this.tweens.add({
-            targets: plant,
-            scale: 1.25,
-            duration: 450,
-            yoyo: true,
-          });
-        this.burst(240, 400, "✧", 0x77b99a);
-      }
-      async bathStep(tool) {
-        if (
-          this.room !== "banheiro" ||
-          this.bath.done ||
-          app.busy ||
-          app.state?.dormindo
-        )
-          return;
-        if (tool === "sabao") this.bath.soap += 5;
-        else if (tool === "esfregar") this.bath.soap++;
-        if (tool === "sabao" || tool === "esfregar") {
-          this.burst(this.pet.x, this.pet.y - 80, "○", 0xffffff);
-          this.bathLabel.setText(
-            this.bath.soap >= 5
-              ? "Espuma pronta! Use o chuveiro."
-              : "Esfregue mais um pouco…",
-          );
-          return;
-        }
-        if (tool === "chuveiro") {
-          if (this.bath.soap < 5) {
-            app.message("Passe o sabonete antes de enxaguar.");
-            return;
-          }
-          this.bath.rinse = true;
-          for (let i = 0; i < 16; i++) {
-            const drop = this.add
-              .ellipse(210 + (i % 5) * 14, 210, 4, 12, 0xb7e7fa, 0.85)
-              .setDepth(30);
-            this.tweens.add({
-              targets: drop,
-              y: 440,
-              alpha: 0,
-              delay: i * 35,
-              duration: 600,
-              onComplete: () => drop.destroy(),
-            });
-          }
-          this.bathLabel.setText("Enxaguado! Agora use a toalha.");
-          return;
-        }
-        if (tool === "toalha") {
-          if (!this.bath.rinse) {
-            app.message("Ensaboe e enxágue antes de secar.");
-            return;
-          }
-          this.bath.done = true;
-          const s = await app.care("banho");
-          if (s) {
-            this.bathLabel.setText("Limpinho! ♡");
-            this.bath = { soap: 0, rinse: false, done: false };
-          } else this.bath.done = false;
-        }
-      }
-      beginMini(game) {
-        this.clearRoom();
-        this.mini = {
-          ...game,
-          proof: [],
-          started: performance.now(),
-          spawned: new Set(),
-          caught: new Set(),
-          targets: [],
-          ending: false,
-        };
-        this.pet.setVisible(false);
-        this.floorShadow.setVisible(false);
-        this.night.setVisible(false);
-        this.back.setTexture(
-          "room-" +
-            (game.tipo === "passeio"
-              ? "passeio"
-              : game.tipo === "estrelas"
-                ? "jardim"
-                : "sala"),
-        );
-        this.miniLayer = this.add.container(0, 0).setDepth(40);
-        const shade = this.add.rectangle(240, 320, 480, 640, 0xffedf7, 0.65);
-        if (game.tipo === "passeio") shade.setAlpha(0.1);
-        this.miniLayer.add(shade);
-        this.miniTitle = this.add
-          .text(
-            240,
-            50,
-            {
-              coracoes: "Pega-corações",
-              memoria: "Memória",
-              estrelas: "Pula-estrelas",
-              passeio: "Passeio",
-            }[game.tipo],
-            {
-              fontSize: "25px",
-              fontFamily: "sans-serif",
-              color: "#783f68",
-              fontStyle: "bold",
-            },
-          )
-          .setOrigin(0.5);
-        this.miniLayer.add(this.miniTitle);
-        this.miniInfo = this.add
-          .text(240, 100, "", {
-            fontSize: "17px",
-            fontFamily: "sans-serif",
-            color: "#783f68",
-            align: "center",
-          })
-          .setOrigin(0.5);
-        this.miniLayer.add(this.miniInfo);
-        if (game.tipo === "memoria") this.memoryBoard();
-        if (game.tipo === "estrelas") {
-          this.jumpPet = this.add
-            .sprite(110, 475, "pet-" + this.age, 0)
-            .setOrigin(0.5, 1)
-            .setDisplaySize(125, 125);
-          this.miniLayer.add(this.jumpPet);
-          this.jumping = false;
-          this.mini.judged = new Set();
-        }
-        if (game.tipo === "passeio") {
-          this.pet.setVisible(true);
-          this.floorShadow.setVisible(true);
-        }
-        app.actions();
-      }
-      memoryBoard() {
-        const m = this.mini;
-        m.flips = [];
-        m.matched = new Set();
-        m.checking = false;
-        m.cards = [];
-        m.desafio.cartas.forEach((value, i) => {
-          const x = 145 + (i % 2) * 190,
-            y = 220 + Math.floor(i / 2) * 135;
-          const tile = this.add
-            .rectangle(x, y, 145, 108, 0xe8b8d8)
-            .setStrokeStyle(3, 0xffffff)
-            .setInteractive({ useHandCursor: true });
-          const label = this.add
-            .text(x, y, "♡", {
-              fontSize: "42px",
-              fontFamily: "sans-serif",
-              color: "#fff",
-            })
-            .setOrigin(0.5);
-          this.miniLayer.add([tile, label]);
-          m.cards.push({ tile, label, value });
-          tile.on("pointerdown", () => this.flip(i));
-        });
-      }
-      flip(i) {
-        const m = this.mini;
-        if (
-          !m ||
-          m.tipo !== "memoria" ||
-          m.checking ||
-          m.matched.has(i) ||
-          m.flips.includes(i) ||
-          m.ending
-        )
-          return;
-        m.flips.push(i);
-        m.cards[i].label.setText(["♥", "★", "❀"][m.cards[i].value]);
-        if (m.flips.length === 2) {
-          const [a, b] = m.flips;
-          m.proof.push([a, b]);
-          if (m.cards[a].value === m.cards[b].value) {
-            m.matched.add(a);
-            m.matched.add(b);
-            m.cards[a].tile.setFillStyle(0xb3d7b4);
-            m.cards[b].tile.setFillStyle(0xb3d7b4);
-            m.flips = [];
-            if (m.matched.size === 6) {
-              m.checking = true;
-              this.miniInfo.setText("Todos os pares! Confirmando…");
-              const delay = Math.max(0, 6300 - (performance.now() - m.started));
-              this.time.delayedCall(delay, () => {
-                if (this.mini === m) this.finishMini();
-              });
-            }
-          } else {
-            m.checking = true;
-            this.time.delayedCall(650, () => {
-              if (this.mini !== m) return;
-              m.cards[a].label.setText("♡");
-              m.cards[b].label.setText("♡");
-              m.flips = [];
-              m.checking = false;
-            });
-          }
-        }
-      }
-      jump() {
-        const m = this.mini;
-        if (!m || m.tipo !== "estrelas" || m.ending || this.jumping) return;
-        this.jumping = true;
-        m.proof.push(Math.round(performance.now() - m.started));
-        this.tweens.add({
-          targets: this.jumpPet,
-          y: 350,
-          duration: 350,
-          yoyo: true,
-          ease: "Sine.easeOut",
-          onComplete: () => (this.jumping = false),
-        });
-      }
-      async collect(target) {
-        const m = this.mini;
-        if (!m || m.ending || m.caught.has(target.id)) return;
-        if (m.collecting) return;
-        if (m.tipo === "passeio") {
-          m.collecting = true;
-          await this.walkTo(target.obj.x, 450);
-          m.collecting = false;
-        }
-        if (this.mini !== m) return;
-        const elapsed = Math.round(performance.now() - m.started);
-        if (elapsed < target.inicio || elapsed > target.inicio + target.duracao)
-          return;
-        m.caught.add(target.id);
-        m.proof.push({ id: target.id, em: elapsed });
-        target.obj.destroy();
-        this.burst(target.x, 400, "♡");
-        this.sfx("patch-click");
-      }
-      finishMini() {
-        const m = this.mini;
-        if (!m || m.ending) return;
-        m.ending = true;
-        this.miniInfo.setText("Confirmando o resultado…");
-        app.finishGame(m, m.proof);
-      }
-      cancelMini(render = true) {
-        if (!this.mini) return;
-        this.mini = null;
-        this.miniLayer?.destroy(true);
-        this.miniLayer = null;
-        this.jumpPet = null;
-        this.floorShadow.setVisible(true);
-        this.pet.setVisible(true);
-        this.room = null;
-        if (render && app.state) this.renderRoom(app.state.comodo);
-        if (render) app.actions();
-      }
-      update() {
-        const m = this.mini;
-        if (!m || m.ending) return;
-        const t = performance.now() - m.started;
-        if (m.tipo === "memoria") {
-          if (!m.checking)
-            this.miniInfo.setText("Pares: " + m.matched.size / 2 + " / 3");
-          return;
-        }
-        if (m.tipo === "coracoes" || m.tipo === "passeio") {
-          for (const target of m.desafio.alvos) {
-            if (t >= target.inicio && !m.spawned.has(target.id)) {
-              m.spawned.add(target.id);
-              const x = 40 + target.x * 400,
-                obj = this.add
-                  .text(x, m.tipo === "passeio" ? 410 : 50, "♥", {
-                    fontSize: "58px",
-                    fontFamily: "sans-serif",
-                    color: "#e873ab",
-                    stroke: "#fff",
-                    strokeThickness: 3,
-                    padding: { x: 10, y: 10 },
-                  })
-                  .setOrigin(0.5)
-                  .setInteractive({ useHandCursor: true });
-              const entry = { ...target, x, obj };
-              obj.on("pointerdown", () => this.collect(entry));
-              this.miniLayer.add(obj);
-              m.targets.push(entry);
-            }
-          }
-          for (const target of m.targets) {
-            if (!target.obj.active) continue;
-            if (t > target.inicio + target.duracao) target.obj.destroy();
-            else if (m.tipo === "coracoes")
-              target.obj.setY(
-                60 + ((t - target.inicio) / target.duracao) * 465,
-              );
-          }
-          this.miniInfo.setText(
-            "Corações: " +
-              m.caught.size +
-              " / " +
-              m.desafio.alvos.length +
-              "   ·   " +
-              Math.max(0, Math.ceil((m.desafio.duracao - t) / 1000)) +
-              "s",
-          );
-        }
-        if (m.tipo === "estrelas") {
-          for (const [i, hit] of m.desafio.tempos.entries()) {
-            if (hit - t < 2100 && !m.spawned.has(i)) {
-              m.spawned.add(i);
-              const star = this.add
-                .text(500, 365, "★", {
-                  fontSize: "48px",
-                  color: "#efbd50",
-                  stroke: "#fff",
-                  strokeThickness: 2,
-                })
-                .setOrigin(0.5);
-              this.miniLayer.add(star);
-              m.targets.push({ id: i, hit, obj: star });
-            }
-            const target = m.targets.find((x) => x.id === i);
-            if (target?.obj.active) {
-              target.obj.x = 110 + (hit - t) * 0.2;
-              if (t >= hit && !m.judged.has(i)) {
-                m.judged.add(i);
-                if (m.proof.some((j) => hit - j >= 80 && hit - j <= 600)) {
-                  m.caught.add(i);
-                  this.burst(110, 365, "☆");
-                }
-                target.obj.destroy();
-              }
-            }
-          }
-          this.miniInfo.setText(
-            "Estrelas: " +
-              m.caught.size +
-              " / 7   ·   " +
-              Math.max(0, Math.ceil((12500 - t) / 1000)) +
-              "s",
-          );
-        }
-        if (t >= m.desafio.duracao + 150) this.finishMini();
-      }
-    };
-  }
 })();

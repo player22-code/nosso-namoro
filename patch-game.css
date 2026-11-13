@@ -516,3 +516,220 @@ body #conteudo-privado #patch-game .patch-wallet {
     animation: none;
   }
 }
+/* Por padrão o canvas permite a rolagem nativa. Arrastar é uma escolha explícita. */
+#patch-game .patch-stage canvas {
+  touch-action: pan-y !important;
+}
+#patch-game[data-arrastar="true"] .patch-stage canvas {
+  touch-action: none !important;
+}
+#patch-game .patch-interaction {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  background: #fff3fa;
+  color: #744563;
+  font-size: 10px;
+  line-height: 1.4;
+}
+#patch-game .patch-interaction > span {
+  flex: 1;
+}
+#patch-game #patch-drag-mode {
+  min-height: 36px;
+  padding: 7px 10px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+#patch-game #patch-drag-mode[aria-pressed="true"] {
+  background: #a95891;
+  color: #fff !important;
+}
+#patch-game .patch-tools button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 58px;
+  border-radius: 15px;
+}
+#patch-game .patch-tool-icon {
+  font-size: 20px;
+  line-height: 1.2;
+}
+#patch-game .patch-rooms button {
+  min-height: 58px;
+  border-radius: 15px;
+  transition:
+    background 0.18s,
+    box-shadow 0.18s;
+}
+#patch-game .patch-rooms button[aria-pressed="true"] {
+  background: linear-gradient(145deg, #f7b3d9, #e39ac9);
+  box-shadow:
+    inset 0 0 0 2px #fff8,
+    0 3px 8px #9a578c30;
+}
+#patch-game .patch-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 12px;
+  gap: 8px;
+  background: #fff3fa;
+}
+#patch-game .patch-action {
+  position: relative;
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  align-items: center;
+  column-gap: 8px;
+  min-height: 76px;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #e5b9d6;
+  border-radius: 18px;
+  background: linear-gradient(140deg, #fff, #f7dced);
+  box-shadow: 0 3px 7px #96578212;
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    background 0.12s;
+}
+#patch-game .patch-action:active:not(:disabled) {
+  transform: scale(0.97);
+  box-shadow: inset 0 2px 6px #9f588b22;
+}
+#patch-game .patch-action-icon {
+  grid-row: 1/3;
+  text-align: center;
+  font-size: 27px;
+  line-height: 1.2;
+}
+#patch-game .patch-action strong {
+  font: 700 12px/1.3 system-ui !important;
+}
+#patch-game .patch-action-note {
+  font-size: 10px;
+  line-height: 1.4;
+  color: #7d536e;
+}
+#patch-game .patch-action:disabled {
+  cursor: default;
+  opacity: 0.52;
+  background: #f2e7ef;
+}
+#patch-game .patch-action.is-working {
+  opacity: 0.85;
+  animation: patch-pulse 1s ease-in-out infinite;
+}
+#patch-game .patch-actions[data-room="cozinha"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+#patch-game .patch-actions[data-room="cozinha"] .patch-action {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+#patch-game .patch-actions [data-action="mercado"] {
+  grid-column: 1/-1 !important;
+  min-height: 54px;
+}
+#patch-game .patch-status {
+  border-top: 1px solid #edd0e3;
+  font-size: 12px;
+  min-height: 42px;
+}
+#patch-game button {
+  -webkit-tap-highlight-color: transparent;
+}
+#patch-game .patch-sheet {
+  overscroll-behavior: contain;
+}
+#patch-game .patch-action .patch-action-note {
+  color: #794c69 !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  #patch-game .patch-action {
+    transition: none;
+  }
+  #patch-game .patch-action.is-working {
+    animation: none;
+  }
+}
+#patch-game .patch-extra-tools {
+  display: flex;
+  gap: 6px;
+  padding: 7px 9px;
+  background: #f8e1f1;
+}
+#patch-game .patch-extra-tools button {
+  flex: 1;
+  min-width: 0;
+  min-height: 34px;
+  font-size: 10px;
+  padding: 5px 3px;
+}
+#patch-game .patch-care-hint {
+  position: absolute;
+  top: 13%;
+  left: 6%;
+  right: 6%;
+  z-index: 4;
+  text-align: center;
+  background: #fff7fbe8;
+  border: 1px solid #e6b3d6;
+  border-radius: 16px;
+  padding: 10px;
+  color: #603550;
+  font-size: 12px;
+  pointer-events: none;
+}
+#patch-game .patch-care-title,
+#patch-game .patch-care-keyboard,
+#patch-game .patch-actions[data-room="cuidado"] p,
+#patch-game .patch-actions[data-room="cuidado"] progress {
+  grid-column: 1/-1;
+  font-size: 12px;
+  margin: 0;
+  line-height: 1.5;
+}
+#patch-game .patch-care-keyboard {
+  border: 1px dashed #b771a6;
+  border-radius: 12px;
+  padding: 9px;
+}
+#patch-game .patch-care-keyboard:focus {
+  outline: 3px solid #a85891;
+}
+#patch-game .patch-actions[data-room="cuidado"] progress {
+  width: 100%;
+  accent-color: #d879ad;
+}
+#patch-game .patch-need meter {
+  transition: all 0.3s;
+}
+#patch-game .patch-need b {
+  font-size: 9px !important;
+}
+#patch-game dialog.patch-sheet {
+  position: fixed;
+  margin: auto;
+  width: min(520px, calc(100vw - 28px));
+  max-height: calc(100vh - 36px);
+  max-height: calc(100dvh - 36px);
+  overscroll-behavior: contain;
+}
+#patch-game dialog.patch-sheet::backdrop {
+  background: #3c203f80;
+  backdrop-filter: blur(4px);
+}
+#patch-game .patch-extra-tools {
+  padding-top: max(7px, env(safe-area-inset-top, 0px));
+}
+#patch-game .patch-sync {
+  padding-bottom: max(6px, env(safe-area-inset-bottom, 0px));
+}
