@@ -1,63 +1,55 @@
-# Nosso Patch — primeira versão jogável 2D
+# Patch — jogo integrado ao Nossa História
 
-O Patch foi publicado na `main` com autorização do usuário (PR #10). As correções de controles são preparadas em `fix/patch-controles-toque`. As migrações `patch_jogo_2d_v1`, `patch_comidas_cuidados_v2` e `patch_controles_v3` estão instaladas no Supabase. Nenhuma história, foto, saldo anterior ou progresso pessoal foi excluído ou reiniciado.
+A implementação de produção está preparada na branch `feat/patch-producao` para revisão por Pull Request. A `main` não é alterada automaticamente. As correções do PR #11 também estão incluídas nesta branch. O pacote `Patch_Jogo_Completo/` foi auditado e preservado integralmente.
 
-## Como jogar
+## O que está implementado
 
-Acesse sua história, abra **Jogar com o Patch** e aguarde o cenário. O Patch mantém o nome, a experiência e as cinco idades do mascote existente. A evolução acontece nos níveis 1, 5, 10, 20 e 30; **Progresso** apresenta uma prévia sem seleção manual.
+- Phaser 3.90.0 dentro da área original do Patch, com seis cômodos, transições, personagem do pacote, objetos manipuláveis e navegação do site preservada.
+- Máquina exclusiva com 14 estados, respiração, piscadas espontâneas, humor por necessidades, sono e despertar. As linhas estáticas recebem movimento programado. A animação de alimentação usa quadros neutros e o alimento selecionado, evitando o alimento laranja embutido na arte original.
+- Cozinha com geladeira, estoque compartilhado, seis alimentos e alimentação por toque ou arraste válido até a boca. Soltar fora não consome o item.
+- Banho por quatro blocos de gestos reais, higiene progressiva, enxágue e secagem; escovação com três blocos na boca; carinho por gesto. O servidor valida duração, distância, ordem, área, autoria, intervalo e conclusão. Há alternativa por teclado.
+- Sala com bola, ursinho desbloqueável, dança, carinho e descanso; quarto com luz/cama e recuperação offline por timestamps; jardim com rega e borboletas; passeio com movimentação e coleta.
+- Cinco necessidades, incluindo energia, com valores limitados, desgaste temporal limitado e sem morte permanente.
+- Seis categorias de loja, confirmação de compra, estoque, inventário, itens por nível, roupas/acessórios alinhados ao personagem e instalação de móveis/decoração por cômodo. Seleções persistentes.
+- XP com curva crescente, preservação do nível antigo na migração, recompensa única por nível, comemoração, missões diárias individuais e conquistas permanentes com datas e resgates protegidos.
+- Três minijogos: corações por movimentação/colisão; memória com imagens, movimentos e tempo; percurso com obstáculos, saltos, colisões e três vidas. Cada um tem instruções, dificuldade, pontuação, resultado, recompensa confirmada, reinício e retorno. Há tratamento de falha de rede ao confirmar e cancelamento de partidas abandonadas.
+- 26 efeitos WAV do pacote com volume, mute por conta, respeito ao autoplay e limite de vozes. Não foram adicionadas músicas de terceiros.
+- Rolagem vertical nativa sobre o canvas por padrão. **Mover objetos** centraliza o cenário e permite arraste; ao soltar ou mudar de cômodo volta a rolar normalmente. Os cuidados por gesto usam esse modo explicitamente. Modais nativos respeitam a altura da tela e ficam acima da navegação fixa.
 
-- **Sala:** carinho por toque, bola arrastável, dança e deslocamento pelo chão.
-- **Cozinha:** abrir/fechar geladeira, selecionar entre seis alimentos do estoque e arrastar até o personagem; botões equivalentes disponíveis. A aba **Comidas** abre o mercadinho para comprar uma unidade por vez e mostra preço, saciedade e quantidade disponível.
-- **Banheiro:** sabonete/arrastar para esfregar → chuveiro → toalha. O cuidado só é confirmado no final.
-- **Quarto:** cama ou lâmpada alternam sono; o descanso é recuperado pelo tempo real, mesmo fora do site. Trocar efetivamente de cômodo acorda o Patch no servidor; tocar novamente no mesmo quarto mantém o sono.
-- **Jardim:** flores, regador e bola interativos.
-- **Passeio:** coleta de três corações durante 15 segundos; personagem caminha até os objetos.
-- **Minijogos:** memória de três pares, oito corações caindo e saltos para coletar estrelas.
-- **Loja/inventário:** quatro roupas/acessórios e três decorações; compra, equipar e retornar à aparência original.
-- **Tarefas:** alimentar, dar banho e fazer carinho; presente e missão diários. Dias renovam à meia-noite UTC.
+## Organização
 
-As animações usam os quadros originais como sprites Phaser, acrescidos de tweens, movimentos, partículas, alimentos, água e objetos interativos. A animação de comer usa quadros neutros e o ícone do alimento selecionado; os quadros antigos com cenoura desenhada não são usados no jogo 2D. Nenhum GIF é usado como mecanismo do cenário. Há tratamento de movimento reduzido. O áudio depende da autorização do navegador e do botão **Som**, cuja preferência é salva por conta usando o sistema existente.
+`patch-game.js` coordena a integração com o site. Os módulos em `patch-game/` separam assets, áudio, personagem/estados, necessidades, nível, salvamento idempotente, cuidados por gestos, painéis, cena da casa e minijogos. Não há build ou servidor de aplicação novo: continua sendo um site estático com Supabase.
 
-## Progresso e economia
+`AUDITORIA-PATCH.md` registra o inventário real, limitações dos GIFs/sprites e origem dos vetores adicionais. Os cenários verticais detalhados já existentes foram reaproveitados; a prancha conceitual não foi usada como objetos recortados. Quarenta objetos SVG originais transparentes complementam os cartões opacos do pacote. Os GIFs originais permanecem disponíveis, mas não controlam o jogo.
 
-`mascote_casal` continua sendo a fonte do nome, XP, idade e estado de sono. As cinco necessidades variam com o tempo. Fome e sono brutos altos indicam necessidade; as barras visuais mostram saciedade e descanso, portanto barras cheias são boas. O jogo apresenta comportamento triste quando alguma necessidade está baixa.
+## Persistência, migração e segurança
 
-`patch_estado` guarda necessidades precisas, cômodo, personalização, missões e uma carteira virtual **compartilhada**, independente da carteira individual usada nos cassinos/cuidados clássicos. Começa com 40 moedas; presente dá 8/dia, missão 10/dia, cada minijogo vencido até 3 e passeio completo 1. Não há aposta nem custo de entrada. Até 10 atividades premiadas e 100 XP novos por dia, com intervalos entre cuidados. Os cuidados dão moedas quando melhoram uma necessidade: alimentar e banho até 2; carinho, brincar, dança e regar até 1. Limite independente de 30 moedas por dia em cuidados, com intervalos por ação e renovação à meia-noite UTC. Dar banho não custa moedas. Alimentar consome um item comprado anteriormente. Os preços e as recompensas reais vêm do servidor.
+A história (`story_id`) continua identificando o pet compartilhado; `story_members` determina quem pode acessá-lo. Auth, fotos, chat, histórias, cassinos, planos e carteiras individuais não foram substituídos.
 
-`patch_estado.alimentos` guarda o estoque compartilhado, iniciando com três cenouras, duas maçãs e um leite; banana, morango e bolinho podem ser comprados. Cada alimento custa 2–6 moedas e recupera 18–35 de saciedade. Estoque máximo de 99 unidades por alimento, validado no servidor.
+As migrações V1, V2 e V3 já existem no projeto conectado. **A V4 está preparada e testada, mas não aplicada permanentemente.** Ela deve ser implantada junto com o frontend desta branch. Não execute a V4 duas vezes.
 
-`patch_inventario` guarda compras; `patch_partidas` registra desafios, provas, validade e liquidação. Os dois integrantes leem o mesmo progresso. Realtime confirma mudanças, com consulta de segurança a cada 15 segundos enquanto visível. Ações também confirmam imediatamente o estado retornado pelo servidor. Falhas de rede não criam ganhos locais ou compras pendentes fictícias.
+A V4 acrescenta XP progressivo, estatísticas, missões, conquistas, casa e itens equipados a `patch_estado`; mantém `mascote_casal` e o XP antigo para migração sem redução de nível. Acrescenta `patch_operacoes` para idempotência e `patch_cuidados` para sessões de interação. Mantém inventário, desafios e liquidação de partidas existentes. Novas tabelas têm RLS e apenas leitura para o navegador autenticado; comandos passam por wrappers INVOKER e funções privadas autorizadas, com `search_path` fixo, transação e bloqueio da história.
 
-As tabelas têm RLS por participação na história e somente SELECT para o navegador autenticado. Escritas e recompensas passam por funções privadas com autorização, bloqueio por história e validação de preço/posse/tempo/prova; os wrappers públicos são SECURITY INVOKER e não aceitam valores de saldo/prêmio. Repetir uma liquidação não duplica moedas. Não há chave secreta no frontend. As provas e limites reduzem fraude; não representam proteção absoluta contra automação de um jogo executado no navegador.
+O servidor calcula preços, posse, desbloqueios, necessidades, prêmios e XP. UUIDs de operação são reutilizados após falha de rede para não debitar duas vezes. A carteira do Patch é independente dos cassinos. Limites: até 30 moedas/dia em cuidados, 10 atividades premiadas/dia, 100 XP/dia, cooldowns e estoque máximo de 99 unidades por alimento. A renovação diária usa meia-noite UTC. O progresso só é apresentado como confirmado após resposta do servidor; não há economia local como substituto da nuvem.
 
-## Arquivos
+As provas de movimentos e jogos validam plausibilidade e limites, mas não constituem proteção absoluta contra automação de um navegador controlado pelo usuário.
 
-- `index.html`: montagem da área e ponte para Supabase, cuidados clássicos preservados em um painel recolhível, eventos de história/conta e preferência de som.
-- `patch-game.js`, `patch-game.css`: controlador, cena Phaser, interações e interface.
-- `patch/assets/`: seis cenários e cinco spritesheets; documentação de origem na pasta.
-- `vendor/`: Phaser 3.90.0 fixado e licença MIT.
-- `sql/patch-jogo-v1.sql` e `sql/patch-comidas-cuidados-v2.sql`: migrações instaladas em ordem; não executar novamente sem verificar histórico, pois cria objetos novos.
-- `tests/patch-jogo.cjs`, `tests/patch-jogo.sql` e `tests/patch-comidas.sql`: testes do navegador e banco. `tests/preferencias-conta.cjs`: preferência de som incluída.
-- `scripts/build-patch-sprites.py`: reconstrução dos sprites a partir dos GIFs originais.
+## Implantação após revisão
 
-## Validação e limites
+1. Rever o PR e `sql/patch-jogo-producao-v4.sql`; confirmar backup/migrações V1–V3 existentes no ambiente de destino.
+2. Em uma janela conjunta, aplicar a V4 no Supabase e publicar o frontend aprovado pelo fluxo normal de GitHub Pages. **Não aplicar a V4 isoladamente mantendo a interface antiga por longo período:** o banho novo exige o protocolo interativo.
+3. Confirmar a conclusão do deploy, atualizar abas antigas e testar duas contas reais do mesmo casal. Nenhuma chave secreta é necessária no frontend.
+4. Não executar os arquivos de testes SQL em autocommit: são preparados para uma transação externa encerrada obrigatoriamente com `ROLLBACK`.
 
-Os testes SQL rodam na instalação real em BEGIN/ROLLBACK, usando participantes existentes apenas dentro da transação, sem exportar dados pessoais nem persistir alterações de teste. Verificam cuidados, preços, inventário, acesso dos dois membros, bloqueio de terceiros/anônimos, RLS, sono ao longo do tempo, limites, quatro atividades e liquidação idempotente. O teste adicional valida compra/consumo de alimentos, estoque compartilhado, saldo insuficiente, bloqueio de estoque vazio, limite de 99 unidades e recompensa diária dos cuidados.
+## Testes executados e limites
 
-Os testes Chromium usam um backend de teste e entradas reais de mouse/toque para cobrir telas de 320, 390 e 1280 px, mercadinho com seis alimentos, compra e consumo, moedas por cuidado, seis cômodos, arrastar alimento, banho em etapas, dormir, jardim, loja, missões, idades, atualização recebida, quatro atividades vencidas e derrota sem prêmio. Passaram também as suítes `pet-idades`, `interface-vidro`, `inicio-referencia`, `preferencias-conta`, `cassinos-expressoes` e `imagens-carregamento`. Isso não substitui uma sessão de duas pessoas em dispositivos físicos com autenticação real. iOS/Safari físico ainda não foi validado.
+- `scripts/validar-patch-assets.py`: inventário, dimensões, quadros, transparência e áudio do pacote real.
+- `tests/patch-producao.cjs`: Chromium com assets reais e sessões/RPCs simuladas em 320, 390 e 1280 px: 14 estados, necessidades/energia, XP, seis categorias, confirmação de compras, roupas/casa, missões/conquistas, som/volume, ausência de arquivos quebrados e overflow. Gestos reais de ponteiro para banho/dentes/carinho e reenvio do mesmo UUID após uma desconexão posterior ao débito em 390 px.
+- `tests/patch-minigames.cjs`: Phaser real, três jogos, colisões, memória, relógio, vitória/derrota, reinício, cancelamento e repetição da mesma confirmação após erro de rede.
+- `tests/patch-runtime.mjs`: UUID idempotente e isolamento de respostas atrasadas de cuidados após troca de conta.
+- `tests/patch-producao.sql`: executado no Supabase real junto à V4 dentro de `BEGIN/ROLLBACK`, com história temporária e participantes existentes sem exportar identificadores. Cobriu migração de nível, preços, resgates e comandos duplicados, parceiro, terceiro, anon, RLS, roupa/casa, alimentos, sono/despertar, gestos/ordem/progresso de higiene, cuidados repetidos, quatro atividades e bônus de nível. Nada do teste foi persistido.
+- Regressões existentes de início, preferências de conta e carregamento de imagens executadas separadamente. Também passou a verificação de interface em 844 × 390 (horizontal).
 
-Para rodar o navegador: servir a raiz com `python -m http.server 8765 --bind 127.0.0.1`, disponibilizar Playwright e Chromium em `/usr/bin/chromium`, executar `node tests/patch-jogo.cjs`. O SQL de teste exige uma transação externa encerrada com ROLLBACK; nunca executar em autocommit. Os testes de interface existentes continuam separados.
+Ainda não foram validados iPhone/Safari físico, duas pessoas autenticadas em dispositivos físicos, Realtime através de redes reais nem uma corrida simultânea de conexões reais. A validação do banco cobre os dois papéis e a idempotência em sequência; a concorrência usa transações/bloqueios, mas requer validação operacional após implantação. Arte esquelética detalhada e novos conteúdos continuam sendo possíveis melhorias; não são apresentados como implementados.
 
-Esta é uma primeira versão jogável com seis ambientes, três minijogos curtos, sete itens e uma missão diária composta. Novos conteúdos, missões variadas, móveis reposicionáveis e animação esquelética detalhada permanecem evoluções futuras. Os acessórios atuais são sobreposições programadas; as roupas originais de cada idade são preservadas nos sprites. Não há gravação/repetição de voz.
-
-A consulta aos advisors após a migração não apontou novos avisos relativos a `patch_*`. Existem avisos anteriores fora deste escopo, incluindo [search_path de função antiga](https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable) e [funções públicas SECURITY DEFINER](https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable); não foram alteradas funções antigas de outras áreas.
-
-O jogo usa Talking Tom como referência para o ciclo de cuidar, alternar cômodos e progredir, mantendo personagem e cenários próprios. Não replica todo o catálogo de funcionalidades ou conteúdo de Talking Tom.
-
-## Controles de toque e banho
-
-Deslizar verticalmente sobre o cenário rola a página. Toques só são aceitos ao soltar, com limite de deslocamento; um gesto de rolagem não faz carinho nem alimenta acidentalmente. O canvas não bloqueia eventos de toque ou roda do mouse por padrão. O modo **Mover objetos** centraliza o cenário, permite arrastar e volta à rolagem normal ao soltar ou mudar de cômodo. Comidas, bola, regador e ferramentas também funcionam por toque, sem precisar arrastar.
-
-Os botões de ação têm ícones, títulos e estado. Os intervalos são calculados pelo servidor e aparecem como contadores. Banho: **Ensaboar → Enxaguar → Secar**, com espuma, água e toalha animadas. Cada etapa só libera a seguinte ao concluir; trocar de cômodo, abrir outro painel ou repetir o comando durante a animação é bloqueado. O servidor só confirma e recompensa o banho depois da secagem; falha de rede permite tentar a secagem novamente.
-
-`tests/patch-controles.cjs` usa gestos de toque CDP reais em Chromium para verificar rolagem, arraste, ausência de cuidado acidental, seis alimentos corretos, despertar, banho sequencial e contadores em 320/390/1280 px. As sessões/RPCs do navegador são simuladas; as regras reais do Supabase são verificadas em transações revertidas por `tests/patch-controles.sql` junto às suítes SQL anteriores.
+O carregamento do Phaser e do palco ocorre ao aproximar o Patch da viewport; o carregador exibe progresso e permite tentar novamente após falhas. Os recursos do jogo (sheet, vetores, sons curtos e seis fundos) são pré-carregados para transições imediatas; não se alega streaming individual de cada cômodo. Não há Service Worker novo nem cache público de fotos privadas.
