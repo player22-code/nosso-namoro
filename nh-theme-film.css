@@ -16,3 +16,8 @@ body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse{object-
 body[data-interface="vidro"]>header.nh-hero-referencia[data-hero-scene="dia"]{background-image:url("diafoto.jpg")!important}
 body[data-interface="vidro"]>header.nh-hero-referencia[data-hero-scene="noite"]{background-image:url("noitefoto.jpg")!important}
 body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-film,body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse{transition:opacity .3s ease}
+
+/* Ajuste fino do enquadramento mobile: mostra mais a parte de baixo dos bichinhos */
+body[data-interface="vidro"]>header.nh-hero-referencia{background-position:center 82%!important}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-film{object-position:center 82%!important}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse{object-position:center 82%!important}
