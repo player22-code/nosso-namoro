@@ -18,24 +18,16 @@ function init(){
   try{video.currentTime=Math.max(0,Math.min(video.duration||t,t));}catch{finish();}
  });}
  async function animateReverse(id){
-  try{
-   if(video.readyState<1)await new Promise((resolve,reject)=>{video.addEventListener('loadedmetadata',resolve,{once:true});video.addEventListener('error',reject,{once:true});setTimeout(resolve,4000);});
-   if(id!==token)return;
-   const duration=video.duration;
-   if(!Number.isFinite(duration)||duration<=0||!context)return;
-   canvas.width=video.videoWidth||1280;canvas.height=video.videoHeight||720;
-   await seek(Math.max(0,duration-0.05));if(id!==token)return;
-   try{context.drawImage(video,0,0,canvas.width,canvas.height)}catch{}
-   canvas.classList.add('is-active');
-   const start=performance.now(),length=Math.min(Math.max(duration*1000,1800),7000);
-   while(id===token){
-    const progress=Math.min(1,(performance.now()-start)/length);
-    await seek(duration*(1-progress));
-    if(id!==token)break;
-    try{context.drawImage(video,0,0,canvas.width,canvas.height);}catch{}
-    if(progress>=1)break;
-   }
-  }catch(e){console.warn('Transicao reversa indisponivel:',e);}
+  // Evita dezenas de seeks/decodificacoes de video por segundo no celular.
+  // Uma unica camada noturna desaparece revelando a foto diurna.
+  video.pause();
+  canvas.classList.add('is-active');
+  hero.dataset.heroScene='noite';
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  if(id!==token)return;
+  hero.dataset.heroScene='dia';
+  canvas.classList.remove('is-active');
+  await new Promise(resolve=>setTimeout(resolve,1150));
   if(id===token)finishScene(id,false);
  }
  async function animateForward(id){
