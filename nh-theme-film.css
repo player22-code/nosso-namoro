@@ -108,3 +108,48 @@ body[data-interface="vidro"]>header.nh-hero-referencia::after{
  -webkit-backdrop-filter:none!important;
  backdrop-filter:none!important;
 }
+
+/* Crossfade real do fundo rosa/roxo. Ambos os degradês originais são preservados. */
+html:has(body[data-interface="vidro"]){
+ background:#a76d96;
+}
+body[data-interface="vidro"]{
+ isolation:isolate;
+ background-image:radial-gradient(ellipse at 15% 40%,#d88eae99,transparent 65%),linear-gradient(145deg,#b97da4,#956088 65%,#b97e9c)!important;
+ background-color:#a76d96!important;
+}
+body[data-interface="vidro"].tema-escuro{
+ background-image:radial-gradient(ellipse at 15% 40%,#d88eae99,transparent 65%),linear-gradient(145deg,#b97da4,#956088 65%,#b97e9c)!important;
+ background-color:#a76d96!important;
+}
+body[data-interface="vidro"]::before{
+ content:"";
+ position:fixed;
+ inset:0;
+ pointer-events:none;
+ z-index:-1;
+ background-image:radial-gradient(ellipse at 10% 35%,#a6639390,transparent 65%),linear-gradient(145deg,#553451,#412a43 65%,#71415f);
+ background-color:#412a43;
+ opacity:0;
+ transition:opacity 1500ms ease-in-out;
+}
+body[data-interface="vidro"].tema-escuro::before{opacity:1}
+body[data-interface="vidro"] section,
+body[data-interface="vidro"] #login-painel,
+body[data-interface="vidro"] #abas-nav,
+body[data-interface="vidro"] #botao-tema,
+body[data-interface="vidro"] .aba-btn,
+body[data-interface="vidro"] .card,
+body[data-interface="vidro"] .tempo,
+body[data-interface="vidro"] .numero,
+body[data-interface="vidro"] .tag,
+body[data-interface="vidro"] .secondary,
+body[data-interface="vidro"] input,
+body[data-interface="vidro"] textarea,
+body[data-interface="vidro"] select,
+body[data-interface="vidro"] footer{
+ transition-duration:1500ms!important;
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-interface="vidro"]::before{transition:none!important}
+}
