@@ -21,3 +21,19 @@ body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-film,body[data-
 body[data-interface="vidro"]>header.nh-hero-referencia{background-position:center 45%!important}
 body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-film{object-position:center 45%!important}
 body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse{object-position:center 45%!important}
+
+/* Correcao real: a imagem tinha quase a mesma proporcao do banner, por isso background-position nao movia nada.
+   Ampliar a altura da area visivel e usar o mesmo enquadramento para foto, video e canvas. */
+@media(max-width:760px){
+ body[data-interface="vidro"]>header.nh-hero-referencia{
+   height:clamp(255px,67vw,420px)!important;
+   background-size:100% 100%!important;
+   background-position:center center!important;
+ }
+ body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-film{
+   object-fit:fill!important;object-position:center!important;
+ }
+ body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse{
+   object-fit:fill!important;object-position:center!important;
+ }
+}
