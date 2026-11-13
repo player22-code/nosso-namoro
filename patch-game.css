@@ -486,3 +486,33 @@ body #conteudo-privado #patch-game .patch-wallet {
   padding: 3px 8px;
   margin-top: 4px;
 }
+/* Mercadinho sempre acessível, inclusive nas menores telas. */
+#patch-game .patch-tools {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+}
+#patch-game .patch-tools button {
+  font-size: 10px !important;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  padding: 7px 3px !important;
+}
+#patch-game .patch-sheet {
+  animation: patch-sheet-in 0.2s ease-out;
+}
+@keyframes patch-sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #patch-game .patch-sheet {
+    animation: none;
+  }
+}

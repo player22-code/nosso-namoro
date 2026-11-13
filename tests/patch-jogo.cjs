@@ -10,6 +10,20 @@ const catalogo = [
   ["almofada_lilas", "Almofada lilás", "decoracao", 16],
   ["vaso_rosa", "Vaso com flores", "decoracao", 14],
 ].map(([id, nome, tipo, preco]) => ({ id, nome, tipo, preco }));
+const catalogo_alimentos = [
+  ["cenoura", "Cenoura", "🥕", 2, 25],
+  ["maca", "Maçã", "🍎", 3, 20],
+  ["leite", "Leite", "🥛", 4, 30],
+  ["banana", "Banana", "🍌", 3, 25],
+  ["morango", "Morango", "🍓", 4, 18],
+  ["bolinho", "Bolinho", "🧁", 6, 35],
+].map(([id, nome, icone, preco, saciedade]) => ({
+  id,
+  nome,
+  icone,
+  preco,
+  saciedade,
+}));
 function fixture() {
   let s = {
     story_id: "patch-test",
@@ -30,6 +44,17 @@ function fixture() {
     decoracao: null,
     inventario: [],
     catalogo,
+    catalogo_alimentos,
+    alimentos: {
+      cenoura: 3,
+      maca: 2,
+      leite: 1,
+      banana: 0,
+      morango: 0,
+      bolinho: 0,
+    },
+    recompensas_cuidados: 0,
+    limite_cuidados: 30,
     progresso: {},
     presente_disponivel: true,
     missao_resgatada: false,
@@ -50,14 +75,29 @@ function fixture() {
       if (name === "patch_acao") {
         const action = a.p_acao,
           item = a.p_item;
+        s.recompensa_acao = 0;
+        const reward =
+          action === "alimentar"
+            ? 2
+            : action === "banho" && s.necessidades.higiene < 85
+              ? 2
+              : action === "carinho" && s.necessidades.carinho < 90
+                ? 1
+                : ["brincar", "dancar", "regar"].includes(action) &&
+                    s.necessidades.diversao < 90
+                  ? 1
+                  : 0;
         if (action === "comodo") s.comodo = item;
         else if (action === "alimentar") {
-          s.necessidades.fome -= 25;
-          s.moedas -= item === "leite" ? 2 : 1;
+          assert(s.alimentos[item] > 0);
+          s.alimentos[item]--;
+          s.necessidades.fome -= catalogo_alimentos.find(
+            (f) => f.id === item,
+          ).saciedade;
           s.progresso.alimentar = 1;
         } else if (action === "banho") {
           s.necessidades.higiene += 45;
-          s.moedas--;
+
           s.progresso.banho = 1;
         } else if (action === "carinho") {
           s.necessidades.carinho += 18;
@@ -66,7 +106,12 @@ function fixture() {
           s.dormindo = true;
           s.comodo = "quarto";
         } else if (action === "acordar") s.dormindo = false;
-        else if (action === "comprar") {
+        else if (action === "comprar_comida") {
+          const f = catalogo_alimentos.find((f) => f.id === item);
+          assert(s.moedas >= f.preco);
+          s.moedas -= f.preco;
+          s.alimentos[item]++;
+        } else if (action === "comprar") {
           const c = catalogo.find((c) => c.id === item);
           assert(c);
           assert(s.moedas >= c.preco);
@@ -87,6 +132,9 @@ function fixture() {
           s.moedas += 10;
           s.missao_resgatada = true;
         }
+        s.recompensa_acao = Math.min(reward, 30 - s.recompensas_cuidados);
+        s.moedas += s.recompensa_acao;
+        s.recompensas_cuidados += s.recompensa_acao;
         s.experiencia++;
         return s;
       }
@@ -227,7 +275,33 @@ async function drag(p, x, y, toX, toY) {
       await p.waitForFunction(
         () => NH_PATCH_GAME.getState().necessidades.fome === 35,
       );
-      assert.equal(db.state.moedas, 79);
+      assert.equal(db.state.moedas, 83);
+      assert.equal(db.state.alimentos.cenoura, 2);
+      await p.locator('[data-patch-menu="comidas"]').click();
+      assert.equal(await p.locator("[data-food]").count(), 6);
+      await p
+        .locator('[data-food="banana"]')
+        .getByRole("button", { name: "Comprar +1" })
+        .click();
+      await p.waitForFunction(
+        () => NH_PATCH_GAME.getState().alimentos.banana === 1,
+      );
+      assert.equal(db.state.moedas, 80);
+      await p
+        .getByRole("button", { name: "Ir para a cozinha", exact: true })
+        .click();
+      await p
+        .locator("#patch-actions")
+        .getByRole("button", { name: /Banana/ })
+        .click();
+      await p.waitForFunction(
+        () => NH_PATCH_GAME.getState().alimentos.banana === 0,
+      );
+      assert.equal(db.state.moedas, 82);
+      assert.match(
+        await p.locator("#patch-status").textContent(),
+        /\+2 moedas/,
+      );
       await room(p, "banheiro");
       await p.locator("#patch-actions").getByText("3 · Toalha").click();
       assert.equal(db.state.progresso.banho, undefined);

@@ -289,15 +289,22 @@
           ["♬ Dançar", () => this.care("dancar")],
           ["Bola", () => this.scene?.playBall()],
         ],
-        cozinha: [
-          ["Cenoura · 1 moeda", () => this.care("alimentar", "cenoura")],
-          ["Maçã · 1 moeda", () => this.care("alimentar", "maca")],
-          ["Leite · 2 moedas", () => this.care("alimentar", "leite")],
-        ],
+        cozinha: (s.catalogo_alimentos || [])
+          .map((f) => [
+            f.icone +
+              " " +
+              f.nome +
+              " · " +
+              (s.alimentos?.[f.id] || 0) +
+              " no estoque",
+            () => this.care("alimentar", f.id),
+            (s.alimentos?.[f.id] || 0) < 1,
+          ])
+          .concat([["🥕 Comprar comidas", () => this.openMenu("comidas")]]),
         banheiro: [
           ["1 · Sabonete", () => this.scene?.bathStep("sabao")],
           ["2 · Chuveiro", () => this.scene?.bathStep("chuveiro")],
-          ["3 · Toalha · 1 moeda", () => this.scene?.bathStep("toalha")],
+          ["3 · Toalha", () => this.scene?.bathStep("toalha")],
         ],
         quarto: [
           ["☾ Dormir / apagar luz", () => this.care("dormir")],
@@ -312,15 +319,16 @@
           ["♡ Carinho", () => this.care("carinho")],
         ],
       };
-      for (const [text, fn] of controls[s.comodo] || []) {
+      for (const [text, fn, locked] of controls[s.comodo] || []) {
         const b = el("button", text);
         b.onclick = fn;
+        b.dataset.locked = String(!!locked);
         area.append(b);
       }
       const help = {
         sala: "Toque no Patch para fazer carinho. Arraste a bola ou toque no chão para ele caminhar.",
         cozinha:
-          "Abra a geladeira e arraste um alimento até a boca. A alimentação usa moedas do Patch.",
+          "Arraste uma comida do estoque até a boca. Reponha na aba Comidas e ganhe moedas quando alimentar o Patch com fome.",
         banheiro:
           "Arraste o sabonete no bichinho, enxágue e seque com a toalha. Também é possível usar os botões.",
         quarto:
@@ -353,6 +361,14 @@
                 ? "Missão concluída: +10 moedas do Patch!"
                 : "Progresso salvo ♡",
         );
+        if (action === "comprar_comida")
+          this.message("Comida comprada! Veja o estoque na cozinha.");
+        if (s.recompensa_acao > 0) {
+          this.message(
+            "Cuidado concluído! +" + s.recompensa_acao + " moedas ♡",
+          );
+          this.scene?.coinReward(s.recompensa_acao);
+        }
         return s;
       } catch (e) {
         if (gen === this.generation)
@@ -442,11 +458,46 @@
         inventario: "Meu inventário",
         jogos: "Minijogos",
         progresso: "Idades do Patch",
+        comidas: "Mercadinho de comidas",
       };
       const panelTitle = $("patch-sheet-title");
       const old = title[this.menu];
       if (panelTitle.textContent !== old) panelTitle.textContent = old;
-      if (this.menu === "progresso") {
+      if (this.menu === "comidas") {
+        area.append(
+          el(
+            "p",
+            "Compre com moedas do Patch. O estoque é compartilhado pelo casal. Cada compra adiciona uma unidade.",
+          ),
+        );
+        const grid = el("div", undefined, "patch-shop-grid");
+        for (const food of s.catalogo_alimentos || []) {
+          const qty = Number(s.alimentos?.[food.id] || 0),
+            card = el("div", undefined, "patch-shop-item");
+          card.dataset.food = food.id;
+          card.append(
+            el("span", food.icone, "patch-item-icon"),
+            el("strong", food.nome),
+            el(
+              "small",
+              food.preco + " moedas · +" + food.saciedade + " de saciedade",
+            ),
+            el("small", "No estoque: " + qty),
+          );
+          const buy = el("button", "Comprar +1");
+          buy.dataset.locked = String(s.moedas < food.preco || qty >= 99);
+          buy.disabled = buy.dataset.locked === "true";
+          buy.onclick = () => this.act("comprar_comida", food.id);
+          card.append(buy);
+          grid.append(card);
+        }
+        const kitchen = el("button", "Ir para a cozinha");
+        kitchen.onclick = () => {
+          this.closeMenu();
+          this.go("cozinha");
+        };
+        area.append(grid, kitchen);
+      } else if (this.menu === "progresso") {
         const grid = el("div", undefined, "patch-shop-grid");
         for (const [key, label, level] of [
           ["bebe", "Bebê", 1],
@@ -530,6 +581,16 @@
               " / 10. Ganhos de XP hoje: " +
               s.xp_hoje +
               " / 100.",
+          ),
+        );
+        area.append(
+          el(
+            "p",
+            "Moedas ganhas nos cuidados hoje: " +
+              (s.recompensas_cuidados || 0) +
+              " / " +
+              (s.limite_cuidados || 30) +
+              ". Alimentar e dar banho rendem até 2 moedas; carinho, dança, brincadeira e rega rendem até 1 quando melhoram uma necessidade.",
           ),
         );
       } else if (this.menu === "jogos") {
@@ -952,6 +1013,7 @@
         this.night.setVisible(s.dormindo);
         if (!this.reactionTimer) this.rest();
         if (!this.mini) this.renderDecor(s.decoracao);
+        if (this.room === "cozinha" && !this.mini) this.syncFoods(s);
       }
       rest() {
         if (!app.state || !this.body.active) return;
@@ -993,7 +1055,13 @@
             .text(
               this.pet.x + 65,
               this.pet.y - 65,
-              { maca: "🍎", leite: "🥛" }[item] || "🥕",
+              {
+                maca: "🍎",
+                leite: "🥛",
+                banana: "🍌",
+                morango: "🍓",
+                bolinho: "🧁",
+              }[item] || "🥕",
               { fontSize: "30px" },
             )
             .setOrigin(0.5)
@@ -1123,18 +1191,16 @@
           });
           this.label("Geladeira", 408, 300);
           this.foods = [];
-          for (const [i, [name, emoji]] of [
-            ["cenoura", "🥕"],
-            ["maca", "🍎"],
-            ["leite", "🥛"],
-          ].entries()) {
-            const food = this.draggable(
-              this.icon(emoji, 130 + i * 110, 540, 48),
-            );
-            food._food = name;
+          for (const [i, f] of (app.state.catalogo_alimentos || []).entries()) {
+            const x = 130 + (i % 3) * 110,
+              y = 540 + Math.floor(i / 3) * 65,
+              food = this.draggable(this.icon(f.icone, x, y, 38));
+            food._food = f.id;
+            food._qty = this.label("", x, y + 25);
             this.foods.push(food);
           }
-          this.label("Arraste até a boca", 240, 594);
+          this.syncFoods(app.state);
+          this.label("Arraste até a boca · Estoque da cozinha", 240, 485);
         }
         if (room === "banheiro") {
           const tub = this.add.graphics().setDepth(14);
@@ -1198,6 +1264,37 @@
         }
         this.rest();
         if (app.state) this.renderDecor(app.state.decoracao);
+      }
+      syncFoods(s) {
+        for (const obj of this.foods || []) {
+          if (!obj.active) continue;
+          const qty = Number(s.alimentos?.[obj._food] || 0);
+          obj.setAlpha(qty ? 1 : 0.35);
+          if (obj.input) obj.input.enabled = qty > 0;
+          obj._qty?.setText("× " + qty);
+        }
+      }
+      coinReward(amount) {
+        this.sfx("patch-coin");
+        this.burst(this.pet.x, this.pet.y - 160, "●", 0xd6a340);
+        const label = this.add
+          .text(this.pet.x, this.pet.y - 170, "+" + amount + " moedas", {
+            fontFamily: "sans-serif",
+            fontSize: "23px",
+            fontStyle: "bold",
+            color: "#956511",
+            stroke: "#fff2cf",
+            strokeThickness: 4,
+          })
+          .setOrigin(0.5)
+          .setDepth(55);
+        this.tweens.add({
+          targets: label,
+          y: label.y - 60,
+          alpha: 0,
+          duration: 1400,
+          onComplete: () => label.destroy(),
+        });
       }
       renderDecor(id) {
         if (this.decorId === id && this.extraDecor?.active) return;
