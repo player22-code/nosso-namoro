@@ -59,12 +59,84 @@
       $("patch-status").textContent = text;
       $("patch-status").dataset.error = String(error);
     },
+    dragMode: false,
+    waits: {},
+    pending: null,
+    setDragMode(on) {
+      this.dragMode = !!on;
+      root.dataset.arrastar = String(this.dragMode);
+      if (this.dragMode && this.game?.canvas) {
+        this.game.canvas.scrollIntoView({
+          block: "center",
+          behavior: "instant",
+        });
+        this.game.scale.updateBounds();
+      }
+      $("patch-drag-mode").setAttribute("aria-pressed", String(this.dragMode));
+      $("patch-drag-mode").textContent = this.dragMode
+        ? "✓ Terminar de mover"
+        : "↔ Mover objetos";
+      $("patch-gesture-help").textContent = this.dragMode
+        ? "Arraste um objeto. Ao soltar, a rolagem volta ao normal."
+        : "Toque para cuidar · Deslize para rolar a página";
+    },
+    refreshControls() {
+      const now = performance.now(),
+        bath = this.scene?.bath;
+      root
+        .querySelectorAll("[data-room],[data-patch-menu],#patch-drag-mode")
+        .forEach((b) => {
+          b.disabled = this.busy || !!bath?.animating || !!this.scene?.mini;
+        });
+      for (const b of $("patch-actions").querySelectorAll("[data-action]")) {
+        const a = b.dataset.action,
+          wait = Math.max(0, Math.ceil(((this.waits[a] || 0) - now) / 1000));
+        let locked = b.dataset.locked === "true",
+          note = b.dataset.note || "";
+        if (a.startsWith("bath-")) {
+          const step = a.slice(5);
+          locked = bath?.phase !== step || !!bath?.animating;
+          note = bath?.animating
+            ? "Aguarde a animação…"
+            : bath?.phase === step
+              ? {
+                  sabao: "Começar por aqui",
+                  chuveiro: "Espuma pronta",
+                  toalha: "Enxaguado: pode secar",
+                }[step]
+              : bath?.phase === "done"
+                ? "Banho concluído"
+                : "Conclua a etapa anterior";
+          if (bath?.phase === "done" && step === "sabao" && !wait)
+            locked = false;
+        }
+        const realAction = a.startsWith("bath-") ? "banho" : a,
+          remaining = Math.max(
+            wait,
+            Math.ceil(((this.waits[realAction] || 0) - now) / 1000),
+          );
+        b.disabled = this.busy || locked || remaining > 0;
+        b.classList.toggle(
+          "is-working",
+          this.busy && this.pending === realAction,
+        );
+        const n = b.querySelector(".patch-action-note");
+        if (n)
+          n.textContent =
+            remaining > 0
+              ? "Disponível em " + remaining + "s"
+              : this.busy && this.pending === realAction
+                ? "Salvando…"
+                : note;
+      }
+    },
     setBusy(v) {
       this.busy = v;
       root.setAttribute("aria-busy", String(v));
       root.querySelectorAll("button:not(.patch-close)").forEach((b) => {
         b.disabled = v || b.dataset.locked === "true";
       });
+      this.refreshControls();
     },
     async connect() {
       const c = bridge.context();
@@ -103,6 +175,8 @@
       this.busy = false;
       this.closeMenu();
       this.scene?.cancelMini(false);
+      this.setDragMode(false);
+      this.waits = {};
       if (this.scene) this.scene.input.enabled = false;
       $("patch-moedas").textContent = "—";
       $("patch-nivel").textContent = "Preparando seu cantinho…";
@@ -167,6 +241,12 @@
         throw new Error("Estado do Patch indisponível");
       const first = !this.state;
       this.state = s;
+      this.waits = Object.fromEntries(
+        Object.entries(s.esperas || {}).map(([k, v]) => [
+          k,
+          performance.now() + Math.max(0, Number(v) || 0) * 1000,
+        ]),
+      );
       if (!this.unsubscribe) {
         try {
           this.unsubscribe = bridge.subscribe(this.story, () =>
@@ -283,57 +363,84 @@
           "Enquanto dorme, o Patch recupera o descanso com o passar do tempo.";
         return;
       }
-      const controls = {
-        sala: [
-          ["♡ Carinho", () => this.care("carinho")],
-          ["♬ Dançar", () => this.care("dancar")],
-          ["Bola", () => this.scene?.playBall()],
-        ],
-        cozinha: (s.catalogo_alimentos || [])
-          .map((f) => [
-            f.icone +
-              " " +
-              f.nome +
-              " · " +
-              (s.alimentos?.[f.id] || 0) +
-              " no estoque",
-            () => this.care("alimentar", f.id),
-            (s.alimentos?.[f.id] || 0) < 1,
-          ])
-          .concat([["🥕 Comprar comidas", () => this.openMenu("comidas")]]),
-        banheiro: [
-          ["1 · Sabonete", () => this.scene?.bathStep("sabao")],
-          ["2 · Chuveiro", () => this.scene?.bathStep("chuveiro")],
-          ["3 · Toalha", () => this.scene?.bathStep("toalha")],
-        ],
-        quarto: [
-          ["☾ Dormir / apagar luz", () => this.care("dormir")],
-          ["♡ Carinho", () => this.care("carinho")],
-        ],
-        jardim: [
-          ["Regar flores", () => this.scene?.waterPlant()],
-          ["Brincar com bola", () => this.scene?.playBall()],
-        ],
-        passeio: [
-          ["Iniciar passeio", () => this.startGame("passeio")],
-          ["♡ Carinho", () => this.care("carinho")],
-        ],
-      };
-      for (const [text, fn, locked] of controls[s.comodo] || []) {
-        const b = el("button", text);
+      const button = (action, label, icon, note, fn, locked = false) => {
+        const b = el("button", undefined, "patch-action");
+        b.dataset.action = action;
+        b.dataset.note = note;
+        b.dataset.locked = String(locked);
+        b.append(
+          el("span", icon, "patch-action-icon"),
+          el("strong", label),
+          el("small", note, "patch-action-note"),
+        );
         b.onclick = fn;
-        b.dataset.locked = String(!!locked);
         area.append(b);
+        return b;
+      };
+      area.dataset.room = s.comodo;
+      const care = (a, title, icon, note) =>
+        button(a, title, icon, note, () => this.care(a));
+      if (s.comodo === "sala") {
+        care("carinho", "Fazer carinho", "♡", "Toque e ganhe afeto");
+        care("dancar", "Dançar", "♫", "Animar o Patch");
+        button("brincar", "Jogar bola", "⚽", "Brincar juntos", () =>
+          this.scene?.playBall(),
+        );
+      } else if (s.comodo === "cozinha") {
+        for (const f of s.catalogo_alimentos || []) {
+          const qty = Number(s.alimentos?.[f.id] || 0),
+            b = button(
+              "alimentar",
+              f.nome,
+              f.icone,
+              qty ? qty + " no estoque" : "Acabou",
+              () => this.care("alimentar", f.id),
+              !qty,
+            );
+          b.dataset.foodAction = f.id;
+        }
+        button("mercado", "Comprar comidas", "🛒", "Repor o estoque", () =>
+          this.openMenu("comidas"),
+        );
+      } else if (s.comodo === "banheiro") {
+        for (const [i, key, label, icon] of [
+          [1, "sabao", "Ensaboar", "🧼"],
+          [2, "chuveiro", "Enxaguar", "🚿"],
+          [3, "toalha", "Secar", "🧺"],
+        ])
+          button("bath-" + key, i + " · " + label, icon, "", () =>
+            this.scene?.bathStep(key),
+          );
+      } else if (s.comodo === "quarto") {
+        care("dormir", "Dormir", "☾", "Apagar a luz e descansar");
+        care("carinho", "Fazer carinho", "♡", "Um carinho antes de dormir");
+      } else if (s.comodo === "jardim") {
+        button("regar", "Regar flores", "🌷", "Cuidar do jardim", () =>
+          this.scene?.waterPlant(),
+        );
+        button("brincar", "Jogar bola", "⚽", "Diversão ao ar livre", () =>
+          this.scene?.playBall(),
+        );
+      } else if (s.comodo === "passeio") {
+        button(
+          "passear",
+          "Iniciar passeio",
+          "🌳",
+          "Encontrar três corações",
+          () => this.startGame("passeio"),
+        );
+        care("carinho", "Fazer carinho", "♡", "Cuidar durante o passeio");
       }
       const help = {
-        sala: "Toque no Patch para fazer carinho. Arraste a bola ou toque no chão para ele caminhar.",
+        sala: "Toque no Patch para fazer carinho, na bola para brincar ou no chão para caminhar. Deslize para rolar a página.",
         cozinha:
-          "Arraste uma comida do estoque até a boca. Reponha na aba Comidas e ganhe moedas quando alimentar o Patch com fome.",
+          "Toque em uma comida para alimentar. Para arrastar até a boca, ative Mover objetos. Reponha o estoque na aba Comidas.",
         banheiro:
-          "Arraste o sabonete no bichinho, enxágue e seque com a toalha. Também é possível usar os botões.",
+          "Siga as etapas: ensaboar, enxaguar e secar. Aguarde cada animação; a próxima etapa será liberada automaticamente.",
         quarto:
           "Toque na cama ou no interruptor para dormir. O descanso continua mesmo fora da página.",
-        jardim: "Arraste o regador até as flores e brinque com a bola.",
+        jardim:
+          "Toque nas flores para regar ou na bola para brincar. Ative Mover objetos se quiser arrastar.",
         passeio:
           "Comece o passeio e toque nos três corações ao longo do caminho.",
       };
@@ -343,6 +450,7 @@
     async act(action, item) {
       if (this.busy || !this.state) return null;
       const gen = this.generation;
+      this.pending = action;
       this.setBusy(true);
       try {
         const s = await bridge.rpc("patch_acao", {
@@ -382,11 +490,28 @@
       }
     },
     async care(action, item) {
+      if (this.scene?.bath.animating && action !== "banho") {
+        this.message("Espere a etapa do banho terminar.");
+        return null;
+      }
+      const wait = Math.ceil(
+        ((this.waits[action] || 0) - performance.now()) / 1000,
+      );
+      if (wait > 0) {
+        this.message("Este cuidado estará disponível em " + wait + "s.");
+        return null;
+      }
       const s = await this.act(action, item);
       if (s) this.scene?.react(action, item);
       return s;
     },
     async go(room) {
+      if (this.scene?.bath.animating) {
+        this.message("Espere terminar esta etapa do banho.");
+        return;
+      }
+      if (this.state?.comodo === room) return;
+      this.setDragMode(false);
       if (this.scene?.mini) {
         this.message(
           "Termine ou saia da atividade antes de trocar de ambiente.",
@@ -421,6 +546,10 @@
             mode: Phaser.Scale.FIT,
             autoCenter: Phaser.Scale.CENTER_BOTH,
           },
+          input: {
+            touch: { capture: false },
+            mouse: { preventDefaultWheel: false },
+          },
           audio: { disableWebAudio: true },
           scene: makeScene(Phaser, this),
         });
@@ -433,6 +562,10 @@
       }
     },
     openMenu(name) {
+      if (this.scene?.bath.animating) {
+        this.message("Espere a etapa do banho terminar.");
+        return;
+      }
       if (!this.state || this.scene?.mini || this.busy) return;
       this.focusBack = document.activeElement;
       this.menu = name;
@@ -784,6 +917,27 @@
     soundState(e.detail.patchSom !== false),
   );
   soundState(window.nhPreferencias?.valor("patchSom") !== false);
+  $("patch-drag-mode").onclick = () => App.setDragMode(!App.dragMode);
+  App.setDragMode(false);
+  setInterval(() => {
+    if (App.state) App.refreshControls();
+  }, 250);
+  root.querySelectorAll("[data-patch-menu]").forEach((b) => {
+    const menus = {
+      comidas: ["🥕", "Comidas"],
+      tarefas: ["✓", "Tarefas"],
+      loja: ["🛍", "Loja"],
+      inventario: ["🎒", "Itens"],
+      jogos: ["🎮", "Jogos"],
+    };
+    const item = menus[b.dataset.patchMenu];
+    if (item) {
+      b.replaceChildren(
+        el("span", item[0], "patch-tool-icon"),
+        el("span", item[1]),
+      );
+    }
+  });
   const observer = new IntersectionObserver(
     (entries) => {
       App.visible = entries[0].isIntersecting;
@@ -826,7 +980,13 @@
         this.reactionTimer = null;
         this.objects = [];
         this.roomTweens = [];
-        this.bath = { soap: 0, rinse: false, done: false };
+        this.bath = {
+          soap: 0,
+          rinse: false,
+          done: false,
+          phase: "sabao",
+          animating: false,
+        };
         this.fridgeOpen = true;
         this.downAt = 0;
         this.walkTween = null;
@@ -868,7 +1028,7 @@
         this.makeAnims(age(app.state?.nivel || 1));
         this.age = age(app.state?.nivel || 1);
         this.body.setInteractive();
-        this.body.on("pointerdown", () => {
+        this.bindTap(this.body, () => {
           if (!this.mini) app.care("carinho");
         });
         this.night = this.add
@@ -888,12 +1048,18 @@
           .setDepth(50)
           .setVisible(false);
         this.input.on("dragstart", (pointer, obj) => {
+          obj._dragAllowed =
+            (!pointer.wasTouch || app.dragMode) &&
+            (!pointer.event?.target ||
+              pointer.event.target === this.game.canvas);
+          if (!obj._dragAllowed) return;
+          obj._didDrag = true;
           obj.setDepth(40);
           obj._home = { x: obj.x, y: obj.y };
           obj._lastStroke = 0;
         });
         this.input.on("drag", (pointer, obj, x, y) => {
-          if (app.busy || this.mini) return;
+          if (app.busy || this.mini || !obj._dragAllowed) return;
           obj.setPosition(P.Math.Clamp(x, 25, 455), P.Math.Clamp(y, 90, 590));
           if (
             obj._tool === "sabao" &&
@@ -908,7 +1074,7 @@
           }
         });
         this.input.on("dragend", (pointer, obj) => {
-          if (app.busy || this.mini) return;
+          if (app.busy || this.mini || !obj._dragAllowed) return;
           if (
             obj._food &&
             P.Math.Distance.Between(obj.x, obj.y, this.pet.x, this.pet.y - 90) <
@@ -919,6 +1085,7 @@
             this.bathStep("toalha");
           else if (obj._tool === "regador" && obj.y > 350) this.waterPlant();
           else if (obj._ball) this.playBall();
+          if (pointer.wasTouch) app.setDragMode(false);
           if (obj.active && obj._home)
             this.tweens.add({
               targets: obj,
@@ -928,7 +1095,20 @@
               ease: "Sine.easeOut",
             });
         });
-        this.input.on("pointerdown", (pointer) => {
+        this.input.on("pointerdown", (p) => {
+          if (p.event?.target && p.event.target !== this.game.canvas) return;
+          this.floorTap = { x: p.x, y: p.y, t: this.time.now };
+        });
+        this.input.on("pointerup", (pointer) => {
+          const tap = this.floorTap;
+          this.floorTap = null;
+          if (
+            !tap ||
+            P.Math.Distance.Between(tap.x, tap.y, pointer.x, pointer.y) > 12 ||
+            this.time.now - tap.t > 700 ||
+            app.busy
+          )
+            return;
           if (this.mini?.tipo === "estrelas") {
             this.jump();
             return;
@@ -1037,7 +1217,7 @@
         this.reactionTimer?.remove();
         this.reactionTimer = null;
         const name = {
-          alimentar: "eat",
+          alimentar: "idle",
           carinho: "love",
           brincar: "play",
           dancar: "play",
@@ -1051,6 +1231,20 @@
           return;
         }
         if (action === "alimentar") {
+          this.foodVisual?.destroy();
+          this.lastFood = item;
+          this.lastFoodAnimation = "idle";
+          if (!reduced.matches)
+            this.roomTweens.push(
+              this.tweens.add({
+                targets: this.pet,
+                y: this.pet.y - 5,
+                duration: 150,
+                yoyo: true,
+                repeat: 5,
+                ease: "Sine.easeInOut",
+              }),
+            );
           const food = this.add
             .text(
               this.pet.x + 65,
@@ -1066,13 +1260,18 @@
             )
             .setOrigin(0.5)
             .setDepth(30);
+          this.foodVisual = food;
+          food.setText(
+            app.state.catalogo_alimentos?.find((f) => f.id === item)?.icone ||
+              "🍽",
+          );
           this.tweens.add({
             targets: food,
             x: this.pet.x,
             y: this.pet.y - 120,
             scale: 0,
             alpha: 0,
-            duration: 600,
+            duration: 1100,
             onComplete: () => food.destroy(),
           });
         }
@@ -1124,7 +1323,7 @@
           .setDepth(20)
           .setInteractive({ useHandCursor: true });
         obj.setPadding(9);
-        if (action) obj.on("pointerdown", action);
+        if (action) this.bindTap(obj, action);
         this.track(obj);
         return obj;
       }
@@ -1143,11 +1342,42 @@
             .setDepth(21),
         );
       }
+      bindTap(obj, fn) {
+        obj.on("pointerdown", (p) => {
+          if (p.event?.target && p.event.target !== this.game.canvas) {
+            obj._tap = null;
+            return;
+          }
+          obj._tap = { x: p.x, y: p.y, t: this.time.now };
+          obj._didDrag = false;
+        });
+        obj.on("pointerup", (p, x, y, event) => {
+          const start = obj._tap;
+          obj._tap = null;
+          if (
+            !start ||
+            obj._didDrag ||
+            P.Math.Distance.Between(start.x, start.y, p.x, p.y) > 12 ||
+            this.time.now - start.t > 700 ||
+            app.busy
+          )
+            return;
+          event?.stopPropagation();
+          fn(p);
+        });
+        return obj;
+      }
       draggable(obj) {
         this.input.setDraggable(obj);
         return obj;
       }
       clearRoom() {
+        this.bathVersion = (this.bathVersion || 0) + 1;
+        this.bathTimer?.remove();
+        this.bathTimer = null;
+        this.foam?.destroy();
+        this.foam = null;
+        this.foodVisual?.destroy();
         this.walkTween?.stop();
         this.walkResolve?.();
         this.walkResolve = null;
@@ -1162,7 +1392,13 @@
         this.pet.setPosition(240, 450).setAngle(0).setVisible(true);
         this.floorShadow.setPosition(240, 458);
         this.body.setVisible(true);
-        this.bath = { soap: 0, rinse: false, done: false };
+        this.bath = {
+          soap: 0,
+          rinse: false,
+          done: false,
+          phase: "sabao",
+          animating: false,
+        };
       }
       renderRoom(room) {
         this.clearRoom();
@@ -1180,12 +1416,16 @@
             this.icon("♪", 415, 165, 30, () => app.care("dancar"));
         }
         if (room === "cozinha") {
+          this.fridgeOpen = true;
           this.icon("▥", 414, 240, 64, () => {
             this.fridgeOpen = !this.fridgeOpen;
-            this.foods.forEach((o) => o.setVisible(this.fridgeOpen));
+            this.foods.forEach((o) => {
+              o.setVisible(this.fridgeOpen);
+              o._qty?.setVisible(this.fridgeOpen);
+            });
             app.message(
               this.fridgeOpen
-                ? "Escolha e arraste um alimento."
+                ? "Toque em um alimento ou ative Mover objetos para arrastar."
                 : "Geladeira fechada. Toque para abrir.",
             );
           });
@@ -1194,13 +1434,15 @@
           for (const [i, f] of (app.state.catalogo_alimentos || []).entries()) {
             const x = 130 + (i % 3) * 110,
               y = 540 + Math.floor(i / 3) * 65,
-              food = this.draggable(this.icon(f.icone, x, y, 38));
+              food = this.draggable(
+                this.icon(f.icone, x, y, 38, () => app.care("alimentar", f.id)),
+              );
             food._food = f.id;
             food._qty = this.label("", x, y + 25);
             this.foods.push(food);
           }
           this.syncFoods(app.state);
-          this.label("Arraste até a boca · Estoque da cozinha", 240, 485);
+          this.label("Toque para alimentar · Estoque da cozinha", 240, 485);
         }
         if (room === "banheiro") {
           const tub = this.add.graphics().setDepth(14);
@@ -1220,7 +1462,7 @@
           soap._tool = "sabao";
           this.icon("🚿", 408, 170, 48, () => this.bathStep("chuveiro"));
           const towel = this.draggable(
-            this.icon("▰", 400, 548, 52, () => this.bathStep("toalha")),
+            this.icon("🧺", 400, 548, 45, () => this.bathStep("toalha")),
           );
           towel._tool = "toalha";
           this.bathLabel = this.label("Sabonete → chuveiro → toalha", 240, 594);
@@ -1237,7 +1479,7 @@
           const hit = this.add
             .zone(240, 440, 290, 150)
             .setInteractive({ useHandCursor: true });
-          hit.on("pointerdown", () =>
+          this.bindTap(hit, () =>
             app.care(app.state.dormindo ? "acordar" : "dormir"),
           );
           this.track(hit);
@@ -1407,58 +1649,156 @@
       async bathStep(tool) {
         if (
           this.room !== "banheiro" ||
-          this.bath.done ||
           app.busy ||
-          app.state?.dormindo
+          app.state?.dormindo ||
+          this.bath.animating
         )
           return;
-        if (tool === "sabao") this.bath.soap += 5;
-        else if (tool === "esfregar") this.bath.soap++;
-        if (tool === "sabao" || tool === "esfregar") {
-          this.burst(this.pet.x, this.pet.y - 80, "○", 0xffffff);
-          this.bathLabel.setText(
-            this.bath.soap >= 5
-              ? "Espuma pronta! Use o chuveiro."
-              : "Esfregue mais um pouco…",
+        if ((app.waits.banho || 0) > performance.now()) {
+          app.message(
+            "O Patch já tomou banho. Espere o contador para repetir.",
           );
           return;
         }
+        if (this.bath.phase === "done" && tool === "sabao")
+          this.bath = {
+            soap: 0,
+            rinse: false,
+            done: false,
+            phase: "sabao",
+            animating: false,
+          };
+        const b = this.bath,
+          version = this.bathVersion;
+        const finish = (delay, fn) => {
+          b.animating = true;
+          app.refreshControls();
+          this.bathTimer = this.time.delayedCall(
+            reduced.matches ? 80 : delay,
+            () => {
+              this.bathTimer = null;
+              if (
+                this.room !== "banheiro" ||
+                this.bathVersion !== version ||
+                this.bath !== b
+              )
+                return;
+              b.animating = false;
+              fn();
+              app.refreshControls();
+            },
+          );
+        };
+        if (tool === "sabao" || tool === "esfregar") {
+          if (b.phase !== "sabao") return;
+          b.soap += tool === "sabao" ? 5 : 1;
+          if (!this.foam) {
+            this.foam = this.add
+              .container(this.pet.x, this.pet.y - 65)
+              .setDepth(15);
+            for (let i = 0; i < 10; i++)
+              this.foam.add(
+                this.add.circle(
+                  ((i % 5) - 2) * 24,
+                  Math.floor(i / 5) * -24,
+                  18,
+                  0xfff8ff,
+                  0.85,
+                ),
+              );
+          }
+          this.burst(this.pet.x, this.pet.y - 100, "○", 0xffffff);
+          this.bathLabel.setText("Preparando espuma…");
+          if (b.soap >= 5)
+            finish(700, () => {
+              b.phase = "chuveiro";
+              this.bathLabel.setText("Espuma pronta! Agora enxágue.");
+              app.message("Etapa 1 de 3 concluída: use o chuveiro.");
+            });
+          return;
+        }
         if (tool === "chuveiro") {
-          if (this.bath.soap < 5) {
-            app.message("Passe o sabonete antes de enxaguar.");
+          if (b.phase !== "chuveiro") {
+            app.message("Use o sabonete primeiro.");
             return;
           }
-          this.bath.rinse = true;
-          for (let i = 0; i < 16; i++) {
-            const drop = this.add
-              .ellipse(210 + (i % 5) * 14, 210, 4, 12, 0xb7e7fa, 0.85)
-              .setDepth(30);
-            this.tweens.add({
-              targets: drop,
-              y: 440,
-              alpha: 0,
-              delay: i * 35,
-              duration: 600,
-              onComplete: () => drop.destroy(),
-            });
+          this.bathLabel.setText("Enxaguando…");
+          for (let i = 0; i < 22; i++) {
+            const drop = this.track(
+              this.add
+                .ellipse(188 + (i % 7) * 17, 215, 5, 14, 0xa6d8f3, 0.9)
+                .setDepth(30),
+            );
+            this.roomTweens.push(
+              this.tweens.add({
+                targets: drop,
+                y: 430,
+                alpha: 0,
+                delay: i * 28,
+                duration: 600,
+                onComplete: () => drop.destroy(),
+              }),
+            );
           }
-          this.bathLabel.setText("Enxaguado! Agora use a toalha.");
+          if (this.foam)
+            this.roomTweens.push(
+              this.tweens.add({ targets: this.foam, alpha: 0, duration: 850 }),
+            );
+          finish(1300, () => {
+            this.foam?.destroy();
+            this.foam = null;
+            b.rinse = true;
+            b.phase = "toalha";
+            this.bathLabel.setText("Enxaguado! Agora seque com a toalha.");
+            app.message("Etapa 2 de 3 concluída: use a toalha.");
+          });
           return;
         }
         if (tool === "toalha") {
-          if (!this.bath.rinse) {
+          if (b.phase !== "toalha") {
             app.message("Ensaboe e enxágue antes de secar.");
             return;
           }
-          this.bath.done = true;
-          const s = await app.care("banho");
-          if (s) {
-            this.bathLabel.setText("Limpinho! ♡");
-            this.bath = { soap: 0, rinse: false, done: false };
-          } else this.bath.done = false;
+          this.bathLabel.setText("Secando…");
+          const towel = this.track(
+            this.add
+              .rectangle(this.pet.x - 65, this.pet.y - 80, 70, 45, 0xd3b2ed)
+              .setStrokeStyle(3, 0xfff3fb)
+              .setDepth(25),
+          );
+          this.roomTweens.push(
+            this.tweens.add({
+              targets: towel,
+              x: this.pet.x + 65,
+              duration: 250,
+              yoyo: true,
+              repeat: 1,
+            }),
+          );
+          finish(1100, async () => {
+            towel.destroy();
+            b.animating = true;
+            app.refreshControls();
+            const result = await app.care("banho");
+            if (this.room !== "banheiro" || version !== this.bathVersion)
+              return;
+            b.animating = false;
+            if (result) {
+              b.phase = "done";
+              b.done = true;
+              this.bathLabel.setText("Limpinho! Banho concluído ♡");
+            } else {
+              b.phase = "toalha";
+              this.bathLabel.setText(
+                "Não foi salvo. Toque em Secar para tentar de novo.",
+              );
+            }
+            app.refreshControls();
+          });
         }
       }
       beginMini(game) {
+        app.setDragMode(false);
         this.clearRoom();
         this.mini = {
           ...game,
@@ -1550,7 +1890,7 @@
             .setOrigin(0.5);
           this.miniLayer.add([tile, label]);
           m.cards.push({ tile, label, value });
-          tile.on("pointerdown", () => this.flip(i));
+          this.bindTap(tile, () => this.flip(i));
         });
       }
       flip(i) {
@@ -1673,7 +2013,7 @@
                   .setOrigin(0.5)
                   .setInteractive({ useHandCursor: true });
               const entry = { ...target, x, obj };
-              obj.on("pointerdown", () => this.collect(entry));
+              this.bindTap(obj, () => this.collect(entry));
               this.miniLayer.add(obj);
               m.targets.push(entry);
             }

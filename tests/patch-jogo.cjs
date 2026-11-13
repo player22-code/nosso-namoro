@@ -87,8 +87,10 @@ function fixture() {
                     s.necessidades.diversao < 90
                   ? 1
                   : 0;
-        if (action === "comodo") s.comodo = item;
-        else if (action === "alimentar") {
+        if (action === "comodo") {
+          if (s.comodo !== item) s.dormindo = false;
+          s.comodo = item;
+        } else if (action === "alimentar") {
           assert(s.alimentos[item] > 0);
           s.alimentos[item]--;
           s.necessidades.fome -= catalogo_alimentos.find(
@@ -235,264 +237,293 @@ async function drag(p, x, y, toX, toY) {
   await p.mouse.up();
   await p.waitForTimeout(250);
 }
-(async () => {
-  const b = await chromium.launch({
-    executablePath: "/usr/bin/chromium",
-    args: ["--no-sandbox"],
-  });
-  try {
-    for (const width of [320, 390, 1280]) {
-      const p = await b.newPage({ viewport: { width, height: 1000 } }),
-        db = fixture(),
-        errors = [],
-        missing = [];
-      p.on("pageerror", (e) => errors.push(e.message));
-      p.on("response", (r) => {
-        if (r.status() >= 400 && r.url().includes("127.0.0.1"))
-          missing.push(r.url());
-      });
-      p.setDefaultTimeout(12000);
-      await setup(p, db);
-      assert.equal(
-        await p.locator("#patch-classico").getAttribute("open"),
-        null,
-      );
-      assert.equal(await p.locator("#patch-needs meter").count(), 5);
-      assert.equal(await p.locator("#patch-rooms button").count(), 6);
-      await p.locator('[data-patch-menu="progresso"]').click();
-      assert.equal(await p.locator("#patch-sheet-body img").count(), 5);
-      assert.equal(await p.locator("#patch-sheet-body button").count(), 0);
-      await p.locator("#patch-sheet-close").click();
-      await p
-        .locator("#patch-actions")
-        .getByRole("button", { name: "Carinho" })
-        .click();
-      await p.waitForFunction(
-        () => NH_PATCH_GAME.getState().progresso.carinho === 1,
-      );
-      await room(p, "cozinha");
-      await drag(p, 130, 540, 240, 360);
-      await p.waitForFunction(
-        () => NH_PATCH_GAME.getState().necessidades.fome === 35,
-      );
-      assert.equal(db.state.moedas, 83);
-      assert.equal(db.state.alimentos.cenoura, 2);
-      await p.locator('[data-patch-menu="comidas"]').click();
-      assert.equal(await p.locator("[data-food]").count(), 6);
-      await p
-        .locator('[data-food="banana"]')
-        .getByRole("button", { name: "Comprar +1" })
-        .click();
-      await p.waitForFunction(
-        () => NH_PATCH_GAME.getState().alimentos.banana === 1,
-      );
-      assert.equal(db.state.moedas, 80);
-      await p
-        .getByRole("button", { name: "Ir para a cozinha", exact: true })
-        .click();
-      await p
-        .locator("#patch-actions")
-        .getByRole("button", { name: /Banana/ })
-        .click();
-      await p.waitForFunction(
-        () => NH_PATCH_GAME.getState().alimentos.banana === 0,
-      );
-      assert.equal(db.state.moedas, 82);
-      assert.match(
-        await p.locator("#patch-status").textContent(),
-        /\+2 moedas/,
-      );
-      await room(p, "banheiro");
-      await p.locator("#patch-actions").getByText("3 · Toalha").click();
-      assert.equal(db.state.progresso.banho, undefined);
-      await p.locator("#patch-actions").getByText("1 · Sabonete").click();
-      await p.locator("#patch-actions").getByText("2 · Chuveiro").click();
-      await p.locator("#patch-actions").getByText("3 · Toalha").click();
-      await p.waitForFunction(
-        () => NH_PATCH_GAME.getState().progresso.banho === 1,
-      );
-      await room(p, "quarto");
-      await p.locator("#patch-actions").getByText("Dormir").click();
-      await p.waitForFunction(() => NH_PATCH_GAME.getState().dormindo);
-      assert(await p.evaluate(() => NH_PATCH_GAME.scene().night.visible));
-      await p.locator("#patch-actions").getByText("Acordar").click();
-      await p.waitForFunction(() => !NH_PATCH_GAME.getState().dormindo);
-      await room(p, "jardim");
-      await p.locator("#patch-actions").getByText("Regar").click();
-      assert(db.events.some((e) => e.a?.p_acao === "regar"));
-      await p.locator("#patch-actions").getByText("bola").click();
-      assert(db.events.some((e) => e.a?.p_acao === "brincar"));
-      await p.locator('[data-patch-menu="tarefas"]').click();
-      if (process.env.PATCH_DEBUG) {
-        await p
-          .locator("#patch-game")
-          .screenshot({ path: "/tmp/patch-menu.png" });
-        console.log(
-          "MENU",
-          await p
-            .getByText("Resgatar missão · +10 moedas", { exact: true })
-            .evaluate((e) => ({
-              rect: e.getBoundingClientRect().toJSON(),
-              ancestors: [e.parentElement, e.closest("#patch-overlay")].map(
-                (x) => ({
-                  class: x.className,
-                  z: getComputedStyle(x).zIndex,
-                  hidden: x.hidden,
-                }),
-              ),
-              elements: document
-                .elementsFromPoint(
-                  e.getBoundingClientRect().x + 20,
-                  e.getBoundingClientRect().y + 20,
-                )
-                .slice(0, 5)
-                .map((x) => x.tagName + ":" + x.id),
-            })),
+module.exports = { fixture, setup, room, tap, drag };
+if (require.main === module)
+  (async () => {
+    const b = await chromium.launch({
+      executablePath: "/usr/bin/chromium",
+      args: ["--no-sandbox"],
+    });
+    try {
+      for (const width of [320, 390, 1280]) {
+        const p = await b.newPage({ viewport: { width, height: 1000 } }),
+          db = fixture(),
+          errors = [],
+          missing = [];
+        p.on("pageerror", (e) => errors.push(e.message));
+        p.on("response", (r) => {
+          if (r.status() >= 400 && r.url().includes("127.0.0.1"))
+            missing.push(r.url());
+        });
+        p.setDefaultTimeout(12000);
+        await setup(p, db);
+        assert.equal(
+          await p.locator("#patch-classico").getAttribute("open"),
+          null,
         );
-      }
-      await p
-        .getByText("Resgatar missão · +10 moedas", { exact: true })
-        .click();
-      await p.waitForFunction(() => NH_PATCH_GAME.getState().missao_resgatada);
-      await p.getByText("Presente diário · +8 moedas", { exact: true }).click();
-      await p.waitForFunction(
-        () => !NH_PATCH_GAME.getState().presente_disponivel,
-      );
-      assert(db.state.missao_resgatada);
-      assert(!db.state.presente_disponivel);
-      await p.locator("#patch-sheet-close").click();
-      await p.locator('[data-patch-menu="loja"]').click();
-      const shirt = p
-        .locator(".patch-shop-item")
-        .filter({ hasText: "Camiseta de coração" });
-      await shirt.getByRole("button", { name: "Comprar" }).click();
-      await shirt.getByRole("button", { name: "Usar", exact: true }).click();
-      await p.waitForFunction(
-        () => NH_PATCH_GAME.getState().roupa === "camiseta_rosa",
-      );
-      assert.equal(db.state.roupa, "camiseta_rosa");
-      await p.locator("#patch-sheet-close").click();
-      await p.locator('[data-patch-menu="inventario"]').click();
-      assert.equal(await p.locator(".patch-shop-item").count(), 1);
-      await p.keyboard.press("Escape");
-      assert(await p.locator("#patch-overlay").isHidden());
-      // Simula uma atualização Realtime do outro integrante, sem recarregar a página.
-      db.state.comodo = "sala";
-      db.state.moedas = 97;
-      await p.evaluate(() => __patchSync());
-      await p.waitForFunction(
-        () =>
-          NH_PATCH_GAME.getState().moedas === 97 &&
-          NH_PATCH_GAME.scene().room === "sala",
-      );
-      for (const [nivel, a] of [
-        [1, "bebe"],
-        [5, "filhote"],
-        [10, "juvenil"],
-        [20, "jovem"],
-        [30, "adulto"],
-      ]) {
-        db.state.nivel = nivel;
-        await p.evaluate(() => NH_PATCH_GAME.refresh());
-        await p.waitForFunction((a) => NH_PATCH_GAME.scene().age === a, a);
-      }
-      const measurements = await p.locator("#patch-game").evaluate((e) => ({
-        client: e.clientWidth,
-        scroll: e.scrollWidth,
-        labels: [...e.querySelectorAll(".patch-need b")].map(
-          (b) => getComputedStyle(b).color,
-        ),
-        wallet: e.querySelector(".patch-wallet").getBoundingClientRect().right,
-        right: e.getBoundingClientRect().right,
-      }));
-      assert(measurements.scroll <= measurements.client + 1);
-      assert(measurements.wallet <= measurements.right);
-      assert(measurements.labels.every((c) => c === "rgb(99, 55, 89)"));
-      assert.deepEqual(missing, []);
-      assert.deepEqual(errors, []);
-      if (width === 390) {
+        assert.equal(await p.locator("#patch-needs meter").count(), 5);
+        assert.equal(await p.locator("#patch-rooms button").count(), 6);
+        await p.locator('[data-patch-menu="progresso"]').click();
+        assert.equal(await p.locator("#patch-sheet-body img").count(), 5);
+        assert.equal(await p.locator("#patch-sheet-body button").count(), 0);
+        await p.locator("#patch-sheet-close").click();
         await p
-          .locator("#patch-game")
-          .screenshot({ path: "/tmp/patch-jogo-mobile.png" });
-        for (const type of ["memoria", "coracoes", "estrelas", "passeio"]) {
-          await p.evaluate((t) => NH_PATCH_GAME.startGame(t), type);
-          await p.waitForFunction(
-            (t) => NH_PATCH_GAME.scene().mini?.tipo === t,
-            type,
+          .locator("#patch-actions")
+          .getByRole("button", { name: "Carinho" })
+          .click();
+        await p.waitForFunction(
+          () => NH_PATCH_GAME.getState().progresso.carinho === 1,
+        );
+        await room(p, "cozinha");
+        await drag(p, 130, 540, 240, 360);
+        await p.waitForFunction(
+          () => NH_PATCH_GAME.getState().necessidades.fome === 35,
+        );
+        assert.equal(db.state.moedas, 83);
+        assert.equal(db.state.alimentos.cenoura, 2);
+        await p.locator('[data-patch-menu="comidas"]').click();
+        assert.equal(await p.locator("[data-food]").count(), 6);
+        await p
+          .locator('[data-food="banana"]')
+          .getByRole("button", { name: "Comprar +1" })
+          .click();
+        await p.waitForFunction(
+          () => NH_PATCH_GAME.getState().alimentos.banana === 1,
+        );
+        assert.equal(db.state.moedas, 80);
+        await p
+          .getByRole("button", { name: "Ir para a cozinha", exact: true })
+          .click();
+        await p
+          .locator("#patch-actions")
+          .getByRole("button", { name: /Banana/ })
+          .click();
+        await p.waitForFunction(
+          () => NH_PATCH_GAME.getState().alimentos.banana === 0,
+        );
+        assert.equal(db.state.moedas, 82);
+        assert.match(
+          await p.locator("#patch-status").textContent(),
+          /\+2 moedas/,
+        );
+        await room(p, "banheiro");
+        assert(
+          await p
+            .locator("#patch-actions")
+            .getByRole("button", { name: /3 · Secar/ })
+            .isDisabled(),
+        );
+        assert.equal(db.state.progresso.banho, undefined);
+        await p
+          .locator("#patch-actions")
+          .getByRole("button", { name: /1 · Ensaboar/ })
+          .click();
+        await p
+          .locator("#patch-actions")
+          .getByRole("button", { name: /2 · Enxaguar/ })
+          .click();
+        await p
+          .locator("#patch-actions")
+          .getByRole("button", { name: /3 · Secar/ })
+          .click();
+        await p.waitForFunction(
+          () => NH_PATCH_GAME.getState().progresso.banho === 1,
+        );
+        await room(p, "quarto");
+        await p.locator('[data-action="dormir"]').click();
+        await p.waitForFunction(() => NH_PATCH_GAME.getState().dormindo);
+        assert(await p.evaluate(() => NH_PATCH_GAME.scene().night.visible));
+        await p.locator("#patch-actions").getByText("Acordar").click();
+        await p.waitForFunction(() => !NH_PATCH_GAME.getState().dormindo);
+        await room(p, "jardim");
+        await p.locator("#patch-actions").getByText("Regar").click();
+        assert(db.events.some((e) => e.a?.p_acao === "regar"));
+        await p.locator("#patch-actions").getByText("bola").click();
+        assert(db.events.some((e) => e.a?.p_acao === "brincar"));
+        await p.locator('[data-patch-menu="tarefas"]').click();
+        if (process.env.PATCH_DEBUG) {
+          await p
+            .locator("#patch-game")
+            .screenshot({ path: "/tmp/patch-menu.png" });
+          console.log(
+            "MENU",
+            await p
+              .getByText("Resgatar missão · +10 moedas", { exact: true })
+              .evaluate((e) => ({
+                rect: e.getBoundingClientRect().toJSON(),
+                ancestors: [e.parentElement, e.closest("#patch-overlay")].map(
+                  (x) => ({
+                    class: x.className,
+                    z: getComputedStyle(x).zIndex,
+                    hidden: x.hidden,
+                  }),
+                ),
+                elements: document
+                  .elementsFromPoint(
+                    e.getBoundingClientRect().x + 20,
+                    e.getBoundingClientRect().y + 20,
+                  )
+                  .slice(0, 5)
+                  .map((x) => x.tagName + ":" + x.id),
+              })),
           );
-          await p.locator("#patch-stage canvas").scrollIntoViewIfNeeded();
-          if (type === "memoria") {
-            for (const [a, c] of [
-              [0, 3],
-              [1, 4],
-              [2, 5],
-            ]) {
-              await tap(p, 145 + (a % 2) * 190, 220 + Math.floor(a / 2) * 135);
-              await tap(p, 145 + (c % 2) * 190, 220 + Math.floor(c / 2) * 135);
+        }
+        await p
+          .getByText("Resgatar missão · +10 moedas", { exact: true })
+          .click();
+        await p.waitForFunction(
+          () => NH_PATCH_GAME.getState().missao_resgatada,
+        );
+        await p
+          .getByText("Presente diário · +8 moedas", { exact: true })
+          .click();
+        await p.waitForFunction(
+          () => !NH_PATCH_GAME.getState().presente_disponivel,
+        );
+        assert(db.state.missao_resgatada);
+        assert(!db.state.presente_disponivel);
+        await p.locator("#patch-sheet-close").click();
+        await p.locator('[data-patch-menu="loja"]').click();
+        const shirt = p
+          .locator(".patch-shop-item")
+          .filter({ hasText: "Camiseta de coração" });
+        await shirt.getByRole("button", { name: "Comprar" }).click();
+        await shirt.getByRole("button", { name: "Usar", exact: true }).click();
+        await p.waitForFunction(
+          () => NH_PATCH_GAME.getState().roupa === "camiseta_rosa",
+        );
+        assert.equal(db.state.roupa, "camiseta_rosa");
+        await p.locator("#patch-sheet-close").click();
+        await p.locator('[data-patch-menu="inventario"]').click();
+        assert.equal(await p.locator(".patch-shop-item").count(), 1);
+        await p.keyboard.press("Escape");
+        assert(await p.locator("#patch-overlay").isHidden());
+        // Simula uma atualização Realtime do outro integrante, sem recarregar a página.
+        db.state.comodo = "sala";
+        db.state.moedas = 97;
+        await p.evaluate(() => __patchSync());
+        await p.waitForFunction(
+          () =>
+            NH_PATCH_GAME.getState().moedas === 97 &&
+            NH_PATCH_GAME.scene().room === "sala",
+        );
+        for (const [nivel, a] of [
+          [1, "bebe"],
+          [5, "filhote"],
+          [10, "juvenil"],
+          [20, "jovem"],
+          [30, "adulto"],
+        ]) {
+          db.state.nivel = nivel;
+          await p.evaluate(() => NH_PATCH_GAME.refresh());
+          await p.waitForFunction((a) => NH_PATCH_GAME.scene().age === a, a);
+        }
+        const measurements = await p.locator("#patch-game").evaluate((e) => ({
+          client: e.clientWidth,
+          scroll: e.scrollWidth,
+          labels: [...e.querySelectorAll(".patch-need b")].map(
+            (b) => getComputedStyle(b).color,
+          ),
+          wallet: e.querySelector(".patch-wallet").getBoundingClientRect()
+            .right,
+          right: e.getBoundingClientRect().right,
+        }));
+        assert(measurements.scroll <= measurements.client + 1);
+        assert(measurements.wallet <= measurements.right);
+        assert(measurements.labels.every((c) => c === "rgb(99, 55, 89)"));
+        assert.deepEqual(missing, []);
+        assert.deepEqual(errors, []);
+        if (width === 390) {
+          await p
+            .locator("#patch-game")
+            .screenshot({ path: "/tmp/patch-jogo-mobile.png" });
+          for (const type of ["memoria", "coracoes", "estrelas", "passeio"]) {
+            await p.evaluate((t) => NH_PATCH_GAME.startGame(t), type);
+            await p.waitForFunction(
+              (t) => NH_PATCH_GAME.scene().mini?.tipo === t,
+              type,
+            );
+            await p.locator("#patch-stage canvas").scrollIntoViewIfNeeded();
+            if (type === "memoria") {
+              for (const [a, c] of [
+                [0, 3],
+                [1, 4],
+                [2, 5],
+              ]) {
+                await tap(
+                  p,
+                  145 + (a % 2) * 190,
+                  220 + Math.floor(a / 2) * 135,
+                );
+                await tap(
+                  p,
+                  145 + (c % 2) * 190,
+                  220 + Math.floor(c / 2) * 135,
+                );
+              }
+            } else {
+              while (await p.evaluate(() => !!NH_PATCH_GAME.scene().mini)) {
+                const m = await p.evaluate(() => {
+                  const s = NH_PATCH_GAME.scene(),
+                    m = s.mini;
+                  if (!m || m.ending) return null;
+                  const t = performance.now() - m.started;
+                  return {
+                    tipo: m.tipo,
+                    t,
+                    targets: m.targets
+                      .filter((x) => x.obj.active && !m.caught.has(x.id))
+                      .map((x) => ({ x: x.obj.x, y: x.obj.y })),
+                    times: m.desafio.tempos,
+                  };
+                });
+                if (
+                  m?.tipo === "estrelas" &&
+                  m.times.some((hit) => hit - m.t > 250 && hit - m.t < 420)
+                )
+                  await tap(p, 240, 550);
+                else if (m?.targets.length && type !== "estrelas")
+                  await tap(p, m.targets[0].x, m.targets[0].y);
+                await p.waitForTimeout(type === "passeio" ? 600 : 100);
+              }
             }
-          } else {
-            while (await p.evaluate(() => !!NH_PATCH_GAME.scene().mini)) {
-              const m = await p.evaluate(() => {
-                const s = NH_PATCH_GAME.scene(),
-                  m = s.mini;
-                if (!m || m.ending) return null;
-                const t = performance.now() - m.started;
-                return {
-                  tipo: m.tipo,
-                  t,
-                  targets: m.targets
-                    .filter((x) => x.obj.active && !m.caught.has(x.id))
-                    .map((x) => ({ x: x.obj.x, y: x.obj.y })),
-                  times: m.desafio.tempos,
-                };
-              });
-              if (
-                m?.tipo === "estrelas" &&
-                m.times.some((hit) => hit - m.t > 250 && hit - m.t < 420)
-              )
-                await tap(p, 240, 550);
-              else if (m?.targets.length && type !== "estrelas")
-                await tap(p, m.targets[0].x, m.targets[0].y);
-              await p.waitForTimeout(type === "passeio" ? 600 : 100);
-            }
+            await p.waitForFunction(() => !NH_PATCH_GAME.scene().mini, null, {
+              timeout: 20000,
+            });
+            assert.equal(
+              await p.evaluate(() => NH_PATCH_GAME.scene().room),
+              "sala",
+            );
+            assert(
+              await p.evaluate(() => NH_PATCH_GAME.scene().objects.length > 0),
+            );
+            console.log("PASS activity", type);
           }
+          assert.equal(db.state.jogos_hoje, 4);
+          const coins = db.state.moedas;
+          await p.evaluate(() => NH_PATCH_GAME.startGame("coracoes"));
           await p.waitForFunction(() => !NH_PATCH_GAME.scene().mini, null, {
             timeout: 20000,
           });
-          assert.equal(
-            await p.evaluate(() => NH_PATCH_GAME.scene().room),
-            "sala",
+          assert.equal(db.state.moedas, coins);
+          assert.match(
+            await p.locator("#patch-status").textContent(),
+            /Tente novamente/,
           );
-          assert(
-            await p.evaluate(() => NH_PATCH_GAME.scene().objects.length > 0),
-          );
-          console.log("PASS activity", type);
+          console.log("PASS loss: no reward");
+          assert.deepEqual(errors, []);
         }
-        assert.equal(db.state.jogos_hoje, 4);
-        const coins = db.state.moedas;
-        await p.evaluate(() => NH_PATCH_GAME.startGame("coracoes"));
-        await p.waitForFunction(() => !NH_PATCH_GAME.scene().mini, null, {
-          timeout: 20000,
-        });
-        assert.equal(db.state.moedas, coins);
-        assert.match(
-          await p.locator("#patch-status").textContent(),
-          /Tente novamente/,
+        console.log(
+          "PASS Patch",
+          width,
+          ": rooms, drag food, bath sequence, sleep, garden, missions, shop, ages, realtime, responsive and paths",
         );
-        console.log("PASS loss: no reward");
-        assert.deepEqual(errors, []);
+        await p.close();
       }
-      console.log(
-        "PASS Patch",
-        width,
-        ": rooms, drag food, bath sequence, sleep, garden, missions, shop, ages, realtime, responsive and paths",
-      );
-      await p.close();
+    } finally {
+      await b.close();
     }
-  } finally {
-    await b.close();
-  }
-})().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+  })().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
