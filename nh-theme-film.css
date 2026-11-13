@@ -37,3 +37,61 @@ body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse{object-
    object-fit:fill!important;object-position:center!important;
  }
 }
+
+/* Transicao visual da foto para a pagina: blur progressivo e degradê sem corte seco. */
+body[data-interface="vidro"]>header.nh-hero-referencia{
+ --nh-fade-bottom:#b77b9f;
+}
+body[data-interface="vidro"].tema-escuro>header.nh-hero-referencia{
+ --nh-fade-bottom:#36254a;
+}
+body[data-interface="vidro"]>header.nh-hero-referencia::after{
+ content:"";
+ position:absolute!important;
+ left:0!important;right:0!important;bottom:-1px!important;top:auto!important;
+ height:clamp(58px,18%,115px)!important;
+ pointer-events:none!important;
+ z-index:1!important;
+ background:linear-gradient(to bottom,transparent 0%,color-mix(in srgb,var(--nh-fade-bottom) 28%,transparent) 40%,color-mix(in srgb,var(--nh-fade-bottom) 80%,transparent) 78%,var(--nh-fade-bottom) 100%)!important;
+ -webkit-backdrop-filter:blur(5px);
+ backdrop-filter:blur(5px);
+ -webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.3) 28%,#000 65%);
+ mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.3) 28%,#000 65%);
+}
+/* Suaviza a passagem entre os temas sem animar posicao, tamanho ou elementos do jogo. */
+body[data-interface="vidro"],
+body[data-interface="vidro"] section,
+body[data-interface="vidro"] #login-painel,
+body[data-interface="vidro"] #abas-nav,
+body[data-interface="vidro"] #botao-tema,
+body[data-interface="vidro"] .aba-btn,
+body[data-interface="vidro"] .card,
+body[data-interface="vidro"] .tempo,
+body[data-interface="vidro"] .numero,
+body[data-interface="vidro"] .tag,
+body[data-interface="vidro"] .secondary,
+body[data-interface="vidro"] input,
+body[data-interface="vidro"] textarea,
+body[data-interface="vidro"] select,
+body[data-interface="vidro"] footer{
+ transition-property:background-color,color,border-color,box-shadow,fill,stroke!important;
+ transition-duration:900ms!important;
+ transition-timing-function:ease-in-out!important;
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-interface="vidro"],
+ body[data-interface="vidro"] section,
+ body[data-interface="vidro"] #login-painel,
+ body[data-interface="vidro"] #abas-nav,
+ body[data-interface="vidro"] #botao-tema,
+ body[data-interface="vidro"] .aba-btn,
+ body[data-interface="vidro"] .card,
+ body[data-interface="vidro"] .tempo,
+ body[data-interface="vidro"] .numero,
+ body[data-interface="vidro"] .tag,
+ body[data-interface="vidro"] .secondary,
+ body[data-interface="vidro"] input,
+ body[data-interface="vidro"] textarea,
+ body[data-interface="vidro"] select,
+ body[data-interface="vidro"] footer{transition-duration:0.01ms!important}
+}
