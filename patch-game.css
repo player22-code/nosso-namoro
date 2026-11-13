@@ -1,0 +1,518 @@
+#patch-game {
+  --patch-ink: #633759;
+  --patch-edge: #ffd5eb;
+  position: relative;
+  max-width: 560px;
+  margin: auto;
+  border: 1px solid #fff8;
+  border-radius: 26px;
+  overflow: hidden;
+  background: linear-gradient(140deg, #f9d7ed, #e4c7ef);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 10px 30px #53284920;
+  color: var(--patch-ink);
+  text-align: left;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+#patch-game * {
+  box-sizing: border-box;
+}
+#patch-game [hidden] {
+  display: none !important;
+}
+#patch-game button {
+  font:
+    600 12px/1.3 system-ui,
+    sans-serif;
+  cursor: pointer;
+  border: 1px solid #fff9;
+  border-radius: 17px;
+  background: linear-gradient(145deg, #fff8, #f5abd780);
+  color: #633759;
+  box-shadow: inset 0 1px 0 #fff8;
+  min-height: 40px;
+  padding: 8px 10px;
+  touch-action: manipulation;
+}
+#patch-game button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+#patch-game button:focus-visible {
+  outline: 3px solid #9d4e98;
+  outline-offset: 2px;
+}
+.patch-hud {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: linear-gradient(120deg, #f0addd, #c796d7);
+  color: #5b2b56;
+}
+.patch-hud > div {
+  flex: 1;
+  min-width: 0;
+}
+.patch-hud h3 {
+  font: 750 19px/1.2 system-ui !important;
+  margin: 0 0 5px !important;
+  color: #62325a !important;
+}
+.patch-hud small {
+  font-size: 11px;
+}
+.patch-xp {
+  height: 7px;
+  max-width: 180px;
+  margin: 5px 0 0;
+  border: 1px solid #fff7;
+  border-radius: 10px;
+  background: #915ca048;
+  overflow: hidden;
+}
+.patch-xp span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #f489be, #fff0fb);
+  border-radius: 10px;
+  transition: width 0.3s;
+}
+.patch-wallet {
+  flex: 0 !important;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.patch-wallet strong {
+  display: block !important;
+  color: #673158 !important;
+  font-size: 20px !important;
+}
+.patch-tools {
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  justify-content: center;
+  background: #ffe6f478;
+}
+.patch-tools button {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 3px !important;
+  font-size: 11px !important;
+}
+.patch-stage-wrap {
+  position: relative;
+  background: #f5c4e0;
+}
+.patch-stage-wrap::before {
+  content: "";
+  display: block;
+  padding-top: 133.333%;
+}
+.patch-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.patch-stage canvas {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: none;
+}
+.patch-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  background: linear-gradient(140deg, #ffe3f0, #ddc4ed);
+  font-size: 14px;
+  gap: 12px;
+}
+.patch-loading::before {
+  content: "♡";
+  display: block;
+  font-size: 40px;
+  animation: patch-pulse 1.5s ease-in-out infinite;
+}
+.patch-room-label {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  z-index: 3;
+  max-width: calc(100% - 24px);
+  background: #fff9;
+  border: 1px solid #fff;
+  border-radius: 18px;
+  padding: 6px 12px;
+  font-size: 12px;
+  pointer-events: none;
+  color: #673156;
+  backdrop-filter: blur(10px);
+}
+.patch-needs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+  padding: 10px 9px;
+  background: #fff2fa;
+  position: relative;
+}
+.patch-need {
+  text-align: center;
+  min-width: 0;
+}
+.patch-need b {
+  display: block;
+  font-size: 10px;
+  color: #673156 !important;
+}
+.patch-need span {
+  display: block;
+  font-size: 9px;
+  color: #794867;
+}
+.patch-need meter {
+  display: block;
+  width: 100%;
+  height: 9px;
+  margin: 4px 0;
+  accent-color: #86ba78;
+}
+.patch-need meter::-webkit-meter-bar {
+  background: #e9d0df;
+  border: 0;
+  border-radius: 9px;
+}
+.patch-need meter::-webkit-meter-optimum-value {
+  background: linear-gradient(90deg, #addc91, #72b471);
+  border-radius: 9px;
+}
+.patch-need meter::-webkit-meter-suboptimum-value {
+  background: #e8b764;
+}
+.patch-need meter::-webkit-meter-even-less-good-value {
+  background: #e98aa6;
+}
+.patch-rooms {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 3px;
+  padding: 8px 5px;
+  background: linear-gradient(#fbd3eb, #e9b8df);
+}
+#patch-game .patch-rooms button {
+  min-width: 0;
+  min-height: 52px;
+  border: 1px solid transparent;
+  background: transparent;
+  box-shadow: none;
+  padding: 4px 1px;
+  font-size: 9px;
+  border-radius: 16px;
+}
+#patch-game .patch-rooms button span {
+  display: block;
+  font-size: 21px;
+  line-height: 1.2;
+  margin-bottom: 3px;
+}
+#patch-game .patch-rooms button[aria-pressed="true"] {
+  background: linear-gradient(130deg, #fff9, #f69bcd);
+  border-color: #fff;
+  box-shadow: 0 0 10px #ef8bb666;
+}
+.patch-actions {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 10px 8px;
+  background: #fff1f9;
+}
+.patch-actions button {
+  flex: 1;
+  min-width: 70px;
+  font-size: 11px !important;
+}
+.patch-help {
+  font-size: 11px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0 12px 10px;
+  background: #fff1f9;
+  color: #794867;
+}
+.patch-status {
+  min-height: 36px;
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 9px 12px;
+  background: #f9e4f3;
+  color: #623456;
+}
+.patch-status[data-error="true"] {
+  color: #a33754;
+  background: #ffe6ed;
+}
+.patch-sync {
+  font-size: 10px;
+  padding: 5px 12px;
+  background: #fff2fa;
+  color: #8a5c7c;
+}
+.patch-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: #48243b75;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  backdrop-filter: blur(4px);
+}
+.patch-sheet {
+  position: relative;
+  width: 100%;
+  max-height: 88%;
+  overflow: auto;
+  background: #fff3fa;
+  border: 1px solid #fff;
+  border-radius: 22px;
+  padding: 18px 14px;
+  color: #623456;
+  box-shadow: 0 12px 35px #46273f55;
+}
+.patch-sheet h3 {
+  font:
+    700 21px/1.3 Georgia,
+    serif !important;
+  color: #73365e !important;
+  margin: 0 40px 12px 0 !important;
+}
+.patch-sheet p {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.patch-sheet > button.patch-close {
+  position: absolute;
+  top: 8px;
+  right: 9px;
+  width: 36px;
+  min-height: 36px;
+  padding: 0;
+  font-size: 23px !important;
+  border-radius: 50% !important;
+}
+.patch-shop-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.patch-shop-item {
+  border: 1px solid #eec8dd;
+  border-radius: 16px;
+  padding: 10px;
+  text-align: center;
+  background: #fff9;
+}
+.patch-shop-item .patch-item-icon {
+  font-size: 30px;
+  display: block;
+  margin: 4px;
+}
+.patch-shop-item strong {
+  display: block;
+  color: #633759 !important;
+  font-size: 12px !important;
+  min-height: 32px;
+}
+.patch-shop-item small {
+  display: block;
+  font-size: 11px;
+  margin: 4px 0 8px;
+  color: #80516d;
+}
+.patch-shop-item button {
+  width: 100%;
+}
+.patch-mission {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 4px;
+  border-bottom: 1px solid #efd0e1;
+  font-size: 12px;
+}
+.patch-mini-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 8px 0;
+  padding: 13px !important;
+}
+.patch-mini-card small {
+  display: block;
+  font-weight: 400;
+  font-size: 11px;
+  margin-top: 4px;
+}
+.patch-demo {
+  padding: 6px 10px;
+  background: #fff3cf;
+  color: #7a5728;
+  font-size: 11px;
+  text-align: center;
+}
+#patch-classico {
+  margin: 18px 0 0;
+  border-top: 1px solid var(--ui-edge, #ecc);
+  padding-top: 10px;
+}
+#patch-classico > summary {
+  font-size: 12px;
+  cursor: pointer;
+  min-height: 35px;
+}
+#mascote-juntos:not(.patch-conectado) #patch-classico > summary {
+  display: none;
+}
+#mascote-juntos:not(.patch-conectado) #patch-game {
+  margin-bottom: 16px;
+}
+#patch-game:not([data-conectado="true"]) .patch-tools,
+#patch-game:not([data-conectado="true"]) .patch-needs,
+#patch-game:not([data-conectado="true"]) .patch-rooms,
+#patch-game:not([data-conectado="true"]) .patch-actions {
+  display: none;
+}
+#patch-game .patch-error-retry {
+  margin: 12px auto;
+  display: block;
+}
+@keyframes patch-pulse {
+  50% {
+    transform: scale(1.12);
+    opacity: 0.7;
+  }
+}
+@media (min-width: 700px) {
+  .patch-hud {
+    padding: 14px 18px;
+  }
+  .patch-tools button {
+    font-size: 12px !important;
+  }
+  .patch-need b {
+    font-size: 12px;
+  }
+  .patch-rooms {
+    gap: 6px;
+    padding: 10px;
+  }
+  .patch-stage-wrap {
+    max-height: 680px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .patch-loading::before {
+    animation: none;
+  }
+  .patch-xp span {
+    transition: none;
+  }
+}
+
+#patch-game .patch-progress-button {
+  display: block;
+  min-height: 24px;
+  font-size: 10px;
+  padding: 2px 10px;
+  margin: 0 0 3px;
+  background: #fff6;
+}
+.patch-shop-item img {
+  max-width: 100%;
+  object-fit: contain;
+}
+#patch-game .patch-wallet {
+  flex: 0 0 auto !important;
+  min-width: 74px;
+}
+#patch-game .patch-hud h3,
+#patch-game .patch-hud strong,
+#patch-game .patch-need b,
+#patch-game .patch-sheet h3,
+#patch-game .patch-shop-item strong {
+  color: #633759 !important;
+}
+#patch-game .patch-need b {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+}
+#patch-game .patch-hud small {
+  color: #633759 !important;
+}
+#patch-game .patch-sheet button {
+  color: #633759 !important;
+}
+#patch-game .patch-hud > div:first-child {
+  overflow: hidden;
+}
+
+body #conteudo-privado #patch-game :is(h3, strong, b) {
+  color: #633759 !important;
+  text-shadow: none !important;
+}
+body #conteudo-privado #patch-game .patch-need b {
+  font-size: 10px !important;
+}
+body #conteudo-privado #patch-game .patch-wallet {
+  color: #633759 !important;
+}
+
+#patch-game #patch-som {
+  min-height: 24px;
+  font-size: 10px;
+  padding: 3px 8px;
+  margin-top: 4px;
+}
+/* Mercadinho sempre acessível, inclusive nas menores telas. */
+#patch-game .patch-tools {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+}
+#patch-game .patch-tools button {
+  font-size: 10px !important;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  padding: 7px 3px !important;
+}
+#patch-game .patch-sheet {
+  animation: patch-sheet-in 0.2s ease-out;
+}
+@keyframes patch-sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #patch-game .patch-sheet {
+    animation: none;
+  }
+}
