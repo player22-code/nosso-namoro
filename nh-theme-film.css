@@ -8,3 +8,11 @@ body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse{positio
 body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse.is-active{opacity:1}
 body[data-interface="vidro"]>header.nh-hero-referencia>:not(.nh-celestial):not(.nh-theme-film):not(.nh-theme-reverse){position:relative;z-index:2}
 body[data-interface="vidro"]>header.nh-hero-referencia::after{z-index:1}
+
+/* Corrige enquadramento e transicao sem recortar a parte inferior dos personagens. */
+body[data-interface="vidro"]>header.nh-hero-referencia{background-position:center bottom!important}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-film{object-position:center bottom}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse{object-fit:cover;object-position:center bottom}
+body[data-interface="vidro"]>header.nh-hero-referencia[data-hero-scene="dia"]{background-image:url("diafoto.jpg")!important}
+body[data-interface="vidro"]>header.nh-hero-referencia[data-hero-scene="noite"]{background-image:url("noitefoto.jpg")!important}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-film,body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse{transition:opacity .3s ease}
