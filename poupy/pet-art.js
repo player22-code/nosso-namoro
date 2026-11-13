@@ -1,0 +1,31 @@
+(()=>{'use strict';
+const themes=[
+{body:'#a7e66d',shade:'#78bd55',cloth:'#ffe5f1',trim:'#f7a9c7',hat:'#f59ab7',kind:'baby'},
+{body:'#a3e567',shade:'#77bd50',cloth:'#ffca48',trim:'#e89b22',hat:'#ffd251',kind:'child'},
+{body:'#9fdf63',shade:'#72b74e',cloth:'#ffc13b',trim:'#e69b22',hat:'#f4c443',kind:'youth'},
+{body:'#9add68',shade:'#72b94d',cloth:'#b9a2ef',trim:'#7d5cbe',hat:'#d5a2e4',kind:'teen'},
+{body:'#95d968',shade:'#6db348',cloth:'#393247',trim:'#ef8bb8',hat:'#d38db8',kind:'adult'}
+];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function svg(stage=0,action='idle',frame=0,variant='default'){
+const t=themes[Math.max(0,Math.min(4,stage))];const walk=action==='walk';const sleep=action==='sleep';const eat=action==='eat';const pet=action==='pet';const bath=action==='scrub';const sad=action==='sad'||action==='hungry'||action==='dirty';
+const shift=walk?(frame%4===1?-2:frame%4===3?2:0):pet?-2:0;
+const eyes=sleep||bath||pet?'<path d="M34 42q5 7 10 0 M56 42q5 7 10 0" fill="none" stroke="#28322c" stroke-width="2.7" stroke-linecap="round"/>':sad?'<path d="M35 43q4-5 8 0 M57 43q4-5 8 0" fill="none" stroke="#273229" stroke-width="2.5"/>':'<ellipse cx="39" cy="42" rx="5.7" ry="7.5" fill="#222532"/><ellipse cx="61" cy="42" rx="5.7" ry="7.5" fill="#222532"/><circle cx="37" cy="39" r="2.1" fill="white"/><circle cx="59" cy="39" r="2.1" fill="white"/>';
+const mouth=eat?'<ellipse cx="50" cy="56" rx="7" ry="8" fill="#622a42"/><ellipse cx="50" cy="60" rx="4" ry="2.5" fill="#ff8eaa"/>':sleep?'<path d="M47 55q3 2 6 0" stroke="#6c3a4c" stroke-width="2" fill="none"/>':'<path d="M45 55q5 7 10 0" stroke="#6c3a4c" stroke-width="2.5" stroke-linecap="round" fill="none"/>';
+const body=t.kind==='baby'?'<path d="M24 62Q50 52 76 62L79 82Q50 94 21 82Z" fill="#fff0f6" stroke="#496c42" stroke-width="2.5"/><path d="M30 62Q50 73 70 62" fill="none" stroke="#f4a7c5" stroke-width="4"/><circle cx="50" cy="74" r="5" fill="#f6b5cf"/>':`<path d="M23 61Q50 52 77 61L80 82Q50 93 20 82Z" fill="${t.cloth}" stroke="#456b3e" stroke-width="2.5"/><path d="M30 63Q50 72 70 63" fill="none" stroke="${t.trim}" stroke-width="3"/><path d="M50 66v15" stroke="${t.trim}" stroke-width="2"/>${t.kind==='adult'?'<path d="M47 70l3-3 3 3-3 5z" fill="#f4a6c6"/>':'<path d="M50 70l2 4 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#fff0b1"/>'}`;
+let headwear='';
+if(t.kind==='baby')headwear='<path d="M22 29Q21 11 49 12Q79 12 79 29L73 30Q50 20 27 32Z" fill="#ffbdd6" stroke="#456b3e" stroke-width="2.5"/><path d="M33 20Q50 11 68 20" stroke="#fff0f7" stroke-width="4" fill="none"/><circle cx="50" cy="15" r="4" fill="#fff"/>';
+if(t.kind==='child'||t.kind==='youth')headwear='<path d="M21 27Q20 12 50 12Q78 12 80 27L66 30Q49 23 29 32Z" fill="'+t.hat+'" stroke="#5e5b35" stroke-width="2.5"/><path d="M23 26Q10 26 10 31Q28 36 43 29" fill="'+t.hat+'" stroke="#5e5b35" stroke-width="2.5"/><path d="M43 16h15" stroke="#fff1a2" stroke-width="3"/>';
+if(t.kind==='teen')headwear='<path d="M23 25Q25 12 50 12Q74 12 77 25" fill="none" stroke="#7d5cbe" stroke-width="7"/><circle cx="20" cy="40" r="10" fill="#c7a3ec" stroke="#624c83" stroke-width="3"/><circle cx="80" cy="40" r="10" fill="#c7a3ec" stroke="#624c83" stroke-width="3"/><path d="M17 40l3 3 4-5 M77 40l3 3 4-5" stroke="#f8e3ff" fill="none" stroke-width="2"/>';
+if(t.kind==='adult')headwear='<path d="M20 27Q24 8 50 10Q77 9 80 27" fill="none" stroke="#e78cb9" stroke-width="6"/><circle cx="19" cy="42" r="12" fill="#3d354e" stroke="#f2a4ca" stroke-width="3"/><circle cx="81" cy="42" r="12" fill="#3d354e" stroke="#f2a4ca" stroke-width="3"/><path d="M19 38l3 4-3 4-3-4z M81 38l3 4-3 4-3-4z" fill="#88d9ed"/>';
+const glasses=variant==='glasses'?'<path d="M29 38h19v14H29z M52 38h19v14H52z" fill="#41425d" fill-opacity=".7" stroke="#302b46" stroke-width="3"/><path d="M48 42h4" stroke="#302b46" stroke-width="3"/>':'';
+const bubble=bath?'<circle cx="16" cy="67" r="7" fill="#e4faff" stroke="#7bc8e6" stroke-width="2"/><circle cx="80" cy="66" r="9" fill="#e4faff" stroke="#7bc8e6" stroke-width="2"/><circle cx="55" cy="21" r="6" fill="#fff" stroke="#7bc8e6" stroke-width="2"/>':'';
+const food=eat?'<circle cx="78" cy="69" r="11" fill="#e94b60" stroke="#6c453a" stroke-width="2"/><path d="M78 58l4-5" stroke="#438c4d" stroke-width="3"/>':'';
+const heart=pet?'<path d="M79 18Q68 8 65 20Q64 29 79 36Q95 26 93 19Q90 8 79 18" fill="#f783b1"/>':'';
+const z=sleep?'<text x="78" y="20" font-size="16" font-weight="bold" fill="#9a73b9">Zz</text>':'';
+const pacifier=t.kind==='baby'&&!sleep?'<circle cx="50" cy="57" r="7" fill="#ffbad2" stroke="#a75b81" stroke-width="2"/><circle cx="50" cy="57" r="3" fill="#fff3f7"/>':'';
+const arms='<ellipse cx="20" cy="72" rx="9" ry="10" fill="'+t.body+'" stroke="#456b3e" stroke-width="2.5"/><ellipse cx="80" cy="72" rx="9" ry="10" fill="'+t.body+'" stroke="#456b3e" stroke-width="2.5"/>';
+return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="300" height="300"><g transform="translate(0 ${shift})"><ellipse cx="50" cy="91" rx="32" ry="5" fill="#865f7b" opacity=".16"/><ellipse cx="34" cy="84" rx="12" ry="8" fill="${t.shade}" stroke="#456b3e" stroke-width="2"/><ellipse cx="66" cy="84" rx="12" ry="8" fill="${t.shade}" stroke="#456b3e" stroke-width="2"/><path d="M29 23Q15 31 18 51Q15 68 26 76Q32 88 50 88Q68 88 74 76Q85 68 82 51Q85 31 71 23Q58 15 50 19Q42 15 29 23" fill="${t.body}" stroke="#456b3e" stroke-width="3"/>${body}${arms}<ellipse cx="50" cy="42" rx="30" ry="27" fill="${t.body}" stroke="#456b3e" stroke-width="2.8"/><ellipse cx="50" cy="58" rx="18" ry="9" fill="${t.shade}" opacity=".27"/><ellipse cx="28" cy="52" rx="6" ry="3.7" fill="#f6a5bd" opacity=".8"/><ellipse cx="72" cy="52" rx="6" ry="3.7" fill="#f6a5bd" opacity=".8"/>${eyes}${mouth}${pacifier}${headwear}${glasses}${food}${bubble}${heart}${z}</g></svg>`;
+}
+window.PoupyArt={svg,stages:themes};
+})();
