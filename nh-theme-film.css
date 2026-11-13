@@ -95,3 +95,16 @@ body[data-interface="vidro"] footer{
  body[data-interface="vidro"] select,
  body[data-interface="vidro"] footer{transition-duration:0.01ms!important}
 }
+
+/* Fade realmente transparente: nao mistura rosa/roxo artificiais na imagem.
+   O mask aplica-se ao banner inteiro (foto e video), revelando a cor real do site. */
+body[data-interface="vidro"]>header.nh-hero-referencia{
+ -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 72%,rgba(0,0,0,.94) 79%,rgba(0,0,0,.72) 86%,rgba(0,0,0,.34) 94%,transparent 100%)!important;
+ mask-image:linear-gradient(to bottom,#000 0%,#000 72%,rgba(0,0,0,.94) 79%,rgba(0,0,0,.72) 86%,rgba(0,0,0,.34) 94%,transparent 100%)!important;
+}
+body[data-interface="vidro"]>header.nh-hero-referencia::after{
+ display:none!important;
+ content:none!important;
+ -webkit-backdrop-filter:none!important;
+ backdrop-filter:none!important;
+}
