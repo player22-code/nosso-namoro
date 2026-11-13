@@ -1,0 +1,16 @@
+/* Transição de tema e degradê do hero */
+body,body section,body main,body .aba-btn,body #modo-seletor,body #botao-tema,body #botao-configuracoes{transition:background-color 2.8s ease,color 2.8s ease,border-color 2.8s ease,box-shadow 2.8s ease!important}
+body[data-interface="vidro"]>header.nh-hero-referencia{isolation:isolate;overflow:hidden}
+body[data-interface="vidro"]>header.nh-hero-referencia::after{content:"";position:absolute;inset:auto 0 0;height:32%;pointer-events:none;z-index:1;background:linear-gradient(to bottom,transparent 0%,rgba(183,111,153,.20) 30%,rgba(183,111,153,.70) 75%,#b77b9f 100%);backdrop-filter:blur(1.5px);-webkit-backdrop-filter:blur(1.5px);transition:background 2.8s ease}
+body[data-interface="vidro"].tema-escuro>header.nh-hero-referencia::after{background:linear-gradient(to bottom,transparent 0%,rgba(54,35,74,.2) 30%,rgba(54,35,74,.75) 75%,#36254a 100%)}
+.nh-sky{position:absolute;left:21%;top:5%;width:39%;height:72%;overflow:hidden;pointer-events:none;z-index:0;clip-path:ellipse(47% 48% at 50% 50%);opacity:.83}
+.nh-sky__color{position:absolute;inset:0;background:linear-gradient(#a3d9fa,#f6b5c9);transition:background 2.8s ease}
+.tema-escuro .nh-sky__color{background:linear-gradient(#1c214e,#654b92)}
+.nh-sky__sun,.nh-sky__moon{position:absolute;left:43%;width:13%;aspect-ratio:1;border-radius:50%;transition:top 2.8s cubic-bezier(.3,0,.7,1),opacity 1.5s ease}
+.nh-sky__sun{top:17%;background:#ffdf88;box-shadow:0 0 22px 9px #ffe4a377;opacity:1}
+.nh-sky__moon{top:-30%;background:#fff6df;box-shadow:0 0 18px 7px #f8eddf66;opacity:0}
+.tema-escuro .nh-sky__sun{top:110%;opacity:0}
+.tema-escuro .nh-sky__moon{top:20%;opacity:1}
+.nh-sky__stars{position:absolute;inset:0;background-image:radial-gradient(2px 2px at 18% 22%,#fff 99%,transparent),radial-gradient(2px 2px at 77% 37%,#fff 99%,transparent),radial-gradient(2px 2px at 60% 12%,#fff 99%,transparent);opacity:0;transition:opacity 2.4s ease}
+.tema-escuro .nh-sky__stars{opacity:.85}
+@media(prefers-reduced-motion:reduce){.nh-sky *{transition-duration:.01ms!important}}
