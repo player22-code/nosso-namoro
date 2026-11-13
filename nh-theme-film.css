@@ -153,3 +153,49 @@ body[data-interface="vidro"] footer{
 @media(prefers-reduced-motion:reduce){
  body[data-interface="vidro"]::before{transition:none!important}
 }
+
+/* Otimizacao mobile: nao recalcular sombras durante o crossfade.
+   A opacidade do fundo continua na camada composta pela GPU. */
+body[data-interface="vidro"] section,
+body[data-interface="vidro"] #login-painel,
+body[data-interface="vidro"] #abas-nav,
+body[data-interface="vidro"] #botao-tema,
+body[data-interface="vidro"] .aba-btn,
+body[data-interface="vidro"] .card,
+body[data-interface="vidro"] .tempo,
+body[data-interface="vidro"] .numero,
+body[data-interface="vidro"] .tag,
+body[data-interface="vidro"] .secondary,
+body[data-interface="vidro"] input,
+body[data-interface="vidro"] textarea,
+body[data-interface="vidro"] select,
+body[data-interface="vidro"] footer{
+ transition-property:background-color,color,border-color!important;
+ transition-duration:850ms!important;
+ transition-timing-function:ease-in-out!important;
+}
+body[data-interface="vidro"]::before{
+ will-change:opacity;
+}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse{
+ background:url("noitefoto.jpg") center/100% 100% no-repeat;
+}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse.is-active{
+ transition:opacity 1100ms ease-in-out!important;
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-interface="vidro"] section,
+ body[data-interface="vidro"] #login-painel,
+ body[data-interface="vidro"] #abas-nav,
+ body[data-interface="vidro"] #botao-tema,
+ body[data-interface="vidro"] .aba-btn,
+ body[data-interface="vidro"] .card,
+ body[data-interface="vidro"] .tempo,
+ body[data-interface="vidro"] .numero,
+ body[data-interface="vidro"] .tag,
+ body[data-interface="vidro"] .secondary,
+ body[data-interface="vidro"] input,
+ body[data-interface="vidro"] textarea,
+ body[data-interface="vidro"] select,
+ body[data-interface="vidro"] footer{transition-duration:.01ms!important}
+}
