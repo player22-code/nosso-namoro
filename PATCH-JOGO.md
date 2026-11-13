@@ -1,6 +1,6 @@
 # Nosso Patch — primeira versão jogável 2D
 
-Implementação isolada na branch `feat/patch-jogo-2d`. Não fazer merge/publicação automática. As migrações aditivas `patch_jogo_2d_v1` e `patch_comidas_cuidados_v2` já foram aplicadas no Supabase conectado; o site em `main` continua com sua interface anterior. Nenhuma história, foto, saldo anterior ou progresso pessoal foi excluído ou reiniciado.
+O Patch foi publicado na `main` com autorização do usuário (PR #10). As correções de controles são preparadas em `fix/patch-controles-toque`. As migrações `patch_jogo_2d_v1`, `patch_comidas_cuidados_v2` e `patch_controles_v3` estão instaladas no Supabase. Nenhuma história, foto, saldo anterior ou progresso pessoal foi excluído ou reiniciado.
 
 ## Como jogar
 
@@ -9,14 +9,14 @@ Acesse sua história, abra **Jogar com o Patch** e aguarde o cenário. O Patch m
 - **Sala:** carinho por toque, bola arrastável, dança e deslocamento pelo chão.
 - **Cozinha:** abrir/fechar geladeira, selecionar entre seis alimentos do estoque e arrastar até o personagem; botões equivalentes disponíveis. A aba **Comidas** abre o mercadinho para comprar uma unidade por vez e mostra preço, saciedade e quantidade disponível.
 - **Banheiro:** sabonete/arrastar para esfregar → chuveiro → toalha. O cuidado só é confirmado no final.
-- **Quarto:** cama ou lâmpada alternam sono; o descanso é recuperado pelo tempo real, mesmo fora do site.
+- **Quarto:** cama ou lâmpada alternam sono; o descanso é recuperado pelo tempo real, mesmo fora do site. Trocar efetivamente de cômodo acorda o Patch no servidor; tocar novamente no mesmo quarto mantém o sono.
 - **Jardim:** flores, regador e bola interativos.
 - **Passeio:** coleta de três corações durante 15 segundos; personagem caminha até os objetos.
 - **Minijogos:** memória de três pares, oito corações caindo e saltos para coletar estrelas.
 - **Loja/inventário:** quatro roupas/acessórios e três decorações; compra, equipar e retornar à aparência original.
 - **Tarefas:** alimentar, dar banho e fazer carinho; presente e missão diários. Dias renovam à meia-noite UTC.
 
-As animações usam os quadros originais como sprites Phaser, acrescidos de tweens, movimentos, partículas, alimentos, água e objetos interativos. Nenhum GIF é usado como mecanismo do cenário. Há tratamento de movimento reduzido. O áudio depende da autorização do navegador e do botão **Som**, cuja preferência é salva por conta usando o sistema existente.
+As animações usam os quadros originais como sprites Phaser, acrescidos de tweens, movimentos, partículas, alimentos, água e objetos interativos. A animação de comer usa quadros neutros e o ícone do alimento selecionado; os quadros antigos com cenoura desenhada não são usados no jogo 2D. Nenhum GIF é usado como mecanismo do cenário. Há tratamento de movimento reduzido. O áudio depende da autorização do navegador e do botão **Som**, cuja preferência é salva por conta usando o sistema existente.
 
 ## Progresso e economia
 
@@ -53,3 +53,11 @@ Esta é uma primeira versão jogável com seis ambientes, três minijogos curtos
 A consulta aos advisors após a migração não apontou novos avisos relativos a `patch_*`. Existem avisos anteriores fora deste escopo, incluindo [search_path de função antiga](https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable) e [funções públicas SECURITY DEFINER](https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable); não foram alteradas funções antigas de outras áreas.
 
 O jogo usa Talking Tom como referência para o ciclo de cuidar, alternar cômodos e progredir, mantendo personagem e cenários próprios. Não replica todo o catálogo de funcionalidades ou conteúdo de Talking Tom.
+
+## Controles de toque e banho
+
+Deslizar verticalmente sobre o cenário rola a página. Toques só são aceitos ao soltar, com limite de deslocamento; um gesto de rolagem não faz carinho nem alimenta acidentalmente. O canvas não bloqueia eventos de toque ou roda do mouse por padrão. O modo **Mover objetos** centraliza o cenário, permite arrastar e volta à rolagem normal ao soltar ou mudar de cômodo. Comidas, bola, regador e ferramentas também funcionam por toque, sem precisar arrastar.
+
+Os botões de ação têm ícones, títulos e estado. Os intervalos são calculados pelo servidor e aparecem como contadores. Banho: **Ensaboar → Enxaguar → Secar**, com espuma, água e toalha animadas. Cada etapa só libera a seguinte ao concluir; trocar de cômodo, abrir outro painel ou repetir o comando durante a animação é bloqueado. O servidor só confirma e recompensa o banho depois da secagem; falha de rede permite tentar a secagem novamente.
+
+`tests/patch-controles.cjs` usa gestos de toque CDP reais em Chromium para verificar rolagem, arraste, ausência de cuidado acidental, seis alimentos corretos, despertar, banho sequencial e contadores em 320/390/1280 px. As sessões/RPCs do navegador são simuladas; as regras reais do Supabase são verificadas em transações revertidas por `tests/patch-controles.sql` junto às suítes SQL anteriores.
