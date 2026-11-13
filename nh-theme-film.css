@@ -1,0 +1,10 @@
+/* Banner diurno/noturno com video de transicao, sem sobrepor os controles */
+body[data-interface="vidro"]>header.nh-hero-referencia{background-image:url("diafoto.jpg")!important;background-position:center!important;background-size:cover!important;isolation:isolate}
+body[data-interface="vidro"].tema-escuro>header.nh-hero-referencia{background-image:url("noitefoto.jpg")!important}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-celestial{display:none!important}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-film{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;pointer-events:none;display:block;opacity:0}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-film.is-active{opacity:1}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block;opacity:0}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse.is-active{opacity:1}
+body[data-interface="vidro"]>header.nh-hero-referencia>:not(.nh-celestial):not(.nh-theme-film):not(.nh-theme-reverse){position:relative;z-index:2}
+body[data-interface="vidro"]>header.nh-hero-referencia::after{z-index:1}
