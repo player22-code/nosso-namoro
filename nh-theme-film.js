@@ -7,10 +7,20 @@ function init(){
  video.className='nh-theme-film';video.src='diapranoite.mp4';video.preload='auto';video.muted=true;video.playsInline=true;video.setAttribute('playsinline','');video.setAttribute('aria-hidden','true');video.disablePictureInPicture=true;
  const canvas=document.createElement('canvas');canvas.className='nh-theme-reverse';canvas.setAttribute('aria-hidden','true');
  hero.prepend(canvas);hero.prepend(video);
+ // Carrega e decodifica antecipadamente o primeiro quadro para o clique responder sem espera.
+ video.load();
+ let firstFrameReady=false;
+ const prepareFirstFrame=()=>{if(!document.body.classList.contains('tema-escuro')&&video.readyState>=2&&video.currentTime<0.08)firstFrameReady=true;};
+ video.addEventListener('loadeddata',prepareFirstFrame);
+ video.addEventListener('canplay',prepareFirstFrame);
+ prepareFirstFrame();
  const context=canvas.getContext('2d',{alpha:false});
  let dark=document.body.classList.contains('tema-escuro'), token=0;
  hero.dataset.heroScene=dark?'noite':'dia';
- function finishScene(id,night){if(id!==token)return;hero.dataset.heroScene=night?'noite':'dia';clear();}
+ function finishScene(id,night){if(id!==token)return;hero.dataset.heroScene=night?'noite':'dia';clear();
+  // Depois da animacao, reposiciona o video oculto para o proximo dia->noite.
+  if(video.readyState>=1){try{video.currentTime=0;}catch{}}
+ }
  function clear(){video.pause();video.classList.remove('is-active');canvas.classList.remove('is-active');}
  function seek(t){return new Promise(resolve=>{
   let settled=false;const finish=()=>{if(settled)return;settled=true;video.removeEventListener('seeked',finish);clearTimeout(timeout);resolve();};
@@ -60,8 +70,13 @@ function init(){
   try{
    if(video.readyState<1)await new Promise((resolve,reject)=>{video.addEventListener('loadedmetadata',resolve,{once:true});video.addEventListener('error',reject,{once:true});setTimeout(resolve,4000);});
    if(id!==token)return;
-   video.currentTime=0;
-   await new Promise(resolve=>{if(video.readyState>=2)return resolve();video.addEventListener('loadeddata',resolve,{once:true});setTimeout(resolve,1200)});
+   // Nao busca o primeiro quadro novamente quando ele ja esta preparado.
+   if(video.currentTime>0.08){
+    await seek(0);
+   }
+   if(video.readyState<2)await new Promise(resolve=>{
+    const done=()=>resolve();video.addEventListener('loadeddata',done,{once:true});setTimeout(done,900);
+   });
    if(id!==token)return;
    video.classList.add('is-active');
    const play=video.play();if(play)await play;
