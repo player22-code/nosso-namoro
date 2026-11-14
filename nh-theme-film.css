@@ -230,3 +230,12 @@ body[data-interface="vidro"]::before{content:none!important;display:none!importa
 @media(prefers-reduced-motion:reduce){
  body[data-interface="vidro"]{transition-duration:.01ms!important}
 }
+
+/* Cena correta em repouso e durante as duas direcoes do video. */
+body[data-interface="vidro"]>header.nh-hero-referencia[data-hero-scene="dia"]{background-image:url("diafoto.jpg")!important}
+body[data-interface="vidro"]>header.nh-hero-referencia[data-hero-scene="noite"]{background-image:url("noitefoto.jpg")!important}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse,
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-theme-reverse.is-active{
+ transition:none!important;
+ background:none!important;
+}
