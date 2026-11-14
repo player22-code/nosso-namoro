@@ -18,16 +18,42 @@ function init(){
   try{video.currentTime=Math.max(0,Math.min(video.duration||t,t));}catch{finish();}
  });}
  async function animateReverse(id){
-  // Evita dezenas de seeks/decodificacoes de video por segundo no celular.
-  // Uma unica camada noturna desaparece revelando a foto diurna.
-  video.pause();
-  canvas.classList.add('is-active');
-  hero.dataset.heroScene='noite';
-  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-  if(id!==token)return;
-  hero.dataset.heroScene='dia';
-  canvas.classList.remove('is-active');
-  await new Promise(resolve=>setTimeout(resolve,1150));
+  // Reproduz os quadros do MESMO diapranoite.mp4 de tras para frente.
+  // O canvas preserva o ultimo quadro enquanto o video faz seek.
+  try{
+   if(video.readyState<1)await new Promise(resolve=>{
+    const done=()=>resolve();
+    video.addEventListener('loadedmetadata',done,{once:true});
+    setTimeout(done,2500);
+   });
+   if(id!==token)return;
+   const duration=video.duration;
+   if(!Number.isFinite(duration)||duration<=0||!context)throw new Error('Video indisponivel');
+   const w=video.videoWidth||960,h=video.videoHeight||540;
+   const scale=Math.min(1,960/w);
+   canvas.width=Math.round(w*scale);canvas.height=Math.round(h*scale);
+   hero.dataset.heroScene='noite';
+   await seek(Math.max(0,duration-0.04));
+   if(id!==token)return;
+   context.drawImage(video,0,0,canvas.width,canvas.height);
+   canvas.classList.add('is-active');
+   const started=performance.now();
+   const length=Math.min(duration*1000,6500);
+   let last=duration;
+   while(id===token){
+    const elapsed=performance.now()-started;
+    const progress=Math.min(1,elapsed/length);
+    const target=Math.max(0.01,duration*(1-progress));
+    if(last-target>=0.035||progress===1){
+     await seek(target);
+     if(id!==token)return;
+     try{context.drawImage(video,0,0,canvas.width,canvas.height)}catch{}
+     last=target;
+    }
+    if(progress>=1)break;
+    await new Promise(resolve=>requestAnimationFrame(resolve));
+   }
+  }catch(e){console.warn('Video reverso indisponivel:',e);}
   if(id===token)finishScene(id,false);
  }
  async function animateForward(id){
