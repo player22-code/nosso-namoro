@@ -3045,66 +3045,74 @@ window.abrirGirininhoSecreto=open;
 
 </style>
 <script id="nh-personagens-expressoes">
-/* Renderer visual independente: lê o resultado existente; não toca na carteira. */
-(() => {
- 'use strict';
- const W=640,H=286,frameWidth=512,frameHeight=256;
- const frames={vitoria:[0,1,2,3],derrota:[4,5,6,7],grande_vitoria:[8,9,10,11]};
- const reduced=matchMedia('(prefers-reduced-motion: reduce)');
- const configs=[
-  {root:'cassino-amor',header:'.ft-cabecalho',asset:'coelho-expressoes.webp',mask:[334,132,89,58],offsets:[[1,16],[2,16],[1,21],[2,18],[6,24],[7,8],[7,-5],[3,30],[1,14],[2,22],[0,42],[3,14]]},
-  {root:'girininho-modal',header:'.nh-girinnho-cabecalho',asset:'girinnho-expressoes.webp',mask:[391,82,46,59],offsets:[[-5,-6],[-2,-4],[-4,-6],[-2,-4],[-4,1],[-3,-10],[-6,-12],[-3,-3],[-4,1],[-3,-6],[-4,1],[-2,1]]}
- ];
- const preloaders=[];
- for(const config of configs){
-  const root=document.getElementById(config.root),header=root?.querySelector(config.header);
-  if(!header)continue;
-  const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
-  canvas.className='nh-expression-layer';canvas.dataset.mask=JSON.stringify(config.mask);canvas.hidden=true;canvas.setAttribute('aria-hidden','true');canvas.dataset.ready='false';header.append(canvas);
-  const ctx=canvas.getContext('2d');if(!ctx)continue;
-  const mask=document.createElement('canvas');mask.width=W;mask.height=H;const mc=mask.getContext('2d');
-  const [cx,cy,rx,ry]=config.mask;mc.save();mc.translate(cx,cy);mc.scale(rx,ry);
-  const gradient=mc.createRadialGradient(0,0,0,0,0,1);gradient.addColorStop(0,'#000');gradient.addColorStop(.72,'#000');gradient.addColorStop(1,'#0000');
-  mc.fillStyle=gradient;mc.fillRect(-1,-1,2,2);mc.restore();
-  const atlas=new Image();atlas.decoding='async';let loaded=false,requested=false,state='',started=0,lastFrame=-1,raf=0;
-  function stop(){if(raf)cancelAnimationFrame(raf);raf=0;lastFrame=-1;ctx.clearRect(0,0,W,H);canvas.hidden=true;canvas.dataset.frame='';}
-  function paint(index){
-   ctx.clearRect(0,0,W,H);ctx.globalCompositeOperation='source-over';ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
-   const [dx,dy]=config.offsets[index];
-   ctx.drawImage(atlas,(index%2)*frameWidth,Math.floor(index/2)*frameHeight,frameWidth,frameHeight,dx,dy,W,H);
-   // O alfa é zero fora do rosto: fundo, títulos, moedas e corpo são os originais.
-   ctx.globalCompositeOperation='destination-in';ctx.drawImage(mask,0,0);ctx.globalCompositeOperation='source-over';
-   canvas.dataset.frame=String(index);canvas.hidden=false;lastFrame=index;
-  }
-  function tick(now){
-   raf=0;const group=frames[state];
-   if(!group||!loaded||root.hidden||document.hidden){stop();return}
-   const index=group[reduced.matches?1:Math.floor(Math.max(0,now-started)/210)%group.length];
-   if(index!==lastFrame)paint(index);
-   if(!reduced.matches)raf=requestAnimationFrame(tick);
-  }
-  function update(){
-   const next=root.dataset.estado||'idle';
-   if(next!==state){state=next;started=performance.now();lastFrame=-1;}
-   if(root.hidden||document.hidden||!frames[state]){stop();return}
-   load();if(loaded&&!raf)tick(performance.now());
-  }
-  function load(){
-   if(requested)return;requested=true;
-   atlas.onload=()=>{if(atlas.naturalWidth!==1024||atlas.naturalHeight!==1536){canvas.dataset.error='invalid-atlas';return}loaded=true;canvas.dataset.ready='true';update()};
-   atlas.onerror=()=>{requested=false;canvas.dataset.error='load-failed';console.warn('Não foi possível carregar a animação do personagem:',config.asset)};
-   atlas.src=config.asset;
-  }
-  // Carrega ao abrir o jogo; a arte original fica visível durante o carregamento.
-  new MutationObserver(()=>{if(!root.hidden)load();update()}).observe(root,{attributes:true,attributeFilter:['data-estado','hidden']});
-  reduced.addEventListener('change',()=>{if(raf)cancelAnimationFrame(raf);raf=0;lastFrame=-1;update()});
-  document.addEventListener('visibilitychange',update);preloaders.push(load);
-  if(!root.hidden)load();update();
+(()=>{
+'use strict';
+const W=640,H=286,FW=512,FH=256,reduce=matchMedia('(prefers-reduced-motion: reduce)');
+const clamp=x=>Math.max(0,Math.min(1,x)),ease=x=>{x=clamp(x);return x*x*(3-2*x)};
+const groups={vitoria:[0,1,2,3],derrota:[4,5,6,7],grande_vitoria:[8,9,10,11]};
+const configs=[
+ {root:'cassino-amor',header:'.ft-cabecalho',asset:'coelho-expressoes.webp',column:0,mask:[334,132,89,58],eyes:[[299,126,25,23],[365,131,24,23]],offsets:[[1,16],[2,16],[1,21],[2,18],[6,24],[7,8],[7,-5],[3,30],[1,14],[2,22],[0,42],[3,14]]},
+ {root:'girininho-modal',header:'.nh-girinnho-cabecalho',asset:'girinnho-expressoes.webp',column:1,mask:[391,82,46,59],eyes:[[357,78,16,12]],offsets:[[-5,-6],[-2,-4],[-4,-6],[-2,-4],[-4,1],[-3,-10],[-6,-12],[-3,-3],[-4,1],[-3,-6],[-4,1],[-2,1]]}
+];
+const create=()=>{const c=document.createElement('canvas');c.width=W;c.height=H;return c};
+function timeline(elapsed,group){
+ const enter=ease(elapsed/360),leave=1-ease((elapsed-1500)/500),alpha=enter*leave;
+ const t=Math.min(group.length-1,Math.max(0,elapsed-150)/390);
+ const i=Math.min(group.length-1,Math.floor(t)),j=Math.min(group.length-1,i+1);
+ return {a:group[i],b:group[j],mix:ease(t-i),alpha};
+}
+for(const config of configs){
+ const root=document.getElementById(config.root),header=root?.querySelector(config.header);if(!header)continue;
+ const canvas=create();canvas.className='nh-expression-layer';canvas.hidden=true;canvas.setAttribute('aria-hidden','true');canvas.dataset.ready='false';header.append(canvas);
+ const ctx=canvas.getContext('2d');if(!ctx)continue;
+ const original=create(),oc=original.getContext('2d'),mask=create(),mc=mask.getContext('2d'),patch=create(),pc=patch.getContext('2d'),blend=create(),bc=blend.getContext('2d');
+ const [cx,cy,rx,ry]=config.mask;mc.save();mc.translate(cx,cy);mc.scale(rx,ry);const g=mc.createRadialGradient(0,0,0,0,0,1);g.addColorStop(0,'#000');g.addColorStop(.54,'#000');g.addColorStop(1,'#0000');mc.fillStyle=g;mc.fillRect(-1,-1,2,2);mc.restore();
+ let requested=false,originalReady=false,atlasReady=false,frames=[],state='',started=0,raf=0,timer=0,lastPaint=0;
+ const base=new Image(),atlas=new Image();base.decoding=atlas.decoding='async';
+ function visible(){return !root.hidden&&!document.hidden&&root.isConnected&&getComputedStyle(root).display!=='none'}
+ function stop(){cancelAnimationFrame(raf);clearTimeout(timer);raf=0;timer=0;canvas.hidden=true;ctx.clearRect(0,0,W,H)}
+ function load(){
+  if(requested)return;requested=true;
+  base.onload=()=>{const sw=base.naturalWidth/2,sh=sw*H/W,sy=(base.naturalHeight-sh)*.1135;if(sw>0&&sh>0){oc.drawImage(base,config.column*sw,sy,sw,sh,0,0,W,H);originalReady=true;canvas.dataset.ready='original';update()}};
+  base.src='cassinos-referencia.jpg';
+  atlas.onload=()=>{if(atlas.naturalWidth!==FW*2||atlas.naturalHeight!==FH*6){canvas.dataset.error='invalid-atlas';return}
+   try{frames=config.offsets.map(([dx,dy],i)=>{const f=create(),fc=f.getContext('2d');fc.imageSmoothingEnabled=true;fc.imageSmoothingQuality='high';fc.drawImage(atlas,(i%2)*FW,Math.floor(i/2)*FH,FW,FH,dx,dy,W,H);fc.globalCompositeOperation='destination-in';fc.drawImage(mask,0,0);fc.globalCompositeOperation='source-over';return f});atlasReady=true;canvas.dataset.ready='atlas';update()}catch{canvas.dataset.error='atlas-render'}
+  };
+  atlas.onerror=()=>{canvas.dataset.error='atlas-unavailable'};
+  atlas.src=config.asset;
  }
- document.getElementById('aba-btn-jogos')?.addEventListener('click',()=>preloaders.forEach(start=>start()),{once:true});
-})();
-
-</script>
+ function drawBlink(amount){
+  if(!originalReady||amount<.01)return false;
+  ctx.clearRect(0,0,W,H);
+  for(const [x,y,ex,ey] of config.eyes){
+   const l=Math.round(x-ex),top=Math.round(y-ey),width=Math.round(ex*2),height=Math.round(ey*2);
+   pc.clearRect(0,0,W,H);
+   // Keep eyelid patch edges stationary; compress just the central eye vertically.
+   for(let j=0;j<height;j++){const v=(j+.5)/height*2-1;const factor=1+amount*1.8*Math.pow(1-Math.abs(v),2);const srcY=Math.max(top,Math.min(top+height-1,y+v*ey*factor));pc.drawImage(original,l,srcY,width,1,l,top+j,width,1)}
+   pc.globalCompositeOperation='destination-in';pc.save();pc.translate(x,y);pc.scale(ex,ey);const m=pc.createRadialGradient(0,0,0,0,0,1);m.addColorStop(0,'#000');m.addColorStop(.55,'#000');m.addColorStop(1,'#0000');pc.fillStyle=m;pc.fillRect(-1,-1,2,2);pc.restore();pc.globalCompositeOperation='source-over';ctx.drawImage(patch,0,0);
+  }return true
+ }
+ function paint(t){
+  const group=groups[state],elapsed=Math.max(0,t-started);
+  ctx.clearRect(0,0,W,H);ctx.globalAlpha=1;
+  if(group&&atlasReady&&elapsed<2000&&!reduce.matches){const p=timeline(elapsed,group);bc.clearRect(0,0,W,H);bc.globalAlpha=1;bc.drawImage(frames[p.a],0,0);bc.globalCompositeOperation='source-over';bc.globalAlpha=p.mix;bc.drawImage(frames[p.b],0,0);bc.globalAlpha=1;ctx.globalAlpha=p.alpha*.75;ctx.drawImage(blend,0,0);ctx.globalAlpha=1;canvas.hidden=p.alpha<.01;canvas.dataset.frame=String(p.a);return true}
+  if(reduce.matches){canvas.hidden=true;return false}
+  // A tiny occasional blink animates the original artwork even if an atlas cannot load.
+  const interval=config.column?6400:5100,local=elapsed%interval;const blink=local<240?Math.sin(Math.PI*local/240):0;
+  canvas.hidden=!drawBlink(blink*.72);
+  return local<240
+ }
+ function schedule(){if(!visible()||reduce.matches)return;const elapsed=performance.now()-started;const group=groups[state];const fast=group&&atlasReady&&elapsed<2000||elapsed%(config.column?6400:5100)<240;
+  if(fast){raf=requestAnimationFrame(tick)}else{const interval=config.column?6400:5100;timer=setTimeout(()=>{timer=0;if(visible())raf=requestAnimationFrame(tick)},Math.max(30,interval-(elapsed%interval)))}
+ }
+ function tick(now){raf=0;if(!visible()){stop();return}if(now-lastPaint>=24){lastPaint=now;paint(now)}schedule()}
+ function update(){if(!visible()){stop();return}load();const next=root.dataset.estado||'idle';if(next!==state){state=next;started=performance.now();lastPaint=0;stop()}if(reduce.matches){stop();return}if(!raf&&!timer){paint(performance.now());schedule()}}
+ new MutationObserver(update).observe(root,{attributes:true,attributeFilter:['data-estado','hidden','style','class']});
+ reduce.addEventListener?.('change',()=>{stop();update()});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else update()});
+ if(visible())update();
+}
+})();</script>
 <style id="nh-interface-vidro-clean">
 /* Interface de vidro: wallpapers e recursos originais preservados. Escopo fora dos cassinos. */
 body[data-interface="vidro"]{--ui-ink:#541c37;--ui-muted:#704658;--ui-surface:rgba(255,246,250,.55);--ui-control:rgba(255,245,250,.42);--ui-popup:rgba(255,246,250,.91);--ui-edge:rgba(255,255,255,.75);--ui-accent:#a93463;--ui-selected:rgba(211,103,145,.29);--ui-shadow:0 9px 26px rgba(72,27,47,.13),inset 0 1px 0 rgba(255,255,255,.8);--ui-float-bottom:calc(100px + env(safe-area-inset-bottom,0px));color:var(--ui-ink)!important;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -3491,7 +3499,7 @@ body[data-interface="vidro"] #conteudo-privado button#modo-abrir-opcoes{border:0
  document.addEventListener('pointerdown',e=>{if(owner&&wanted&&musica.paused&&faixaAtual>=0&&!e.target.closest('#alternar-musica,.faixa-musica,#proxima-musica,#chat-ligar,#chat-video,#voz-tela'))musica.play().catch(()=>{});},{passive:true});
  if(typeof usuario!=='undefined')window.nhPreferencias.entrar(usuario);
 })();
-</script><script>window.NH_PATCH_BRIDGE={context:()=>({storyId:historiaAtual?.historia_id||null,userId:usuario?.id||null,modo:modoAtual}),rpc:async(nome,args)=>{const {data,error}=await db.rpc(nome,args);if(error)throw error;return data;},subscribe:(story,fn)=>{const ch=db.channel('patch-jogo-'+story).on('postgres_changes',{event:'*',schema:'public',table:'patch_estado',filter:'story_id=eq.'+story},fn).on('postgres_changes',{event:'*',schema:'public',table:'patch_inventario',filter:'story_id=eq.'+story},fn).subscribe();return ()=>db.removeChannel(ch);}};</script><script type="module" src="patch-game.js"></script><script defer src="poupy/pet-art.js?v=20261113-redraw1"></script><script defer src="poupy/game.js?v=20261113-redraw1"></script><script id="nh-celestial-script">(()=>{'use strict';function start(){const hero=document.querySelector('body[data-interface="vidro"] > header.nh-hero-referencia');if(!hero||hero.querySelector('.nh-celestial'))return;const wrap=document.createElement('div');wrap.className='nh-celestial';wrap.setAttribute('aria-hidden','true');wrap.innerHTML='<span class="nh-celestial__stars"></span><span class="nh-celestial__sun"></span><span class="nh-celestial__moon"></span>';hero.prepend(wrap);}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();})();</script><script defer src="nh-theme-film.js?v=20261126-visual2"></script><style id="nh-desktop-workspace">
+</script><script>window.NH_PATCH_BRIDGE={context:()=>({storyId:historiaAtual?.historia_id||null,userId:usuario?.id||null,modo:modoAtual}),rpc:async(nome,args)=>{const {data,error}=await db.rpc(nome,args);if(error)throw error;return data;},subscribe:(story,fn)=>{const ch=db.channel('patch-jogo-'+story).on('postgres_changes',{event:'*',schema:'public',table:'patch_estado',filter:'story_id=eq.'+story},fn).on('postgres_changes',{event:'*',schema:'public',table:'patch_inventario',filter:'story_id=eq.'+story},fn).subscribe();return ()=>db.removeChannel(ch);}};</script><script type="module" src="patch-game.js"></script><script defer src="poupy/pet-art.js?v=20261113-redraw1"></script><script defer src="poupy/game.js?v=20261113-redraw1"></script><script id="nh-celestial-script">(()=>{'use strict';function start(){const hero=document.querySelector('body[data-interface="vidro"] > header.nh-hero-referencia');if(!hero||hero.querySelector('.nh-celestial'))return;const wrap=document.createElement('div');wrap.className='nh-celestial';wrap.setAttribute('aria-hidden','true');wrap.innerHTML='<span class="nh-celestial__stars"></span><span class="nh-celestial__sun"></span><span class="nh-celestial__moon"></span>';hero.prepend(wrap);}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();})();</script><script defer src="nh-theme-film.js?v=20261126-visual3"></script><style id="nh-desktop-workspace">
 /* NH desktop workspace — visual layer only; mobile and application logic unchanged. */
 @media (min-width: 900px) {
  body[data-interface="vidro"] { --desk-edge:max(24px,calc((100vw - 1480px)/2)); --desk-side:clamp(180px,17vw,228px); --desk-gap:24px; --desk-right:76px; --desk-left:calc(var(--desk-edge) + var(--desk-side) + var(--desk-gap)); --ui-float-bottom:24px; }
@@ -3621,4 +3629,14 @@ body[data-interface="vidro"] .nh-cassinos-grade>button:hover{filter:brightness(1
 }
 @media(min-width:900px) and (max-width:1120px){body[data-interface="vidro"]>header.nh-hero-referencia #titulo-site{font-size:clamp(26px,3vw,34px);width:46%}body[data-interface="vidro"]>header.nh-hero-referencia .subtitulo{font-size:12px}}
 @media(prefers-reduced-motion:reduce){body[data-interface="vidro"]>header.nh-hero-referencia :is(.nh-scene-photo,.nh-theme-film,.nh-theme-reverse){transition:none!important}#nh-visualizador{display:none!important}body[data-interface="vidro"] .nh-cassinos-grade>button{transition:none!important}}
+</style>
+<style id="nh-motion-refinement">
+body[data-interface="vidro"]>header.nh-hero-referencia.nh-scenes-ready{background-image:none!important;--nh-scene-fade:color-mix(in srgb,#422d50 calc(var(--nh-scene-progress,0)*100%),#b77b9f)}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-scene-photo,
+body[data-interface="vidro"]>header.nh-hero-referencia :is(.nh-theme-film,.nh-theme-reverse){transition:none!important}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-scene-day{opacity:1}
+body[data-interface="vidro"]>header.nh-hero-referencia .nh-scene-night{opacity:0}
+#cassino-amor .ft-cabecalho,#girininho-modal .nh-girinnho-cabecalho{aspect-ratio:640/286!important;overflow:hidden!important}
+#cassino-amor .ft-cabecalho .nh-expression-layer,#girininho-modal .nh-expression-layer{object-fit:contain!important;image-rendering:auto!important;opacity:1;pointer-events:none}
+@media(prefers-reduced-motion:reduce){#cassino-amor .nh-expression-layer,#girininho-modal .nh-expression-layer{display:none!important}}
 </style></body></html>
