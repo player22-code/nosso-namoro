@@ -3873,4 +3873,58 @@ async function refresh(){const u=check();if(!u)return null;if(pending)return pen
 window.nhPoupyWallet={balance(){if(!check())return null;return saldo},async action(a){const u=check();if(!u)throw Error('Faça login para usar suas moedas.');if(!['feed','reward'].includes(a))throw Error('Ação inválida');version++;pending=null;const {data,error}=await db.rpc('nh_poupy_wallet_action',{p_action:a});if(account()!==u)throw Error('A conta mudou. Atualize o saldo.');if(error){refresh().catch(()=>{});throw error}version++;pending=null;publish(Number(data));refresh().catch(()=>{});return Number(data)}};
 function tick(){check();const pet=document.querySelector('#poupy-web');if(!document.hidden&&account()&&pet?.getClientRects().length)refresh().catch(()=>{})}
 setInterval(tick,2500);document.addEventListener('visibilitychange',tick);window.addEventListener('focus',tick);new MutationObserver(tick).observe(document.body,{attributes:true,attributeFilter:['data-aba','data-nh-workspace']});tick();
-})();</script></body></html>
+})();</script><style id="nh-casino-viewport-fit">
+/* Keep the entire game within ordinary desktop viewports; scroll only on very short screens. */
+#cassino-amor.cassino-modal,#girininho-modal{--casino-board:clamp(220px,calc((100dvh - 240px)*1.5),460px);--casino-art:clamp(210px,32vw,340px);box-sizing:border-box!important}
+#cassino-amor.cassino-modal[hidden],#girininho-modal[hidden]{display:none!important}
+#cassino-amor .cassino-conteudo{padding:12px 14px max(12px,env(safe-area-inset-bottom))!important;overflow-y:auto!important}
+#cassino-amor #cassino-titulo{font-size:clamp(19px,2.7vw,26px)!important;line-height:1.2!important;margin:4px 38px 4px!important}
+#cassino-amor .cassino-conteudo>p{font-size:12px!important;line-height:1.35!important;margin:4px auto 8px!important}
+#cassino-amor .cassino-conteudo>.cassino-nota,#girininho-modal .gi-note{font-size:11px!important;line-height:1.45!important;margin:9px auto 0!important;max-width:810px}
+#cassino-amor .cassino-cena{display:grid!important;grid-template-columns:minmax(0,1fr);gap:8px!important;width:min(100%,var(--casino-mobile,380px))!important;max-width:none!important;margin:0 auto!important;padding:10px!important;align-items:center;min-height:0!important}
+#cassino-amor .ft-cabecalho,#girininho-modal .nh-girinnho-cabecalho{width:100%!important;height:auto!important;aspect-ratio:640/286!important;margin:0!important;min-width:0!important;border-radius:12px!important;overflow:hidden!important}
+#cassino-amor .cassino-area-efeito{width:100%!important;min-width:0!important;margin:0!important}
+#cassino-amor .cassino-tela{width:100%!important;max-width:100%!important;margin:0!important;padding:4px!important;border-width:4px!important}
+#cassino-amor .cassino-grade,#girininho-modal .gi-grid{width:100%!important;aspect-ratio:5/3!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:repeat(3,minmax(0,1fr))!important;margin:0!important;gap:1px!important}
+#girininho-modal .gi-cell{width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;aspect-ratio:auto!important}
+#cassino-amor .cassino-painel{grid-template-columns:auto minmax(56px,1fr) minmax(92px,1.5fr)!important;gap:6px!important;padding:7px!important;margin:0!important;min-width:0!important}
+#cassino-amor .cassino-painel select,#girininho-modal select{font-size:13px!important;padding:7px 5px!important;min-height:36px!important;margin:0!important}
+#cassino-amor .cassino-girar,#girininho-modal .gi-spin{font-size:18px!important;min-height:42px!important;padding:5px 8px!important;border-width:3px!important;white-space:nowrap}
+#cassino-amor .cassino-resultado,#girininho-modal .gi-msg{font-size:13px!important;line-height:1.35!important;min-height:20px!important;margin:3px 0!important}
+#cassino-amor .cassino-controles{gap:5px!important;align-items:center}
+#cassino-amor .cassino-controles button,#girininho-modal #girininho-mute{font-size:11px!important;padding:6px 8px!important;min-height:34px!important;line-height:1.2}
+#cassino-amor .cassino-musica-restrita{margin:2px auto!important;font-size:10px!important;line-height:1.3}
+#cassino-amor .cassino-fechar,#girininho-modal .gi-close{position:fixed!important;top:max(6px,env(safe-area-inset-top))!important;right:max(8px,env(safe-area-inset-right))!important;z-index:20!important;width:36px!important;height:36px!important;min-height:0!important;padding:0!important;font-size:25px!important;line-height:1!important}
+#girininho-modal{overflow:auto!important;padding:0!important}
+#girininho-modal .gi-wrap{display:grid!important;grid-template-columns:minmax(0,1fr);align-items:center;gap:8px!important;width:min(calc(100% - 24px),var(--casino-mobile,380px))!important;max-width:none!important;margin:14px auto!important;padding:10px!important}
+#girininho-modal .gi-board{width:100%;min-width:0!important;padding:4px!important;border-width:4px!important}
+#girininho-modal .gi-actions{gap:6px!important;padding:7px!important;margin-top:7px!important}
+#girininho-modal .gi-label{font-size:12px!important}
+#girininho-modal .gi-note{margin:0!important}
+@media(min-width:760px){
+ #cassino-amor .cassino-cena{width:min(100%,calc(var(--casino-art) + var(--casino-board) + 36px))!important;grid-template-columns:minmax(0,var(--casino-art)) minmax(0,var(--casino-board))!important;grid-template-areas:"art board" "panel board" "status status" "options options";gap:10px 14px!important;align-items:center}
+ #cassino-amor .ft-cabecalho{grid-area:art;align-self:end}
+ #cassino-amor .cassino-area-efeito{grid-area:board;align-self:center}
+ #cassino-amor .cassino-painel{grid-area:panel;align-self:start}
+ #cassino-amor .cassino-resultado{grid-area:status}
+ #cassino-amor .cassino-controles{grid-area:options}
+ #cassino-amor .cassino-musica-restrita{width:auto!important;order:5}
+ #girininho-modal .gi-wrap{width:min(calc(100% - 36px),calc(var(--casino-art) + var(--casino-board) + 36px))!important;grid-template-columns:minmax(0,var(--casino-art)) minmax(0,var(--casino-board))!important;grid-template-areas:"art board" "note note";gap:10px 14px!important}
+ #girininho-modal .nh-girinnho-cabecalho{grid-area:art}
+ #girininho-modal .gi-board{grid-area:board}
+ #girininho-modal .gi-note{grid-area:note;text-align:center}
+ #girininho-modal .gi-actions .gi-label:first-child{flex-basis:auto!important}
+}
+@media(max-width:759px){
+ #cassino-amor.cassino-modal,#girininho-modal{--casino-mobile:clamp(230px,calc((100dvh - 235px)*.95),390px)}
+ #cassino-amor .cassino-conteudo{padding-top:9px!important}
+ #girininho-modal .gi-wrap{margin-top:12px!important}
+ #cassino-amor .cassino-controles{gap:4px!important}
+ #cassino-amor .cassino-musica-restrita{font-size:10px!important}
+}
+@media(max-width:340px){
+ #cassino-amor .cassino-painel{grid-template-columns:minmax(0,1fr) minmax(0,1.25fr)!important}
+ #cassino-amor .cassino-painel label{grid-column:1/-1}
+ #girininho-modal .gi-actions{flex-wrap:wrap}
+}
+</style></body></html>
