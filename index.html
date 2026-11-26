@@ -3804,4 +3804,62 @@ by('nh-clean-feature-open').onclick=()=>photos[selected]?showPhoto(photos[select
 let pending=false;function sync(){pending=false;const next=current();const show=!!next&&!panel.hidden&&by('login-painel').hidden;reset(show?next:null);document.body.classList.toggle('nh-clean-active',show);nav.hidden=!show;dash.hidden=!show;updateWorkspace(show);if(!show){document.body.classList.remove('nh-clean-show-scene');return}updatePhotos();updateTime();const tab=document.body.dataset.aba||'inicio';nav.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.nhGo===tab)));updateArrows()}
 function queue(){if(pending)return;pending=true;queueMicrotask(sync)}
 new MutationObserver(queue).observe(panel,{attributes:true,attributeFilter:['hidden']});new MutationObserver(queue).observe(by('login-painel'),{attributes:true,attributeFilter:['hidden']});new MutationObserver(queue).observe(gallery,{childList:true,subtree:true,attributes:true,attributeFilter:['src','data-tree-story']});new MutationObserver(queue).observe(by('titulo-historia'),{childList:true,subtree:true});new MutationObserver(queue).observe(document.body,{attributes:true,attributeFilter:['data-aba']});setInterval(()=>{if(current()!==story)queue();else if(story){updateTime();if(signature&&!signature.startsWith(JSON.stringify([historiaAtual?.data_inicio]).slice(0,-1)))updatePhotos()}},1000);sync();
+})();</script><style id="nh-compact-games-pet">
+/* Compact game cards and a viewport-aware Poupy workspace. */
+body[data-interface="vidro"].nh-clean-active #aba-jogos #nh-cassinos-inicio{width:100%!important;max-width:760px!important;justify-self:center;margin:0 auto 12px!important}
+body[data-interface="vidro"].nh-clean-active #aba-jogos .nh-cassinos-grade{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;max-width:760px;margin-inline:auto}
+body[data-interface="vidro"].nh-clean-active #aba-jogos .nh-cassinos-grade>button{width:100%!important;height:auto!important;min-height:0!important;max-height:170px!important;aspect-ratio:2.15!important;background-size:cover!important;background-position:left center!important;border-radius:16px!important}
+body[data-interface="vidro"].nh-clean-active #aba-jogos .nh-cassino-copy strong{font-size:clamp(13px,1.6vw,21px)!important;line-height:1.1!important}
+body[data-interface="vidro"].nh-clean-active #aba-jogos .nh-jogar{font-size:11px;padding:4px 12px}
+body[data-interface="vidro"].nh-clean-active #aba-inicio>#mascote-juntos:not(.nh-workspace-hidden){width:100%!important;max-width:1000px!important;padding:12px clamp(10px,1.8vw,20px)!important;margin:0 auto!important;min-height:0!important;box-sizing:border-box}
+body[data-interface="vidro"].nh-clean-active #mascote-juntos #poupy-web{width:100%!important;max-width:960px!important;margin:0 auto!important;display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,300px);grid-template-areas:"title level" "game progress" "game stats" "game controls" "game accessories" "message message" "credit credit";gap:8px 16px;align-items:center;text-align:center}
+body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-top{grid-area:title;min-width:0;margin:0}
+body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-top h2{font-size:clamp(17px,2vw,23px)!important;line-height:1.2;margin:0!important;overflow-wrap:anywhere}
+body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-evolution{grid-area:level;margin:0!important;min-width:0;font-size:13px}
+body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-progress-details{grid-area:progress;margin:0!important;min-width:0}
+body[data-interface="vidro"].nh-clean-active #poupy-web .pou-progress-trigger{margin:0!important;padding:7px 10px!important;min-height:32px}
+body[data-interface="vidro"].nh-clean-active #poupy-web .pou-progress-panel{max-height:min(40dvh,300px);overflow:auto!important}
+body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-stats{grid-area:stats;gap:5px;margin:0!important}
+body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-stats>div{padding:6px 3px;font-size:11px;color:var(--clean-ink);background:var(--clean-card)}
+body[data-interface="vidro"].nh-clean-active #poupy-web>canvas[data-pou-game]{grid-area:game;display:block!important;justify-self:center;align-self:center;width:min(100%,var(--nh-pet-canvas-width,580px))!important;height:auto!important;min-height:0!important;max-width:100%!important;aspect-ratio:16/9!important;object-fit:contain;border-radius:16px}
+body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-controls{grid-area:controls;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0!important}
+body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-controls button{min-width:0;min-height:36px;padding:7px 5px!important;font-size:11px!important;white-space:normal;line-height:1.2;border-radius:12px!important}
+body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-controls button:last-child{grid-column:1/-1}
+body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-accessories-panel{grid-area:accessories;margin:0;max-height:min(32dvh,220px);overflow:auto}
+body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-message{grid-area:message;margin:0!important;min-height:18px;font-size:12px;line-height:1.35}
+body[data-interface="vidro"].nh-clean-active #poupy-web>small{grid-area:credit;font-size:10px;line-height:1.2;opacity:.8}
+body[data-interface="vidro"].nh-clean-active[data-nh-workspace="pet"] #conteudo-privado{padding-top:8px!important;padding-bottom:14px!important}
+body[data-interface="vidro"].nh-clean-active[data-nh-workspace="pet"] #nh-work-tabs{margin-bottom:10px!important}
+@media(max-width:760px){
+ body[data-interface="vidro"].nh-clean-active #mascote-juntos #poupy-web{grid-template-columns:minmax(0,1fr);grid-template-areas:"title" "level" "progress" "stats" "game" "controls" "accessories" "message" "credit";max-width:490px!important;gap:6px}
+ body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-controls{grid-template-columns:repeat(3,minmax(0,1fr))}
+ body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-controls button:last-child{grid-column:auto}
+ body[data-interface="vidro"].nh-clean-active #poupy-web>canvas[data-pou-game]{width:min(100%,var(--nh-pet-canvas-width,420px))!important}
+ body[data-interface="vidro"].nh-clean-active #aba-jogos .nh-cassinos-grade{gap:8px!important}
+ body[data-interface="vidro"].nh-clean-active #aba-jogos .nh-cassinos-grade>button{max-height:135px!important;aspect-ratio:1.8!important}
+ body[data-interface="vidro"].nh-clean-active #aba-jogos .nh-cassino-copy strong{font-size:clamp(11px,3vw,16px)!important}
+ body[data-interface="vidro"].nh-clean-active #aba-jogos .nh-jogar{font-size:9px;padding:3px 7px}
+}
+@media(max-height:650px) and (min-width:761px){
+ body[data-interface="vidro"].nh-clean-active #mascote-juntos #poupy-web{gap:5px 12px}
+ body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-controls button{min-height:32px;padding:5px 4px!important}
+ body[data-interface="vidro"].nh-clean-active #poupy-web>.pou-stats>div{padding:4px 2px}
+}
+</style><script id="nh-compact-pet-fit">(()=>{
+const pet=document.getElementById('mascote-juntos'),pou=document.getElementById('poupy-web');if(!pet||!pou)return;
+let raf=0;
+function fit(){raf=0;if(!document.body.classList.contains('nh-clean-active')||document.body.dataset.nhWorkspace!=='pet'||!pet.getClientRects().length)return;
+ const viewport=window.visualViewport?.height||window.innerHeight;const top=Math.max(0,pet.getBoundingClientRect().top);const available=viewport-top-16;
+ const mobile=innerWidth<=760;
+ const reserved=mobile?270:75;
+ const maxHeight=Math.max(mobile?110:120,available-reserved);
+ const width=Math.floor(Math.min(mobile?490:640,maxHeight*16/9));
+ pou.style.setProperty('--nh-pet-canvas-width',width+'px');
+}
+function queue(){if(!raf)raf=requestAnimationFrame(fit)}
+new MutationObserver(queue).observe(document.body,{attributes:true,attributeFilter:['class','data-nh-workspace','data-aba']});
+window.addEventListener('resize',queue,{passive:true});window.visualViewport?.addEventListener('resize',queue,{passive:true});
+document.getElementById('nh-work-tabs')?.addEventListener('click',queue);
+if('ResizeObserver'in window){const ro=new ResizeObserver(queue);for(const id of ['nh-clean-nav','nh-work-tabs']){const el=document.getElementById(id);if(el)ro.observe(el)}}
+queue();
 })();</script></body></html>
